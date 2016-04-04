@@ -1,0 +1,39 @@
+{
+  "name": "ords-fhir",
+  "version": "0.4.0",
+  "description": "HL7 FHIR cluster implementation on NodeJS with freely chosen data backend written in typescript",
+  "main": "dist/index.js",
+  "dependencies": {
+    "ts-objectschema": "^0.1.1",
+    "aws-sdk": "^2.2.33",
+    "body-parser": "^1.14.2",
+    "cors": "^2.7.1",
+    "express": "^4.13.4",
+    "mongodb": "^2.1.7",
+    "multer": "^1.1.0",
+    "oauth2-server": "^2.4.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "tsd install && tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MedSolve/ords-fhir.git"
+  },
+  "keywords": [
+    "HL7",
+    "FHIR",
+    "NodeJS",
+    "typescript",
+    "cluster",
+    "oauth2"
+  ],
+  "author": "MedSolve",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MedSolve/ords-fhir/issues"
+  },
+  "homepage": "https://github.com/MedSolve/ords-fhir#readme"
+}
