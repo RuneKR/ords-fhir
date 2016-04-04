@@ -7,7 +7,7 @@ npm-debug.log*
 pids
 *.pid
 *.seed
-
+.DS_Store
 # production
 typings
 dist
