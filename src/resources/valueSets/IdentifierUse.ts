@@ -1,6 +1,6 @@
 import {Valueset} from '../Valueset';
 
-class IdentifierUse {
+export class IdentifierUse {
 
     public codeSystem: Object = {
         concept: [

@@ -1,6 +1,6 @@
 import {Valueset} from '../Valueset';
 
-class ConformanceResourceStatus {
+export class ConformanceResourceStatus {
 
     public codeSystem: Object = {
         concept: [

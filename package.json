@@ -16,7 +16,7 @@
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "tsd install && tsc"
+    "postinstall": "tsd install -o && tsc"
   },
   "repository": {
     "type": "git",

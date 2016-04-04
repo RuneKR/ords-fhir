@@ -1,6 +1,6 @@
 import {Valueset} from '../Valueset';
 
-class AddressUse {
+export class AddressUse {
     public codeSystem: Object = {
         concept: [
             {

@@ -9,5 +9,5 @@
         "outDir": "dist",
         "target": "es5"
     },
-    "exclude": ["node_modules", "typings"]
+    "exclude": ["node_modules", "typings", "dist"]
 }

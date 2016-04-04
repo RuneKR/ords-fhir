@@ -5,7 +5,7 @@ import * as fs from 'fs';
 import {PopulationLevel} from 'ts-objectschema';
 import {KeyStringObject} from './interfaces';
 
-class ConnectionBase {
+export class ConnectionBase {
     public db: Db;
     public models: KeyStringObject;
     constructor() {
