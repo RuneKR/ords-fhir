@@ -1,13 +1,12 @@
 /// <reference path='../../typings/tsd.d.ts' />
 
 import * as express from 'express';
-import * as https from 'https';
 import * as aws from 'aws-sdk';
 import * as cors from 'cors';
-import {MongoClient} from 'mongodb';
 import {con} from './Connection';
 import {TypeRoute} from './routes/TypeRoute';
 import {InstanceRoute} from './routes/InstanceRoute';
+import {KeyStringObject} from './Interfaces';
 
 /**
  * Working child of the cluster with the http and https webserver
@@ -15,14 +14,14 @@ import {InstanceRoute} from './routes/InstanceRoute';
 export class ChildWorker {
 
     /**
-    * main express application
-    */
+     * main express application
+     */
     private app: express.Express;
 
     /**
-    * Start an express application on a https server and configure mongoose and aws
-    */
-    constructor() {
+     * Start an express application on a https server and configure mongoose and aws
+     */
+    constructor(modules: Array<KeyStringObject>) {
 
         // init express
         this.app = express();
@@ -34,39 +33,27 @@ export class ChildWorker {
 
         // setup cors
         this.app.use(cors({
-            origin: function(origin: string, callback: Function) {
-                callback(null, process.env.WHITELIST.indexOf(origin) !== -1);
-            },
+            allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin', 'Authentication'],
             credentials: true,
-            allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin', 'Authentication']
+            origin: function(origin: string, callback: Function): void {
+                callback(undefined, process.env.WHITELIST.indexOf(origin) !== -1);
+            }
         }));
 
-        // connect to db 
-        MongoClient.connect(process.env.MONGO_URI, (err, db) => {
+        // setup routs
+        this.app.use('/api/', new TypeRoute().route);
+        this.app.use('/api/', new InstanceRoute().route);
 
-            // display err
-            if (err) {
-                throw err;
-            }
+        // external
+        let tmp: any;
 
-            // save connection 
-            con.init(db);
-
-            // setup routs
-            this.app.use('/api/',new TypeRoute().route);
-            this.app.use('/api/',new InstanceRoute().route);
-
-            // start https server
-            /*  
-            https.createServer({
-              key: fs.readFileSync( 'common/server-key.pem'),
-              cert: fs.readFileSync( 'common/server-cert.pem')
-            }, this.app).listen(443);
-            */
-
-            // start http server
-            this.app.listen(process.env.PORT);
-
+        // load external modules
+        modules.forEach((plugin: KeyStringObject) => {
+            tmp = require(plugin['module']).instance;
+            tmp.init(con, plugin['config']);
         });
+
+        // start http server
+        this.app.listen(process.env.PORT);
     }
 }

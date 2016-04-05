@@ -33,6 +33,10 @@ export class Server {
 
         // iterator key
         let i: number = 0;
+        
+        // see for modules
+        let modules: Array<KeyStringObject> = config['modules'];
+        delete config['modules'];
 
         // set process variables from configuration
         Object.keys(config).forEach((key: string) => {
@@ -65,7 +69,7 @@ export class Server {
         } else {
 
             // start child
-            this.child = new ChildWorker();
+            this.child = new ChildWorker(modules);
         }
     }
     

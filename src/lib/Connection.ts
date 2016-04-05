@@ -1,12 +1,12 @@
 /// <reference path='../../typings/tsd.d.ts' />
 
-import {Db, MongoCallback, Cursor} from 'mongodb';
+import {MongoCallback} from 'mongodb';
 import * as fs from 'fs';
 import {PopulationLevel} from 'ts-objectschema';
 import {KeyStringObject} from './interfaces';
 
 export class ConnectionBase {
-    public db: Db;
+    public db: any;
     public models: KeyStringObject;
     constructor() {
 
@@ -16,7 +16,7 @@ export class ConnectionBase {
     /**
      * init the connect to mongodb by supplying a open db socket
      */
-    public init(db: Db): void {
+    public init(db: any): void {
         // holder for meta data
         let meta: Array<string>;
         let name: string;
@@ -50,18 +50,6 @@ export class ConnectionBase {
     }
 
     /**
-     * FHIR requires id not _id field so we have to remove that field
-     * 
-     * @param {*} doc Mongodb document that need the field removed
-     */
-    public renameFields(doc: any): void {
-
-        if (doc && doc._id) {
-            delete doc._id;
-        }
-    }
-
-    /**
      * (description)
      * 
      * @param {string} model (description)
@@ -77,9 +65,8 @@ export class ConnectionBase {
             return cb(new Error('Model do not exsists'), 404);
         }
 
-        // disalbe id field
-        let curs: Cursor = this.db.collection(model).find(query).limit(limit).project({ _id: 0 });
-        curs.toArray(cb);
+        // return action
+        this.db.read(model, query, limit, cb);
 
     }
     /**
@@ -97,9 +84,9 @@ export class ConnectionBase {
             return cb(new Error('Model do not exsists'), 404);
         }
 
-        // look throughout the version collection of the model and disable id field
-        let curs: Cursor = this.db.collection('v_' + model).find({ 'meta.versionId': { $eq: version } }).limit(1).project({ _id: 0 });
-        curs.toArray(cb);
+        // return action
+        this.db.vread(model, version, cb);
+        
     }
     /**
      * (description)
@@ -123,32 +110,19 @@ export class ConnectionBase {
         }
 
         // do multiple validation one to check if we are doing an update and one to check if we are doing an create
-        let dbUpdate: any = { $set: new this.models[model](update, PopulationLevel.all) };
+        let dbUpdate: any = new this.models[model](update, PopulationLevel.all);
+        let dbCreate: Object;
 
         // try to see if required could be done
         try {
-            let dbCreate: Object = new this.models[model](update, PopulationLevel.required);
-            dbUpdate.$setOnInsert = dbCreate;
-
+            dbCreate = new this.models[model](update, PopulationLevel.required);
         } catch (e) {
-            // do nothing
+            dbCreate = undefined;
         }
 
-        // update based on query or create new document
-        this.db.collection(model).findOneAndUpdate(
-            query,
-            dbUpdate,
-            { returnOriginal: false, upsert: true },
-            (err: Error, doc: any) => {
-
-                // parsing back doc.value because of this is how it is returned
-                if (!err) {
-                    this.renameFields(doc.value);
-                    cb(err, doc.value);
-                } else {
-                    cb(err, doc);
-                }
-            });
+        // do action
+        this.db.update(model, query, dbUpdate, cb, dbCreate);
+       
     }
     /**
      * (description)
@@ -167,23 +141,10 @@ export class ConnectionBase {
         }
 
         // do multiple validation one to check if we are doing an update and one to check if we are doing an create
-        let dbUpdate: any = { $setOnInsert: new this.models[model](create, PopulationLevel.required) };
+        let dbUpdate: any = new this.models[model](create, PopulationLevel.required);
 
-        // update based on query or create new document
-        this.db.collection(model).findOneAndUpdate(
-            query,
-            dbUpdate,
-            { returnOriginal: false, upsert: true },
-            (err: Error, doc: any) => {
-
-                // parsing back doc.value because of this is how it is returned
-                if (!err) {
-                    this.renameFields(doc.value);
-                    cb(err, doc.value);
-                } else {
-                    cb(err, doc);
-                }
-            });
+        // do action
+        this.db.create(model, query, dbUpdate, cb);
     }
     /**
      * (description)
@@ -200,8 +161,8 @@ export class ConnectionBase {
             return cb(new Error('Model do not exsists'), 404);
         }
 
-        // delete the one document based on the query. We dont need to rename _id field since it is not returned
-        this.db.collection(model).findOneAndDelete(query, cb);
+        // return action
+        this.db.delete(model, query, cb);
     }
     // not implemented yet
     // history() {}
