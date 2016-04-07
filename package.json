@@ -6,13 +6,9 @@
   "typings": "dist/index.d.ts",
   "dependencies": {
     "ts-objectschema": "^0.1.1",
-    "aws-sdk": "^2.2.33",
     "body-parser": "^1.14.2",
     "cors": "^2.7.1",
-    "express": "^4.13.4",
-    "mongodb": "^2.1.7",
-    "multer": "^1.1.0",
-    "oauth2-server": "^2.4.1"
+    "express": "^4.13.4"
   },
   "devDependencies": {},
   "scripts": {

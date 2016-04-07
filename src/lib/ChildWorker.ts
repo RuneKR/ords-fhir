@@ -6,6 +6,7 @@ import * as cors from 'cors';
 import {con} from './Connection';
 import {TypeRoute} from './routes/TypeRoute';
 import {InstanceRoute} from './routes/InstanceRoute';
+import {hook} from './Hook';
 import {KeyStringObject} from './Interfaces';
 
 /**
@@ -39,19 +40,22 @@ export class ChildWorker {
                 callback(undefined, process.env.WHITELIST.indexOf(origin) !== -1);
             }
         }));
+        
+        // external
+        let tmp: any;
+
+        // load external modules as singletons and provide config and hooks to them
+        modules.forEach((plugin: KeyStringObject) => {
+            tmp = require(plugin['module']).instance;
+            tmp.init(plugin['config'], hook);
+        });
+        
+        // do connection
+        hook.doHook('connectToDatabase', con);
 
         // setup routs
         this.app.use('/api/', new TypeRoute().route);
         this.app.use('/api/', new InstanceRoute().route);
-
-        // external
-        let tmp: any;
-
-        // load external modules
-        modules.forEach((plugin: KeyStringObject) => {
-            tmp = require(plugin['module']).instance;
-            tmp.init(con, plugin['config']);
-        });
 
         // start http server
         this.app.listen(process.env.PORT);

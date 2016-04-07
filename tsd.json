@@ -17,35 +17,11 @@
     "mime/mime.d.ts": {
       "commit": "95b7178e0ef33b4b88327676418b4cc3ad61df0f"
     },
-    "aws-sdk/aws-sdk.d.ts": {
-      "commit": "99c4fb76b5d941939ba53e61d0daee4bd74f150f"
-    },
     "cors/cors.d.ts": {
-      "commit": "95b7178e0ef33b4b88327676418b4cc3ad61df0f"
-    },
-    "multer/multer.d.ts": {
       "commit": "95b7178e0ef33b4b88327676418b4cc3ad61df0f"
     },
     "body-parser/body-parser.d.ts": {
       "commit": "95b7178e0ef33b4b88327676418b4cc3ad61df0f"
-    },
-    "bcryptjs/bcryptjs.d.ts": {
-      "commit": "95b7178e0ef33b4b88327676418b4cc3ad61df0f"
-    },
-    "moment/moment-node.d.ts": {
-      "commit": "95b7178e0ef33b4b88327676418b4cc3ad61df0f"
-    },
-    "moment/moment.d.ts": {
-      "commit": "95b7178e0ef33b4b88327676418b4cc3ad61df0f"
-    },
-    "jwt-simple/jwt-simple.d.ts": {
-      "commit": "95b7178e0ef33b4b88327676418b4cc3ad61df0f"
-    },
-    "mongodb/mongodb.d.ts": {
-      "commit": "4ba57e605bd71bf7248de65aac0b4f50e3eb1c9e"
-    },
-    "es6-promise/es6-promise.d.ts": {
-      "commit": "4ba57e605bd71bf7248de65aac0b4f50e3eb1c9e"
     }
   }
 }
