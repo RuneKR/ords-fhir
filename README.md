@@ -1,20 +1,17 @@
 # Aim
-HL7 FHIR implementation on NodeJS in typescript that can support multiple telemedicin use cases and use any database backend (for example MongoDB).
+Modular HL7 FHIR implementation on NodeJS written in typescript that can support multiple telemedicine use cases and use any database backend (for example MongoDB).
 
 # About the project
-We are a small project group studying biomedical engineering and health at Aalborg University of Denmark. Though our semester we started to develop a telemedicine health data backend with the main standard implemented being HL7 FHIR. FHIR includes different HL7 and CDA standards, but the plan is that more standards might be implemented to provide interoperability with some existing systems in both Danish and international health context. This will only be done as the community requires it.
-Pleas see our [wiki page](https://github.com/MedSolve/ords-fhir/wiki) for more information.
+We are a small project group studying biomedical engineering and health at Aalborg University of Denmark. In our semester 8th semester we started to develop this project based on the HL7 FHIR standard. The project is based on the need for a platform standard for Danish and international telemedicine projects that can support multiple and varying use cases. FHIR includes different HL7 and CDA standards, but additional standards and functionalities might be implemented as the project evolves. This could for example allow for better interoperability with some existing health systems in both Danish and international context. 
 
 # Current status
-We are working to implement full HL7 FHIR REST support and auto-generate conformance from resources.
-We ARE NOT in version 1 yet.
+We are working to implement full HL7 FHIR REST support and auto-generate conformance from resources. We ARE NOT in version 1 yet.
 
 # Setting up the project
-This project is a core and cannot be used alone. To use it, pleas see the [example project](https://github.com/MedSolve/ts-ords-fhir-node.git).
+This project is a core and cannot be used alone as it depends on some modules. To use it, pleas see the [example project](https://github.com/MedSolve/ts-ords-fhir-node.git). You are very welcome to add to or modify this project to make this project fit your project.
 
-# Code Organization
-The source is located in the `src` folder and builded code in `dist` folder. All FHIR resources and datatypes are located in the `resources` folder. 
-Feel free to add og change anything to make the resources fit your project! Routing are located in `lib/routes` and other files are included in `lib`. 
+# Learn more	
+Pleas see our [wiki page](https://github.com/MedSolve/ords-fhir/wiki) for information on this project and how to contact us. For information about contributing see below. You can also open an issue here on GitHub if you have any questions. 
 
 # Contribute
 We are very keen to have developers contributing. Please read [the guidelines for contribution](CONTRIBUTE.MD) if you want to contribute.
