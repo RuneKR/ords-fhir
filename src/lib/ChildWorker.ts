@@ -1,7 +1,6 @@
 /// <reference path='../../typings/tsd.d.ts' />
 
 import * as express from 'express';
-import * as aws from 'aws-sdk';
 import * as cors from 'cors';
 import {con} from './Connection';
 import {TypeRoute} from './routes/TypeRoute';
@@ -27,11 +26,6 @@ export class ChildWorker {
         // init express
         this.app = express();
 
-        // set the config of aws connection
-        aws.config.update({
-            credentials: new aws.Credentials(process.env.AWS_ACCESS_KEY, process.env.AWS_SECRET_KEY)
-        });
-
         // setup cors
         this.app.use(cors({
             allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin', 'Authentication'],
@@ -40,7 +34,7 @@ export class ChildWorker {
                 callback(undefined, process.env.WHITELIST.indexOf(origin) !== -1);
             }
         }));
-        
+
         // external
         let tmp: any;
 
@@ -49,15 +43,24 @@ export class ChildWorker {
             tmp = require(plugin['module']).instance;
             tmp.init(plugin['config'], hook);
         });
-        
+
         // do connection
         hook.doHook('connectToDatabase', con);
+        
+        // setup routes
+        hook.addHook('addRoutes', 'FHIRrestRoutes', this.addRoutes);
 
-        // setup routs
-        this.app.use('/api/', new TypeRoute().route);
-        this.app.use('/api/', new InstanceRoute().route);
+        // do routes
+        hook.doHook('addRoutes', this.app);
 
         // start http server
         this.app.listen(process.env.PORT);
     }
+    public addRoutes(app: express.Express): void {
+        
+        // setup routs
+        app.use('/api/', new TypeRoute().route);
+        app.use('/api/', new InstanceRoute().route);
+    }
+
 }

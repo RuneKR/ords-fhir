@@ -10,7 +10,9 @@
     "cors": "^2.7.1",
     "express": "^4.13.4"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "jasmine-core": "2.4.1"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "postinstall": "tsd install -o && tsc"
