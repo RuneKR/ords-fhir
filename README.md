@@ -7,8 +7,8 @@ We are a small project group studying biomedical engineering and health at Aalbo
 # Current status
 We are working to implement full HL7 FHIR REST support and auto-generate conformance from resources. We ARE NOT in version 1 yet.
 
-# Setting up the project
-This project is a core and cannot be used alone as it depends on some modules. To use it, pleas see the [example project](https://github.com/MedSolve/ts-ords-fhir-node.git). You are very welcome to add to or modify this project to make this project fit your project.
+# Using this project
+This project is a core and cannot be used alone as it depends on some modules. This project exsists as a npm module. Do `npm install ords-fhir --save` to use. For a full example on how to use the module, pleas see the [example project](https://github.com/MedSolve/ts-ords-fhir-node.git). You are very welcome to add to or modify this project to make this project fit your project.
 
 # Learn more	
 Pleas see our [wiki page](https://github.com/MedSolve/ords-fhir/wiki) for information on this project and how to contact us. For information about contributing see below. You can also open an issue here on GitHub if you have any questions. 
