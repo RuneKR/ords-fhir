@@ -1,6 +1,5 @@
 import {addressUse} from '../valueSets/AddressUse';
 import {String, Validator, ElementDefinition, Binding, BindingStrength, PopulationLevel} from 'ts-objectschema';
-import {KeyStringObject} from '../../lib/interfaces';
 
 export class Address extends Validator {
     public use: ElementDefinition = {
@@ -16,7 +15,7 @@ export class Address extends Validator {
         type: String
     };
 
-    public constructor(data: KeyStringObject, validate: PopulationLevel) {
+    public constructor(data: {[key: string]: any}, validate: PopulationLevel) {
 
         // do validation command
         super();

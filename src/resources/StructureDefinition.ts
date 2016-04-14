@@ -1,7 +1,6 @@
 
 import {conformanceResourceStatus} from './valueSets/ConformanceResourceStatus';
 import {String, Validator, ElementDefinition, Binding, BindingStrength, PopulationLevel} from 'ts-objectschema';
-import {KeyStringObject} from '../lib/interfaces';
 import {DomainResource} from './DomainResource';
 
 // back bone element
@@ -12,7 +11,7 @@ class Snapshot extends Validator {
         type: String
     };
 
-    public constructor(data: KeyStringObject, validate: PopulationLevel) {
+    public constructor(data: {[key: string]: any}, validate: PopulationLevel) {
 
         // do validation command
         super();
@@ -52,7 +51,7 @@ class StructureDefinition extends DomainResource {
         type: Snapshot
     };
 
-    public constructor(data: KeyStringObject, validate: PopulationLevel) {
+    public constructor(data: {[key: string]: any}, validate: PopulationLevel) {
 
         // do validation command
         super();

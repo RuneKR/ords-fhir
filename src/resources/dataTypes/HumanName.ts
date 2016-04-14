@@ -1,7 +1,6 @@
 import {nameUse} from '../valueSets/NameUse';
 import {Period} from './Period';
 import {String, Validator, ElementDefinition, PopulationLevel, BindingStrength, Binding} from 'ts-objectschema';
-import {KeyStringObject} from '../../lib/interfaces';
 
 export class HumanName extends Validator {
     public use: ElementDefinition = {
@@ -35,7 +34,7 @@ export class HumanName extends Validator {
         search: false,
         type: Period
     };
-    public constructor(data: KeyStringObject, validate: PopulationLevel) {
+    public constructor(data: {[key: string]: any}, validate: PopulationLevel) {
 
         // do validation command
         super();

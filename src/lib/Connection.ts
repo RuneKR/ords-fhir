@@ -3,11 +3,12 @@
 import {MongoCallback} from 'mongodb';
 import * as fs from 'fs';
 import {PopulationLevel} from 'ts-objectschema';
-import {KeyStringObject} from './interfaces';
 
 export class ConnectionBase {
     public db: any;
-    public models: KeyStringObject;
+    public models:  {
+        [key: string]: any; // correct from any
+    }
     constructor() {
 
         // init models

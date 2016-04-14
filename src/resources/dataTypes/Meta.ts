@@ -1,5 +1,4 @@
 import {Validator, Uri, Id, Instant, ElementDefinition, PopulationLevel} from 'ts-objectschema';
-import {KeyStringObject} from '../../lib/interfaces';
 import {Coding} from './Coding';
 
 export class Meta extends Validator {
@@ -28,7 +27,7 @@ export class Meta extends Validator {
         search: false,
         type: [Coding]
     };
-    public constructor(data: KeyStringObject, validate: PopulationLevel) {
+    public constructor(data: {[key: string]: any}, validate: PopulationLevel) {
 
         // do validation command
         super();

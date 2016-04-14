@@ -6,7 +6,6 @@ import {con} from './Connection';
 import {TypeRoute} from './routes/TypeRoute';
 import {InstanceRoute} from './routes/InstanceRoute';
 import {hook} from './Hook';
-import {KeyStringObject} from './Interfaces';
 
 /**
  * Working child of the cluster with the http and https webserver
@@ -21,7 +20,7 @@ export class ChildWorker {
     /**
      * Start an express application on a https server and configure mongoose and aws
      */
-    constructor(modules: Array<KeyStringObject>) {
+    constructor(modules: Array<{[key: string]: any}>) { // correct from any
 
         // init express
         this.app = express();
@@ -39,7 +38,7 @@ export class ChildWorker {
         let tmp: any;
 
         // load external modules as singletons and provide config and hooks to them
-        modules.forEach((plugin: KeyStringObject) => {
+        modules.forEach((plugin: {[key: string]: any}) => {
             tmp = require(plugin['module']).instance;
             tmp.init(plugin['config'], hook);
         });

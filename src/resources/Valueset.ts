@@ -1,6 +1,5 @@
 import {String, Boolean, Validator, ElementDefinition, PopulationLevel} from 'ts-objectschema';
 import {DomainResource} from './DomainResource';
-import {KeyStringObject} from '../lib/interfaces';
 
 // backbone elements
 class ConceptValue extends Validator {
@@ -19,7 +18,7 @@ class ConceptValue extends Validator {
         search: true,
         type: Boolean
     };
-    public constructor(data: KeyStringObject) {
+    public constructor(data: {[key: string]: any}) {
 
         // do validation command
         super();
@@ -44,7 +43,7 @@ class CodeSystem extends Validator {
         search: true,
         type: [ConceptValue]
     };
-    public constructor(data: KeyStringObject) {
+    public constructor(data: {[key: string]: any}) {
 
         // do validation command
         super();
@@ -60,7 +59,7 @@ export class Valueset extends DomainResource {
         search: true,
         type: CodeSystem
     };
-    public constructor(data: KeyStringObject) {
+    public constructor(data: {[key: string]: any}) {
 
         // do validation command
         super();

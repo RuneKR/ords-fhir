@@ -3,7 +3,6 @@ import {Period} from './Period';
 import {Reference} from './Reference';
 import {String, Validator, Uri, ElementDefinition, PopulationLevel, BindingStrength, Binding} from 'ts-objectschema';
 import {CodeableConcept} from './CodeableConcept';
-import {KeyStringObject} from '../../lib/interfaces';
 
 export class Identifier extends Validator {
     public use: ElementDefinition = {
@@ -39,7 +38,7 @@ export class Identifier extends Validator {
         type: Reference
     };
 
-    public constructor(data: KeyStringObject, validate: PopulationLevel) {
+    public constructor(data: {[key: string]: any}, validate: PopulationLevel) {
 
         // do validation command
         super();

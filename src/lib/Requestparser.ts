@@ -1,6 +1,5 @@
 import {PopulationLevel} from 'ts-objectschema';
 import {Router} from 'express';
-import {KeyStringObject} from './interfaces';
 import {con} from './Connection';
 import * as parser from 'body-parser';
 
@@ -17,10 +16,10 @@ export class Requestparser {
      * @param params
      * @returns new query
      */
-    public query(modelname: string, params: KeyStringObject): Object {
+    public query(modelname: string, params: {[key: string]: any}): Object {
 
         // holder for parsed query
-        let query: KeyStringObject = {};
+        let query: {[key: string]: any} = {};
 
         // temp comparator data
         let comparator: any;
@@ -32,7 +31,7 @@ export class Requestparser {
         let keys: Array<string>;
 
         // temp data
-        let temp: KeyStringObject;
+        let temp: {[key: string]: any};
 
         // temp type of data query element
         let type: any;
@@ -106,7 +105,7 @@ export class Requestparser {
             limit: process.env.LIMIT_UPLOAD_MB + 'mb'
         }));
     }
-    private deepLoopQuery(model: KeyStringObject, keys: Array<string>, wasArray?: boolean): any {
+    private deepLoopQuery(model: {[key: string]: any}, keys: Array<string>, wasArray?: boolean): any {
 
         let key: string = keys.shift();
 

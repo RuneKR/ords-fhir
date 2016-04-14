@@ -1,14 +1,15 @@
-
-export interface KeyStringFunction {
-    [key: string]: Function;
-}
-
-export interface KeyStringObject {
-    [key: string]: KeyStringFunction;
-}
-
+/**
+ * Hook system utilized without the 
+ * 
+ * @export
+ * @class Hook
+ */
 export class Hook {
-    public hooks: KeyStringObject;
+    public hooks: {
+        [key: string]: {
+            [key: string]: Function;
+        };
+    };
     constructor() {
         
         // save inited hooks
@@ -37,5 +38,6 @@ export class Hook {
         delete this.hooks[key][name];
     }
 }
+
 
 export const hook: Hook = new Hook();

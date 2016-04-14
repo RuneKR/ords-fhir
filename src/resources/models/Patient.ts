@@ -3,7 +3,6 @@ import {HumanName} from '../dataTypes/HumanName';
 import {Address} from '../dataTypes/Address';
 import {DomainResource} from '../DomainResource';
 import {ElementDefinition, PopulationLevel} from 'ts-objectschema';
-import {KeyStringObject} from '../../lib/interfaces';
 
 export class Patient extends DomainResource {
 
@@ -28,7 +27,7 @@ export class Patient extends DomainResource {
         search: true,
         type: Address
     };
-    public constructor(data: KeyStringObject, validate: PopulationLevel) {
+    public constructor(data: {[key: string]: any}, validate: PopulationLevel) {
 
         // do validation command
         super();

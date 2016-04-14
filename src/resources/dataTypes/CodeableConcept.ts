@@ -1,6 +1,5 @@
 import {String, Validator, ElementDefinition, PopulationLevel} from 'ts-objectschema';
 import {Coding} from './Coding';
-import {KeyStringObject} from '../../lib/interfaces';
 
 export class CodeableConcept extends Validator {
     public coding: ElementDefinition = {
@@ -13,7 +12,7 @@ export class CodeableConcept extends Validator {
         search: false,
         type: String
     };
-    public constructor(data: KeyStringObject, validate: PopulationLevel) {
+    public constructor(data: {[key: string]: any}, validate: PopulationLevel) {
 
         // do validation command
         super();
