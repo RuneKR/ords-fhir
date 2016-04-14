@@ -44,13 +44,13 @@ export class ChildWorker {
         });
 
         // do connection
-        hook.doHook('connectToDatabase', con);
+        hook.doHooks('connectToDatabase', con);
         
         // setup routes
         hook.addHook('addRoutes', 'FHIRrestRoutes', this.addRoutes);
 
         // do routes
-        hook.doHook('addRoutes', this.app);
+        hook.doHooks('addRoutes', this.app);
 
         // start http server
         this.app.listen(process.env.PORT);
