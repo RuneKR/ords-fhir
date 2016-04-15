@@ -15,7 +15,7 @@ export class Hook {
      * Creates a new empty container for commands and their hooks
      */
     constructor() {
-        
+
         // initiating empty object for hooks
         this.hooks = {};
     }
@@ -27,27 +27,27 @@ export class Hook {
      * @returns {void}        no feedback is provided back  
      */
     public addHook(command: string, name: string, hook: Function): void {
-        
+
         // add hooks
         if (this.hooks[command] === undefined) {
-            this.hooks[command] = {};    
+            this.hooks[command] = {};
         }
-        
+
         // save hook
         this.hooks[command][name] = hook;
     }
     /**
-     * Execute hooks synchronously for a specfic command and pass a given argument to the hooks
+     * Execute hooks synchronously for a specfic command and apply one or more arguments to the hooks
      * @param   {string}      command   command for which hooks is executed
-     * @param   {any}         arg       argument to be used in the hooks 
+     * @param   {...any}      args      arguments to be used in the hooks 
      * @returns {void}        no feedback is provided back  
      * @throws  Error is thrown if command does not exsists
      */
-    public doHooks(command: string, arg: any): void {
+    public doHooks(command: string, ...args: Array<any>): void {
 
         // do all hook while providing them with args
         Object.keys(this.hooks[command]).forEach((hookKey: string) => {
-            this.hooks[command][hookKey](arg);
+            this.hooks[command][hookKey].apply(undefined, args);
         });
     }
     /**
