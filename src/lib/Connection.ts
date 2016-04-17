@@ -1,14 +1,39 @@
 /// <reference path='../../typings/tsd.d.ts' />
 
-import {MongoCallback} from 'mongodb';
-import * as fs from 'fs';
-import {PopulationLevel} from 'ts-objectschema';
+import {MongoCallback}      from 'mongodb';
+import * as fs              from 'fs';
+import {PopulationLevel}    from 'ts-objectschema';
+import {StringMapAny}       from './Interfaces';
 
+/**
+ * Interface for a DbCon module in order to provide interoperability with the ConnectionBase
+ */
+export interface DbCon {
+    read(model: string, query: Object, limit: number, cb: MongoCallback<any>): void;
+    vread(model: string, version: number, cb: MongoCallback<any>): void;
+    update(model: string, query: Object, dbUpdate: Object, cb: MongoCallback<any>, dbCreate: Object): void;
+    create(model: string, query: Object, dbUpdate: Object, cb: MongoCallback<any>): void;
+    delete(model: any, query: Object, cb: MongoCallback<any>): void;
+    createIndex(model: string, path: string): void;
+}
+
+/**
+ * Base for the connection to any database
+ */
 export class ConnectionBase {
-    public db: any;
-    public models:  {
-        [key: string]: any; 
-    };
+    /**
+     * Conected database
+     * @type {DbCon}
+     */
+    public db: DbCon;
+    /**
+     * Container of models by their name
+     * @type {StringMapAny}
+     */
+    public models: StringMapAny;
+    /**
+     * 
+     */
     constructor() {
 
         // init models
@@ -42,7 +67,7 @@ export class ConnectionBase {
                 // keep javascript models
                 if (meta[1] === 'js') {
                     // ensure index
-                    this.db.collection(name).createIndex('id');
+                    this.db.createIndex(name, 'id');
                     // save model
                     this.models[name] = require('../resources/models/' + name)[name];
                 }
@@ -52,7 +77,6 @@ export class ConnectionBase {
 
     /**
      * (description)
-     * 
      * @param {string} model (description)
      * @param {Object} query (description)
      * @param {number} limit (description)
@@ -72,7 +96,6 @@ export class ConnectionBase {
     }
     /**
      * (description)
-     * 
      * @param {string} model (description)
      * @param {*} version (description)
      * @param {MongoCallback<any>} cb (description)
@@ -87,11 +110,10 @@ export class ConnectionBase {
 
         // return action
         this.db.vread(model, version, cb);
-        
+
     }
     /**
      * (description)
-     * 
      * @param {string} model (description)
      * @param {Object} query (description)
      * @param {*} update (description)
@@ -104,7 +126,7 @@ export class ConnectionBase {
         if (typeof this.models[model] === 'undefined') {
             return cb(new Error('Model do not exsists'), 404);
         }
-        
+
         // id field should not be present in an update
         if (update.id) {
             throw new Error('id field is not allowed to be included in an update');
@@ -123,11 +145,10 @@ export class ConnectionBase {
 
         // do action
         this.db.update(model, query, dbUpdate, cb, dbCreate);
-       
+
     }
     /**
      * (description)
-     * 
      * @param {string} model (description)
      * @param {Object} query (description)
      * @param {*} update (description)
@@ -149,7 +170,6 @@ export class ConnectionBase {
     }
     /**
      * (description)
-     * 
      * @param {string} model (description)
      * @param {Object} query (description)
      * @param {MongoCallback<any>} cb (description)
@@ -165,8 +185,9 @@ export class ConnectionBase {
         // return action
         this.db.delete(model, query, cb);
     }
-    // not implemented yet
-    // history() {}
 }
 
+/**
+ * Singleton of ConnectionBase
+ */
 export const con: ConnectionBase = new ConnectionBase();

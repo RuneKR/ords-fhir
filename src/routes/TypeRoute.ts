@@ -6,8 +6,11 @@ import {con} from '../lib/Connection';
 import {requestparser} from '../lib/Requestparser';
 
 export class TypeRoute {
-    public route: Router = Router();
+    public route: Router;
     constructor() {
+
+        // setup router
+        this.route = Router();
 
         // bind model to router
         this.route.get('/:model/', this.search);
@@ -74,7 +77,7 @@ export class TypeRoute {
 
             // if meta data is specified then use that in return
             if (docs[0].meta) {
-                
+
                 // set response headers
                 if (docs[0].meta.versionId) {
                     res.set({
@@ -109,7 +112,7 @@ export class TypeRoute {
 
                 // if meta data is specified then use that in return
                 if (doc.meta) {
-                    
+
                     // set response headers
                     if (doc.meta.versionId) {
                         res.set({

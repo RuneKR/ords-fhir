@@ -3,9 +3,9 @@ import * as os                      from 'os';
 import {ChildWorker, ModuleConfig}  from './lib/ChildWorker';
 
 /*
-* Map with string as key and value as a clusterworker
+* Map with number as key and value as a cluster.Worker
 */
-export interface NumberMapWorker {
+export interface WorkerByProcessid {
     [key: number]: cluster.Worker;
 }
 
@@ -27,9 +27,9 @@ export interface Config {
 export class Server {
     /**
      * Active workers by their process id
-     * @type {NumberMapWorker}
+     * @type {WorkerByProcessid}
      */
-    public activeWorkers: NumberMapWorker;
+    public activeWorkers: WorkerByProcessid;
     /**
      * Childworker attached to the process
      * @type {ChildWorker}
