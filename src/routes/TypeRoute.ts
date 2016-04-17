@@ -1,9 +1,9 @@
-/// <reference path='../../../typings/tsd.d.ts' />
+/// <reference path='../../typings/tsd.d.ts' />
 
 import {ObjectID} from 'mongodb';
 import {Router, Request, Response} from 'express';
-import {con} from '../Connection';
-import {requestparser} from '../Requestparser';
+import {con} from '../lib/Connection';
+import {requestparser} from '../lib/Requestparser';
 
 export class TypeRoute {
     public route: Router = Router();

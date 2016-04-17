@@ -7,8 +7,8 @@ import {PopulationLevel} from 'ts-objectschema';
 export class ConnectionBase {
     public db: any;
     public models:  {
-        [key: string]: any; // correct from any
-    }
+        [key: string]: any; 
+    };
     constructor() {
 
         // init models

@@ -1,11 +1,20 @@
 /// <reference path='../../typings/tsd.d.ts' />
 
-import * as express from 'express';
-import * as cors from 'cors';
-import {con} from './Connection';
-import {TypeRoute} from './routes/TypeRoute';
-import {InstanceRoute} from './routes/InstanceRoute';
-import {hook} from './Hook';
+import * as express     from 'express';
+import * as cors        from 'cors';
+import {con}            from './Connection';
+import {TypeRoute}      from '../routes/TypeRoute';
+import {InstanceRoute}  from '../routes/InstanceRoute';
+import {StringMapAny}   from './Interfaces';
+import {hook}           from './Hook';
+
+/**
+ * Module config syntax
+ */
+export interface ModuleConfig {
+    config: StringMapAny;
+    module: string; 
+}
 
 /**
  * Working child of the cluster with the http and https webserver
@@ -20,7 +29,7 @@ export class ChildWorker {
     /**
      * Start an express application on a https server and configure mongoose and aws
      */
-    constructor(modules: Array<{[key: string]: any}>) { // correct from any
+    constructor(modules: Array<ModuleConfig>) { // correct from any
 
         // init express
         this.app = express();
@@ -34,13 +43,13 @@ export class ChildWorker {
             }
         }));
 
-        // external
+        // external modules temp holder for loading them
         let tmp: any;
 
         // load external modules as singletons and provide config and hooks to them
-        modules.forEach((plugin: {[key: string]: any}) => {
-            tmp = require(plugin['module']).instance;
-            tmp.init(plugin['config'], hook);
+        modules.forEach((plugin: ModuleConfig) => {
+            tmp = require(plugin.module).instance;
+            tmp.init(plugin.config, hook);
         });
 
         // do connection

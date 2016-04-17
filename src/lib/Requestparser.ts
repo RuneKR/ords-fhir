@@ -3,23 +3,23 @@ import {Router} from 'express';
 import {con} from './Connection';
 import * as parser from 'body-parser';
 
+/**
+ * Parse incomming requests into a MongoDB query form
+ */
 export class Requestparser {
-
     /**
      * Prefixes that a query can contain
-     * @type {string[]}
      */
-    private queryPrefix: Array<string> = ['eq', 'ne', 'gt', 'lt', 'ge', 'le', 'sa', 'eb', 'ap'];
-
+    private queryValuePrefix: Array<string> = ['eq', 'ne', 'gt', 'lt', 'ge', 'le', 'sa', 'eb', 'ap'];
     /**
      * Query params received from express based on FHIR
      * @param params
      * @returns new query
      */
-    public query(modelname: string, params: {[key: string]: any}): Object {
+    public query(modelname: string, params: { [key: string]: any }): Object {
 
         // holder for parsed query
-        let query: {[key: string]: any} = {};
+        let query: { [key: string]: any } = {};
 
         // temp comparator data
         let comparator: any;
@@ -31,7 +31,7 @@ export class Requestparser {
         let keys: Array<string>;
 
         // temp data
-        let temp: {[key: string]: any};
+        let temp: { [key: string]: any };
 
         // temp type of data query element
         let type: any;
@@ -54,7 +54,7 @@ export class Requestparser {
             comparator = '$eq';
 
             // check if any prefix is set in query and integers are passed after the prefix
-            if (this.queryPrefix.indexOf(value.substr(0, 2)) !== 1
+            if (this.queryValuePrefix.indexOf(value.substr(0, 2)) !== 1
                 && !!parseInt(value.substr(2, 1), 10)) {    // 10 is chosen could be others
 
                 // set mongodb $ and prefix as key and read the value after prefix
@@ -80,8 +80,8 @@ export class Requestparser {
 
     /**
      * Parse body input from request to req.body
-     * @param req
-     * @param res
+     * @param {Router}     router      instance of express routing object
+     * @returns {void}     no feedback is provided back
      */
     public bodyParser(router: Router): void {
 
@@ -90,22 +90,22 @@ export class Requestparser {
             extended: false,
             limit: process.env.LIMIT_UPLOAD_MB + 'mb'
         }));
-        
-        router.put('*',parser.urlencoded({
+
+        router.put('*', parser.urlencoded({
             extended: false,
             limit: process.env.LIMIT_UPLOAD_MB + 'mb'
         }));
-        
+
         // parse application/json
-        router.post('*',parser.json({
+        router.post('*', parser.json({
             limit: process.env.LIMIT_UPLOAD_MB + 'mb'
         }));
-        
-        router.put('*',parser.json({
+
+        router.put('*', parser.json({
             limit: process.env.LIMIT_UPLOAD_MB + 'mb'
         }));
     }
-    private deepLoopQuery(model: {[key: string]: any}, keys: Array<string>, wasArray?: boolean): any {
+    private deepLoopQuery(model: { [key: string]: any }, keys: Array<string>, wasArray?: boolean): any {
 
         let key: string = keys.shift();
 

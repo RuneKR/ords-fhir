@@ -1,3 +1,9 @@
+export interface StringMapFunction {
+    [key: string]: {
+        [key: string]: Function;
+    };
+}
+
 /**
  * Hook manager and container for commands executed within the application
  * @class Hook
@@ -5,12 +11,9 @@
 export class Hook {
     /**
      * Container of all hooks related to their commands
+     * @type {StringMapFunction}
      */
-    public hooks: {
-        [key: string]: {
-            [key: string]: Function;
-        };
-    };
+    public hooks: StringMapFunction;
     /**
      * Creates a new empty container for commands and their hooks
      */
@@ -24,7 +27,7 @@ export class Hook {
      * @param   {string}      command   command to be hooked into
      * @param   {string}      name      name of the hook being added
      * @param   {Function}    hook      the hook function itself
-     * @returns {void}        no feedback is provided back  
+     * @returns {void}        no feedback is provided  
      */
     public addHook(command: string, name: string, hook: Function): void {
 
@@ -40,7 +43,7 @@ export class Hook {
      * Execute hooks synchronously for a specfic command and apply one or more arguments to the hooks
      * @param   {string}      command   command for which hooks is executed
      * @param   {...any}      args      arguments to be used in the hooks 
-     * @returns {void}        no feedback is provided back  
+     * @returns {void}        no feedback is provided  
      * @throws  Error is thrown if command does not exsists
      */
     public doHooks(command: string, ...args: Array<any>): void {
@@ -54,7 +57,7 @@ export class Hook {
      * Remove a hook by a given name from a command
      * @param   {string}      command   command to remove the hook from
      * @param   {string}      name      name of the hook being removed
-     * @returns {void}        no feedback is provided back 
+     * @returns {void}        no feedback is provided 
      * @throws  Error is thrown if command does not exsists 
      */
     public removeHook(command: string, name: string): void {
