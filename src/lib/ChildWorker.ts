@@ -1,19 +1,16 @@
 /// <reference path='../../typings/tsd.d.ts' />
 
-import * as express     from 'express';
-import * as cors        from 'cors';
-import {con}            from './Connection';
-import {TypeRoute}      from '../routes/TypeRoute';
-import {InstanceRoute}  from '../routes/InstanceRoute';
-import {StringMapAny}   from './Interfaces';
-import {hook}           from './Hook';
+import * as express           from 'express';
+import * as cors              from 'cors';
+import {con}                  from './Connection';
+import {TypeRoute}            from '../routes/TypeRoute';
+import {InstanceRoute}        from '../routes/InstanceRoute';
+import {StringMapAny}         from './Interfaces';
+import {hook}                 from './Hook';
 
-/**
- * Module config syntax
- */
 export interface ModuleConfig {
     config: StringMapAny;
-    module: string; 
+    module: string;
 }
 
 /**
@@ -45,11 +42,12 @@ export class ChildWorker {
 
         // external modules temp holder for loading them
         let tmp: any;
+        let tmpInst: any;
 
-        // load external modules as singletons and provide config and hooks to them
+        // load external modules and provide config and hooks to them
         modules.forEach((plugin: ModuleConfig) => {
             tmp = require(plugin.module).instance;
-            tmp.init(plugin.config, hook);
+            tmpInst = new tmp(plugin.config, hook);
         });
 
         // do connection
@@ -64,11 +62,10 @@ export class ChildWorker {
         // start http server
         this.app.listen(process.env.PORT);
     }
-    public addRoutes(app: express.Express): void {
+    private addRoutes(app: express.Express): void {
         
         // setup routs
         app.use('/api/', new TypeRoute().route);
         app.use('/api/', new InstanceRoute().route);
     }
-
 }

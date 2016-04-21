@@ -48,6 +48,11 @@ export class Hook {
      */
     public doHooks(command: string, ...args: Array<any>): void {
 
+        // validate it exsists
+        if (this.hooks[command] === undefined) {
+            throw new Error('Command does not exsists');
+        }
+
         // do all hook while providing them with args
         Object.keys(this.hooks[command]).forEach((hookKey: string) => {
             this.hooks[command][hookKey].apply(undefined, args);
@@ -62,7 +67,12 @@ export class Hook {
      */
     public removeHook(command: string, name: string): void {
 
-        // delete hook or thr
+        // validate it exsists
+        if (this.hooks[command] === undefined) {
+            throw new Error('Command does not exsists');
+        }
+        
+        // delete hook
         delete this.hooks[command][name];
     }
 }
