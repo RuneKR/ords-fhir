@@ -8,7 +8,7 @@ export interface StringMapFunction {
  * Hook manager and container for commands executed within the application
  * @class Hook
  */
-export class Hook {
+export class HookManager {
     /**
      * Container of all hooks related to their commands
      * @type {StringMapFunction}
@@ -80,4 +80,4 @@ export class Hook {
 /**
  * Singelton of the hook class
  */
-export const hook: Hook = new Hook();
+export const hm: HookManager = new HookManager();

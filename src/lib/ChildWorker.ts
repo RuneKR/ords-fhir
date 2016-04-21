@@ -2,11 +2,10 @@
 
 import * as express           from 'express';
 import * as cors              from 'cors';
-import {con}                  from './Connection';
 import {TypeRoute}            from '../routes/TypeRoute';
 import {InstanceRoute}        from '../routes/InstanceRoute';
 import {StringMapAny}         from './Interfaces';
-import {hook}                 from './Hook';
+import {hm}                 from './HookManager';
 
 export interface ModuleConfig {
     config: StringMapAny;
@@ -17,12 +16,10 @@ export interface ModuleConfig {
  * Working child of the cluster with the http and https webserver
  */
 export class ChildWorker {
-
     /**
      * main express application
      */
     private app: express.Express;
-
     /**
      * Start an express application on a https server and configure mongoose and aws
      */
@@ -47,17 +44,14 @@ export class ChildWorker {
         // load external modules and provide config and hooks to them
         modules.forEach((plugin: ModuleConfig) => {
             tmp = require(plugin.module).instance;
-            tmpInst = new tmp(plugin.config, hook);
+            tmpInst = new tmp(plugin.config, hm);
         });
-
-        // do connection
-        hook.doHooks('connectToDatabase', con);
         
         // setup routes
-        hook.addHook('addRoutes', 'FHIRrestRoutes', this.addRoutes);
+        hm.addHook('routes.add', 'FHIRrestRoutes', this.addRoutes);
 
         // do routes
-        hook.doHooks('addRoutes', this.app);
+        hm.doHooks('routes.add', this.app);
 
         // start http server
         this.app.listen(process.env.PORT);
