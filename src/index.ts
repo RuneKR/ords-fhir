@@ -1,23 +1,13 @@
 import * as cluster                 from 'cluster';
 import * as os                      from 'os';
-import {ChildWorker, ModuleConfig}  from './lib/ChildWorker';
+import {ChildWorker}                from './lib/ChildWorker';
+import {ModuleConfig, Config}       from './lib/Interfaces';
 
 /*
 * Map with number as key and value as a cluster.Worker
 */
 export interface WorkerByProcessid {
     [key: number]: cluster.Worker;
-}
-
-/**
- * Configuration element of ords-fhir
- */
-export interface Config {
-    [key: string]: any;
-    LIMIT_UPLOAD_MB: number;
-    PORT: number;
-    WHITELIST: Array<string>;
-    modules: Array<ModuleConfig>;
 }
 
 /**
@@ -36,7 +26,7 @@ export class Server {
      */
     public child: ChildWorker;
     /**
-     * Creates a new worker on every cpu and attach env variables to them
+     * Generate a new Worker on each cpu and attach elements from the config variables to them as enviroment variables
      * @param {StringMapAny}    config      configuration for ords-fhir
      */
     constructor(config: Config) {
@@ -76,7 +66,7 @@ export class Server {
             }
 
             // bind exit function
-            cluster.on('exit', (worker: cluster.Worker, code: number, signal: string) => this.rebootWorker(worker, code, signal));
+            cluster.on('exit', (worker: cluster.Worker) => this.rebootWorker(worker));
 
             // none master but slave worker
         } else {
@@ -88,11 +78,9 @@ export class Server {
     /**
      * Rebooting worker and delete the old worker from list
      * @param {cluster.Worker}  worker  worker that is being terminated
-     * @param {number}          code    code for termination
-     * @param {string}          signal  descriptor of termination
      * @returns void            no feedback is provided
      */
-    public rebootWorker(worker: cluster.Worker, code: number, signal: string): void {
+    public rebootWorker(worker: cluster.Worker): void {
 
         // remove from active worker pool
         delete this.activeWorkers[worker.process.pid];
@@ -104,3 +92,11 @@ export class Server {
         this.activeWorkers[child.process.pid] = child;
     }
 }
+
+// this is just for testing
+let sinstance: Server = new Server({
+    LIMIT_UPLOAD_MB: 1,
+    modules: [],
+    PORT: 8000,
+    WHITELIST: [],
+});

@@ -5,10 +5,10 @@
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "dependencies": {
-    "ts-objectschema": "^0.1.1",
     "body-parser": "^1.14.2",
     "cors": "^2.7.1",
-    "express": "^4.13.4"
+    "express": "^4.13.4",
+    "ts-objectschema": "^0.1.1"
   },
   "devDependencies": {
     "jasmine-core": "2.4.1"

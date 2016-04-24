@@ -13,14 +13,12 @@ export class HookManager {
      * Container of all hooks related to their commands
      * @type {StringMapFunction}
      */
-    public hooks: StringMapFunction;
+    public hooks: StringMapFunction = {};
     /**
-     * Creates a new empty container for commands and their hooks
+     * Creates a new instance of HookManager
      */
     constructor() {
-
-        // initiating empty object for hooks
-        this.hooks = {};
+        // dont do anything
     }
     /**
      * Add a named hook to a speicific command or create a new command and add the hook to that command
@@ -40,7 +38,7 @@ export class HookManager {
         this.hooks[command][name] = hook;
     }
     /**
-     * Execute hooks synchronously for a specfic command and apply one or more arguments to the hooks
+     * Execute hooks asynchronously for a specfic command and apply one or more arguments to the hooks
      * @param   {string}      command   command for which hooks is executed
      * @param   {...any}      args      arguments to be used in the hooks 
      * @returns {void}        no feedback is provided  
@@ -53,10 +51,26 @@ export class HookManager {
             throw new Error('Command does not exsists');
         }
 
-        // do all hook while providing them with args
-        Object.keys(this.hooks[command]).forEach((hookKey: string) => {
-            this.hooks[command][hookKey].apply(undefined, args);
-        });
+        // calculate functions to run
+        let funcsToRun: Array<string> = Object.keys(this.hooks[command]);
+
+        // keep ref to self
+        let self: any = this;
+
+        // the next funciton
+        let next: any = function (...innerArgs: Array<any>): void {
+
+            // check if any functions are left to run
+            if (funcsToRun.length === 0) {
+                return;
+            }
+
+            innerArgs.unshift(next);
+            let funcName: string = funcsToRun.shift();
+            self.hooks[command][funcName].apply(undefined, innerArgs);
+        };
+
+        next.apply(undefined, args);
     }
     /**
      * Remove a hook by a given name from a command
@@ -71,7 +85,7 @@ export class HookManager {
         if (this.hooks[command] === undefined) {
             throw new Error('Command does not exsists');
         }
-        
+
         // delete hook
         delete this.hooks[command][name];
     }

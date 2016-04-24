@@ -12,3 +12,4 @@
 /// <reference path="multer/multer.d.ts" />
 /// <reference path="node/node.d.ts" />
 /// <reference path="serve-static/serve-static.d.ts" />
+/// <reference path="async/async.d.ts" />
