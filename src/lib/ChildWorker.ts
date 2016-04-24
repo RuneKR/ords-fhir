@@ -9,23 +9,25 @@ import {hm}                   from './HookManager';
 
 /**
  * Working child of the cluster
+ * @class ChildWorker
  */
 export class ChildWorker {
     /**
-     * main express application
+     * Main router
      */
     private router: express.Express = express();
     /**
      * Startup all tasks for the worker 
+     * @param   {Array<ModuleConfig>}       modules   modules and be instanceiated and their config
      */
     constructor(modules: Array<ModuleConfig>) {
 
         // do loading of modules
         this.loadModules(modules);
-        
+
         // setup route hooks
-        hm.addHook('routes.configure', 'filterRequest', this.filterRequest);
-        hm.addHook('routes.configure', 'addFhirRoutes', this.addFhirRoutes);
+        hm.addHook('routes.configure', 'filterRequest', this.SetUpRawRequestFiltering.bind(this));
+        hm.addHook('routes.configure', 'addFhirRoutes', this.addFhirRoutes.bind(this));
 
         // do hooks for routing
         hm.doHooks('routes.configure', this.router);
@@ -33,23 +35,14 @@ export class ChildWorker {
         // start http server
         this.router.listen(process.env.PORT);
     }
-    private filterRequest(next: Function, router: express.Express): void {
-        
-        // setup cors
-        router.use(cors({
-            allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin', 'Authentication'],
-            credentials: true,
-            origin: function (origin: string, callback: Function): void {
-                callback(undefined, process.env.WHITELIST.indexOf(origin) !== -1);
-            }
-        }));
-        
-        // go next
-        next(router);
-    }
+    /**
+     * Load all installed modules and supply the HookManager singleton and their config to them
+     * @param   {Array<ModuleConfig>}       modules   modules and be instanceiated and their config
+     * @returns {void}                      no feedback is provided  
+     */
     private loadModules(modules: Array<ModuleConfig>): void {
-        
-         // external modules temp holder for loading them
+
+        // external modules temp holder for loading them
         let tmp: any;
         let tmpInst: any;
 
@@ -58,14 +51,38 @@ export class ChildWorker {
             tmp = require(plugin.module).instance;
             tmpInst = new tmp(plugin.config, hm);
         });
-
     }
-    private addFhirRoutes(next: Function, router: express.Express): void {
-        
+    /**
+     * Setup raw filtering of incomming requests based on allwed origins and request headers
+     * @param   {Function}       next   next function in hook routes.configure
+     * @returns {void}                  no feedback is provided
+     */
+    private SetUpRawRequestFiltering(next: Function): void {
+
+        // setup cors
+        this.router.use(cors({
+            allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin', 'Authentication'],
+            credentials: true,
+            origin: function (origin: string, callback: Function): void {
+                callback(undefined, process.env.WHITELIST.indexOf(origin) !== -1);
+            }
+        }));
+
+        // go next
+        next(this.router);
+    }
+    /**
+     * Adds FHIR routes to the router
+     * @param   {Function}       next   next function in hook routes.configure
+     * @returns {void}                  no feedback is provided
+     */
+    private addFhirRoutes(next: Function): void {
+
         // setup routs
-        router.use('/api/', new TypeRoute().route);
-        router.use('/api/', new InstanceRoute().route);
-        
-        next(router);
+        this.router.use('/api/', new TypeRoute().route);
+        this.router.use('/api/', new InstanceRoute().route);
+
+        // go next
+        next(this.router);
     }
 }
