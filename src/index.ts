@@ -1,7 +1,17 @@
 import * as cluster                 from 'cluster';
 import * as os                      from 'os';
-import {ChildWorker}                from './lib/ChildWorker';
-import {ModuleConfig, Config}       from './lib/Interfaces';
+import {ChildWorker, ModuleConfig}  from './lib/ChildWorker';
+
+/**
+ * Configuration element of ords-fhir
+ */
+export interface Configuration {
+    [key: string]: any;
+    LIMIT_UPLOAD_MB: number;
+    PORT: number;
+    WHITELIST: Array<string>;
+    modules: Array<ModuleConfig>;
+}
 
 /*
 * Map with number as key and value as a cluster.Worker
@@ -29,7 +39,7 @@ export class Server {
      * Generate a new Worker on each cpu and attach elements from the config variables to them as enviroment variables
      * @param {StringMapAny}    config      configuration for ords-fhir
      */
-    constructor(config: Config) {
+    constructor(config: Configuration) {
 
         // number of CPU on the system
         let numCPUs: number = os.cpus().length;

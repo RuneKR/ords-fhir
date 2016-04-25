@@ -4,8 +4,17 @@ import * as express           from 'express';
 import * as cors              from 'cors';
 import {TypeRoute}            from '../routes/TypeRoute';
 import {InstanceRoute}        from '../routes/InstanceRoute';
-import {ModuleConfig}         from './Interfaces';
+import {StringMapAny}         from './Interfaces';
 import {hm}                   from './HookManager';
+
+/**
+ * Configuration for every module
+ */
+export interface ModuleConfig {
+    config: StringMapAny;
+    module: string;
+}
+
 
 /**
  * Working child of the cluster
