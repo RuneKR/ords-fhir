@@ -104,9 +104,9 @@ export class Server {
 }
 
 // this is just for testing
-let sinstance: Server = new Server({
+let demo: Server = new Server({
     LIMIT_UPLOAD_MB: 1,
-    modules: [],
     PORT: 8000,
     WHITELIST: [],
+    modules: [],
 });
