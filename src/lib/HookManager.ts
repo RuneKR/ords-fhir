@@ -51,8 +51,8 @@ export class HookManager {
             throw new Error('Command does not exsists');
         }
 
-        // calculate functions to run
-        let funcsToRun: Array<string> = Object.keys(this.hooks[command]);
+        // calculate functions to run and sort them by alpha
+        let funcsToRun: Array<string> = Object.keys(this.hooks[command]).sort();
 
         // keep ref to self
         let self: any = this;
