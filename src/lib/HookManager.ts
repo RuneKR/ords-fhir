@@ -38,7 +38,7 @@ export class HookManager {
         this.hooks[command][name] = hook;
     }
     /**
-     * Execute hooks asynchronously for a specfic command and apply one or more arguments to the hooks
+     * Execute hooks for a specfic command and apply one or more arguments to the hooks
      * @param   {string}      command   command for which hooks is executed
      * @param   {...any}      args      arguments to be used in the hooks 
      * @returns {void}        no feedback is provided  
