@@ -2,7 +2,7 @@
 
 import {ObjectID} from 'mongodb';
 import {Router, Request, Response} from 'express';
-import {con} from '../lib/Connection';
+import {dbm} from '../lib/DBManager';
 import {requestparser} from '../lib/Requestparser';
 
 export class InstanceRoute {
@@ -31,7 +31,7 @@ export class InstanceRoute {
     public read(req: Request, res: Response): void {
 
         // read from connection
-        con.read(
+        dbm.read(
             req.params.model, 
             {   id: { $eq: new ObjectID(req.params.id) } }, 
             1, 
@@ -78,7 +78,7 @@ export class InstanceRoute {
     public vread(req: Request, res: Response): void {
 
         // read from connection
-        con.read(
+        dbm.read(
             req.params.model, 
             { id: { $eq: new ObjectID(req.params.id) },
             'meta.versionId': { $eq: req.params.vid } }, 
@@ -126,7 +126,7 @@ export class InstanceRoute {
     public update(req: Request, res: Response): void {
         
         // do update
-        con.update(
+        dbm.update(
             req.params.model, 
             {   id: { $eq: new ObjectID(req.params.id) }    }, 
             req.body, 
@@ -178,7 +178,7 @@ export class InstanceRoute {
     public delete(req: Request, res: Response): void {
         
         // do update
-        con.delete(
+        dbm.delete(
             req.params.model, 
             { id: { $eq: new ObjectID(req.params.id) }}, 
             (err: Error, doc: any) => {

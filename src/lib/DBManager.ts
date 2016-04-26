@@ -20,7 +20,7 @@ export interface DbCon {
 /**
  * Base for the connection to any database
  */
-export class ConnectionBase {
+export class DBManager {
     /**
      * Conected database
      * @type {DbCon}
@@ -190,4 +190,4 @@ export class ConnectionBase {
 /**
  * Singleton of ConnectionBase
  */
-export const con: ConnectionBase = new ConnectionBase();
+export const dbm: DBManager = new DBManager();

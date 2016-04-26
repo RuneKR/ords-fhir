@@ -1,6 +1,6 @@
 import {PopulationLevel} from 'ts-objectschema';
 import {Router} from 'express';
-import {con} from './Connection';
+import {dbm} from './DBManager';
 import * as parser from 'body-parser';
 
 /**
@@ -40,7 +40,7 @@ export class Requestparser {
         let model: any;
 
         try {
-            model = new con.models[modelname]({}, PopulationLevel.none);
+            model = new dbm.models[modelname]({}, PopulationLevel.none);
         } catch (e) {
             throw new Error('Model do not exsists and therefor cannot be searched');
         }
