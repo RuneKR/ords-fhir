@@ -3,7 +3,7 @@ import {dbm, DBManager}       from './DBManager';
 import * as express           from 'express';
 
 /**
- * Manage injections
+ * Manage injections for external modules
  * @class DenpendenyInjector
  */
 export class DenpendenyInjector {

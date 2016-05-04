@@ -27,7 +27,7 @@ export class Patient extends DomainResource {
         search: true,
         type: Address
     };
-    public constructor(data: {[key: string]: any}, validate: PopulationLevel) {
+    public constructor(data: { [key: string]: any }, validate: PopulationLevel) {
 
         // do validation command
         super();

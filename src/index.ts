@@ -1,6 +1,12 @@
 import * as cluster                 from 'cluster';
 import * as os                      from 'os';
 import {ChildWorker, ModuleConfig}  from './lib/ChildWorker';
+import * as models                  from './resources/ResourceList';
+
+/**
+ * All avalable models that are also called resources by FHIR
+ */
+export const resources: any = models;
 
 /**
  * Configuration element of ords-fhir
@@ -12,6 +18,7 @@ export interface Configuration {
         whitelist: Array<string>;
     };
     modules: Array<ModuleConfig>;
+    resources: Array<any>;
 }
 
 /*
@@ -111,4 +118,5 @@ export const demo: Server = new Server({
         whitelist: []
     },
     modules: [],
+    resources: []
 });

@@ -1,7 +1,6 @@
 /// <reference path='../../typings/tsd.d.ts' />
 
 import {MongoCallback}      from 'mongodb';
-import * as fs              from 'fs';
 import {PopulationLevel}    from 'ts-objectschema';
 import {StringMapAny}       from './Interfaces';
 
@@ -14,36 +13,12 @@ export class DBManager {
      * @type {StringMapAny}
      */
     public models: StringMapAny;
+    /**
+     * load all resources that are models
+     */
+    constructor() {
 
-    constructor(){
-        
-        // holder for meta data
-        let meta: Array<string>;
-        let name: string;
-
-        // read all models
-        fs.readdir('build/resources/models', (err: Error, files: Array<string>) => {
-
-            // debug cant find folders
-            if (err) {
-                throw err;
-            }
-
-            // foreach found file
-            files.forEach((file: string) => {
-                meta = file.split('.');
-
-                name = meta[0];
-
-                // keep javascript models
-                if (meta[1] === 'js') {
-                    // ensure index
-                    
-                    // save model
-                    this.models[name] = require('../resources/models/' + name)[name];
-                }
-            });
-        });
+       
     }
 
     /**
