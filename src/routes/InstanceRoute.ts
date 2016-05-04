@@ -12,7 +12,7 @@ export class InstanceRoute {
     constructor() {
         
         // parse info
-        requestparser.bodyParser(this.route);
+        requestparser.setupBodyParser(this.route, ['put', 'post']);
 
         // bind model to router
         this.route.get('/:model/:id([0-9a-f]{24})', this.read);

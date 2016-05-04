@@ -1,5 +1,3 @@
-/// <reference path='../../typings/tsd.d.ts' />
-
 import * as express           from 'express';
 import * as cors              from 'cors';
 import {TypeRoute}            from '../routes/TypeRoute';
@@ -83,7 +81,7 @@ export class ChildWorker {
      * @param   {express.Express}   router  routing for the server
      * @returns {void}              no feedback is provided
      */
-    private SetUpRawRequestFiltering(next: Function, router: express.Express): void {
+    private SetUpRawRequestFiltering(next: Function, router: express.Router): void {
 
         // setup cors
         router.use(cors({
@@ -103,7 +101,7 @@ export class ChildWorker {
      * @param   {express.Express}   router  routing for the server
      * @returns {void}              no feedback is provided
      */
-    private addFhirRoutes(next: Function, router: express.Express): void {
+    private addFhirRoutes(next: Function, router: express.Router): void {
 
         // setup routs
         router.use('/api/', new TypeRoute().route);

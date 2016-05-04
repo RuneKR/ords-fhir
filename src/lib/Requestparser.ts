@@ -4,13 +4,46 @@ import {dbm} from './DBManager';
 import * as parser from 'body-parser';
 
 /**
- * Parse incomming JSON syntax requests into a MongoDB query form
+ * Prefixes that a query can contain
+ */
+let queryValuePrefix: Array<string> = ['eq', 'ne', 'gt', 'lt', 'ge', 'le', 'sa', 'eb', 'ap'];
+
+/**
+ * String router based on express used for TypeScript index validation
+ */
+export interface StringRouter extends Router {
+    [key: string]: any;
+}
+
+/**
+ * Toolbock for handling incomming requests
+ * @class Requestparser
  */
 export class Requestparser {
     /**
-     * Prefixes that a query can contain
+     * Setup a body parser to parse requestbodies to req.body for a router
+     * @param   {Router}        router      router to attach the body parser to
+     * @param   {Array<string>} methods     methods on router to attach the body parser to
+     * @returns {void}          no feedback is provided back
      */
-    private queryValuePrefix: Array<string> = ['eq', 'ne', 'gt', 'lt', 'ge', 'le', 'sa', 'eb', 'ap'];
+    public setupBodyParser(router: StringRouter, methods: Array<string>): void {
+
+        // attach parser to every method
+        for (let method of methods) {
+
+            // parse application/x-www-form-urlencoded
+            router[method]('*', parser.urlencoded({
+                extended: false,
+                limit: process.env.LIMIT_UPLOAD_MB + 'mb'
+            }));
+
+            // parse application/json
+            router[method]('*', parser.json({
+                limit: process.env.LIMIT_UPLOAD_MB + 'mb'
+            }));
+
+        }
+    }
     /**
      * Query params received from express based on FHIR
      * @param params
@@ -54,7 +87,7 @@ export class Requestparser {
             comparator = '$eq';
 
             // check if any prefix is set in query and integers are passed after the prefix
-            if (this.queryValuePrefix.indexOf(value.substr(0, 2)) !== 1
+            if (queryValuePrefix.indexOf(value.substr(0, 2)) !== 1
                 && !!parseInt(value.substr(2, 1), 10)) {    // 10 is chosen could be others
 
                 // set mongodb $ and prefix as key and read the value after prefix
@@ -78,33 +111,6 @@ export class Requestparser {
         return query;
     }
 
-    /**
-     * Parse body input from request to req.body
-     * @param {Router}     router      instance of express routing object
-     * @returns {void}     no feedback is provided back
-     */
-    public bodyParser(router: Router): void {
-
-        // parse application/x-www-form-urlencoded
-        router.post('*', parser.urlencoded({
-            extended: false,
-            limit: process.env.LIMIT_UPLOAD_MB + 'mb'
-        }));
-
-        router.put('*', parser.urlencoded({
-            extended: false,
-            limit: process.env.LIMIT_UPLOAD_MB + 'mb'
-        }));
-
-        // parse application/json
-        router.post('*', parser.json({
-            limit: process.env.LIMIT_UPLOAD_MB + 'mb'
-        }));
-
-        router.put('*', parser.json({
-            limit: process.env.LIMIT_UPLOAD_MB + 'mb'
-        }));
-    }
     private deepLoopQuery(model: { [key: string]: any }, keys: Array<string>, wasArray?: boolean): any {
 
         let key: string = keys.shift();

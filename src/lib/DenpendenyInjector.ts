@@ -26,6 +26,7 @@ export class DenpendenyInjector {
     public requestparser: Requestparser = requestparser;  
     /**
      * Main express router
+     * @type {Router}
      */
     public router: express.Express = express();
     /**
