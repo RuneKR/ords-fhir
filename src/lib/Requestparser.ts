@@ -1,22 +1,10 @@
-import {enforce}                                 from 'ts-objectschema';
-import {Router, Request, Response, NextFunction} from 'express';
-import {dbm}                                     from './DBManager';
-import * as parser                               from 'body-parser';
+import {enforce}                         from 'ts-objectschema';
+import {Request, Response, NextFunction} from 'express';
+import {dbm}                             from './DBManager';
+import * as parser                       from 'body-parser';
 
 /**
- * Prefixes that a query can contain
- */
-let queryValuePrefix: Array<string> = ['eq', 'ne', 'gt', 'lt', 'ge', 'le', 'sa', 'eb', 'ap'];
-
-/**
- * String router based on express used for TypeScript index validation
- */
-export interface StringRouter extends Router {
-    [key: string]: any;
-}
-
-/**
- * Toolbock for handling incomming requests
+ * Toolbox for handling incomming requests
  * @class Requestparser
  */
 export class Requestparser {
@@ -42,8 +30,8 @@ export class Requestparser {
         });
     }
     /**
-     * Query params received from express based on FHIR
-     * @param params
+     * Generate MongoDB query based on a FHIR query
+     * @param {string}     modelname        name of the model that is to be searched
      * @returns new query
      */
     public parseQuery(modelname: string, params: { [key: string]: any }): Object {
@@ -68,6 +56,11 @@ export class Requestparser {
 
         // the model instance
         let model: any;
+        
+        /**
+         * Prefixes that a query can contain
+         */
+        let queryValuePrefix: Array<string> = ['eq', 'ne', 'gt', 'lt', 'ge', 'le', 'sa', 'eb', 'ap'];
 
         try {
             model = new dbm.models[modelname]({}, enforce.skip);
@@ -145,4 +138,7 @@ export class Requestparser {
     }
 }
 
+/**
+ * Singleton of the request parser
+ */
 export const requestparser: Requestparser = new Requestparser();
