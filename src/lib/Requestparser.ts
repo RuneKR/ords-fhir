@@ -1,7 +1,7 @@
-import {PopulationLevel} from 'ts-objectschema';
-import {Router} from 'express';
-import {dbm} from './DBManager';
-import * as parser from 'body-parser';
+import {enforce}                                 from 'ts-objectschema';
+import {Router, Request, Response, NextFunction} from 'express';
+import {dbm}                                     from './DBManager';
+import * as parser                               from 'body-parser';
 
 /**
  * Prefixes that a query can contain
@@ -27,7 +27,7 @@ export class Requestparser {
      * @param   {Function}  next   next function to be run during the request
      * @returns {void}          no feedback is provided back
      */
-    public parseBody(req: Express.Request, res: Express.Response, next: Function): void {
+    public parseBody(req: Request, res: Response, next: NextFunction): void {
 
         // parse application/x-www-form-urlencoded
         parser.urlencoded({
@@ -70,7 +70,7 @@ export class Requestparser {
         let model: any;
 
         try {
-            model = new dbm.models[modelname]({}, PopulationLevel.none);
+            model = new dbm.models[modelname]({}, enforce.skip);
         } catch (e) {
             throw new Error('Model do not exsists and therefor cannot be searched');
         }
@@ -96,7 +96,7 @@ export class Requestparser {
             type = this.deepLoopQuery(model, keys);
 
             // update value based on type 
-            value = model.getValueFromClass(type, value, PopulationLevel.search);
+            value = model.getValueFromClass(type, value, enforce.skip);
 
             // prepare query
             temp = {};
@@ -130,9 +130,9 @@ export class Requestparser {
 
             // set new model
             if (Array.isArray(model[key].type)) {
-                model = new model[key].type[0]({}, PopulationLevel.none);
+                model = new model[key].type[0]({}, enforce.skip);
             } else {
-                model = new model[key].type({}, PopulationLevel.none);
+                model = new model[key].type({}, enforce.skip);
             }
 
             // if this type is an array note in next loop

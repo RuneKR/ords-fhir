@@ -1,9 +1,7 @@
-/// <reference path='../../typings/tsd.d.ts' />
-
 import {MongoCallback}      from 'mongodb';
 import {PopulationLevel}    from 'ts-objectschema';
-import {StringMapAny}       from './Interfaces';
 import * as models          from '../resources/ResourceList';
+import {hm}                 from './HookManager';
 
 /**
  * Base for the connection to any database
@@ -11,9 +9,9 @@ import * as models          from '../resources/ResourceList';
 export class DBManager {
     /**
      * Container of models by their name
-     * @type {StringMapAny}
+     * @type {{[key: string]: any}}
      */
-    public models: StringMapAny = models;
+    public models: { [key: string]: any } = models;
     /**
      * (description)
      * @param {string} model (description)
@@ -30,7 +28,7 @@ export class DBManager {
         }
 
         // return action
-        this.db.read(model, query, limit, cb);
+        hm.doHooks('dbm.read', model, query, limit, cb);
 
     }
     /**
@@ -48,7 +46,7 @@ export class DBManager {
         }
 
         // return action
-        this.db.vread(model, version, cb);
+        hm.doHooks('dbm.readversion', model, version, cb);
 
     }
     /**
@@ -83,7 +81,7 @@ export class DBManager {
         }
 
         // do action
-        this.db.update(model, query, dbUpdate, cb, dbCreate);
+        hm.doHooks('dbm.update', model, query, dbUpdate, cb, dbCreate);
 
     }
     /**
@@ -105,7 +103,7 @@ export class DBManager {
         let dbUpdate: any = new this.models[model](create, PopulationLevel.required);
 
         // do action
-        this.db.create(model, query, dbUpdate, cb);
+        hm.doHooks('dbm.create', model, query, dbUpdate, cb);
     }
     /**
      * (description)
@@ -122,7 +120,7 @@ export class DBManager {
         }
 
         // return action
-        this.db.delete(model, query, cb);
+        hm.doHooks('dbm.delete', model, query, cb);
     }
 }
 

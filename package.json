@@ -8,7 +8,7 @@
     "body-parser": "^1.14.2",
     "cors": "^2.7.1",
     "express": "^4.13.4",
-    "ts-objectschema": "^0.1.1"
+    "ts-objectschema": "^0.3.0"
   },
   "devDependencies": {
     "jasmine-core": "2.4.1"
