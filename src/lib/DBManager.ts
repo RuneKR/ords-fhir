@@ -17,8 +17,6 @@ export class DBManager {
 
     constructor(){
         
-    }
-    public init(): void {
         // holder for meta data
         let meta: Array<string>;
         let name: string;
