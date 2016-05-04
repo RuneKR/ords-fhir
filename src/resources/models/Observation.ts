@@ -1,6 +1,6 @@
 import {DomainResource} from '../DomainResource';
 import {CodeableConcept} from '../dataTypes/CodeableConcept';
-import {ElementDefinition, PopulationLevel} from 'ts-objectschema';
+import {ElementDefinition, enforce} from 'ts-objectschema';
 import {Identifier} from '../dataTypes/Identifier';
 
 export class Observation extends DomainResource {
@@ -22,7 +22,7 @@ export class Observation extends DomainResource {
         search: false,
         type: CodeableConcept
     };
-    public constructor(data: { [key: string]: any }, validate: PopulationLevel) {
+    public constructor(data: { [key: string]: any }, validate: enforce) {
 
         // do validation command
         super();

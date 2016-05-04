@@ -39,7 +39,7 @@ export class ChildWorker {
         this.loadModules(modules);
 
         // do hooks for routing
-        hm.doHooks('routes.configure', DI.dbm.models);
+        hm.doHooks('routes.configure', DI.router);
 
         // start http server
         DI.router.listen(process.env.PORT);
@@ -48,6 +48,7 @@ export class ChildWorker {
      * Load all installed modules and supply the HookManager singleton and their config to them
      * @param   {Array<ModuleConfig>}       modules   modules and be instanceiated and their config
      * @returns {void}                      no feedback is provided  
+     * @throws  Error is thrown if multiple modules have the same name
      */
     private loadModules(modules: Array<ModuleConfig>): void {
 
@@ -70,6 +71,11 @@ export class ChildWorker {
 
             // create tmp scope
             scope = Object.create(plugin.prototype);
+
+            // check if DI includes a module instance allready
+            if (DI[entry.module.name] !== undefined) {
+                throw new Error('Module allready exsits by name ' + entry.module.name);
+            }
 
             // create new instance of the dependency and keep reference to it
             DI[entry.module.name] = plugin.apply(scope, dependencies);

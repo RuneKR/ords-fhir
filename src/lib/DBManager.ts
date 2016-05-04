@@ -1,5 +1,5 @@
 import {MongoCallback}      from 'mongodb';
-import {PopulationLevel}    from 'ts-objectschema';
+import {enforce}            from 'ts-objectschema';
 import * as models          from '../resources/ResourceList';
 import {hm}                 from './HookManager';
 
@@ -70,12 +70,12 @@ export class DBManager {
         }
 
         // do multiple validation one to check if we are doing an update and one to check if we are doing an create
-        let dbUpdate: any = new this.models[model](update, PopulationLevel.all);
+        let dbUpdate: any = new this.models[model](update, enforce.exists);
         let dbCreate: Object;
 
         // try to see if required could be done
         try {
-            dbCreate = new this.models[model](update, PopulationLevel.required);
+            dbCreate = new this.models[model](update, enforce.required);
         } catch (e) {
             dbCreate = undefined;
         }
@@ -100,7 +100,7 @@ export class DBManager {
         }
 
         // do multiple validation one to check if we are doing an update and one to check if we are doing an create
-        let dbUpdate: any = new this.models[model](create, PopulationLevel.required);
+        let dbUpdate: any = new this.models[model](create, enforce.required);
 
         // do action
         hm.doHooks('dbm.create', model, query, dbUpdate, cb);

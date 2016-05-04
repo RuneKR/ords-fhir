@@ -18,12 +18,12 @@ export class DenpendenyInjector {
      * DBManager singleton
      * @type {DBManager}
      */
-    public dbm: DBManager = dbm;  
+    public dbm: DBManager = dbm;
     /**
      * Requestparser singleton
      * @type {DBManager}
      */
-    public requestparser: Requestparser = requestparser;  
+    public requestparser: Requestparser = requestparser;
     /**
      * Main express router
      * @type {Router}
@@ -51,7 +51,7 @@ export class DenpendenyInjector {
             // save ref to dependency
             resolve.push(this[entry]);
         }
-        
+
         // return results
         return resolve;
     }
