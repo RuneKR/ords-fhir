@@ -3,6 +3,7 @@
 import {MongoCallback}      from 'mongodb';
 import {PopulationLevel}    from 'ts-objectschema';
 import {StringMapAny}       from './Interfaces';
+import * as models          from '../resources/ResourceList';
 
 /**
  * Base for the connection to any database
@@ -12,15 +13,7 @@ export class DBManager {
      * Container of models by their name
      * @type {StringMapAny}
      */
-    public models: StringMapAny;
-    /**
-     * load all resources that are models
-     */
-    constructor() {
-
-       
-    }
-
+    public models: StringMapAny = models;
     /**
      * (description)
      * @param {string} model (description)

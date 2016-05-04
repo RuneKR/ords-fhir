@@ -29,17 +29,20 @@ export class ChildWorker {
      * Startup all tasks for the worker 
      * @param   {Array<ModuleConfig>}       modules   modules and be instanceiated and their config
      */
-    constructor(modules: Array<ModuleConfig>) {
+    constructor(modules: Array<ModuleConfig>, resources: Array<any>) {
 
         // setup route hooks
         hm.addHook('routes.configure', 'filterRequest', this.SetUpRawRequestFiltering.bind(this));
         hm.addHook('routes.configure', 'addFhirRoutes', this.addFhirRoutes.bind(this));
 
+        // remove not needed resources
+        this.updateResources(resources);
+
         // do loading of modules
         this.loadModules(modules);
 
         // do hooks for routing
-        hm.doHooks('routes.configure', DI.router);
+        hm.doHooks('routes.configure', DI.dbm.models);
 
         // start http server
         DI.router.listen(process.env.PORT);
@@ -97,9 +100,9 @@ export class ChildWorker {
     }
     /**
      * Adds FHIR routes to the router
-     * @param   {Function}       next   next function in hook routes.configure
+     * @param   {Function}          next   next function in hook routes.configure
      * @param   {express.Express}   router  routing for the server
-     * @returns {void}                  no feedback is provided
+     * @returns {void}              no feedback is provided
      */
     private addFhirRoutes(next: Function, router: express.Express): void {
 
@@ -109,5 +112,33 @@ export class ChildWorker {
 
         // go next
         next(router);
+    }
+    /**
+     * Update the avalable resources in dbm based on the supplied filter
+     * @param   {Array<any}      filter     array of new resources to be used
+     * @returns {void}           no feedback is provided
+     */
+    private updateResources(filter: Array<any>): void {
+
+        // get functionname based on a function
+        let functionName: Function = function (fun: Function): string {
+
+            let ret: string = fun.toString();
+            ret = ret.substr('function '.length);
+            ret = ret.substr(0, ret.indexOf('('));
+            return ret;
+        };
+
+        // ref to new avalable resources
+        let newModelMap: StringMapAny = {};
+
+        for (let model of filter) {
+            newModelMap[functionName(model)] = model;
+        }
+
+        // only update reference if anything is applied in filter
+        if (filter.length !== 0) {
+            DI.dbm.models = newModelMap;
+        }
     }
 }

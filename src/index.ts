@@ -2,11 +2,12 @@ import * as cluster                 from 'cluster';
 import * as os                      from 'os';
 import {ChildWorker, ModuleConfig}  from './lib/ChildWorker';
 import * as models                  from './resources/ResourceList';
+import {StringMapAny}               from './lib/Interfaces';
 
 /**
  * All avalable models that are also called resources by FHIR
  */
-export const resources: any = models;
+export const resources: StringMapAny = models;
 
 /**
  * Configuration element of ords-fhir
@@ -55,9 +56,6 @@ export class Server {
         // iterator key
         let i: number = 0;
 
-        // see for modules
-        let modules: Array<ModuleConfig> = config.modules;
-
         // set process variables from configuration
         process.env.LIMIT_UPLOAD_MB = config.config.limit_upload_mb;
         process.env.PORT = config.config.port;
@@ -89,7 +87,7 @@ export class Server {
         } else {
 
             // start child
-            this.child = new ChildWorker(modules);
+            this.child = new ChildWorker(config.modules, config.resources);
         }
     }
     /**
