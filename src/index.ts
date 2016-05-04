@@ -6,10 +6,11 @@ import {ChildWorker, ModuleConfig}  from './lib/ChildWorker';
  * Configuration element of ords-fhir
  */
 export interface Configuration {
-    [key: string]: any;
-    LIMIT_UPLOAD_MB: number;
-    PORT: number;
-    WHITELIST: Array<string>;
+    config: {
+        limit_upload_mb: number;
+        port: number;
+        whitelist: Array<string>;
+    };
     modules: Array<ModuleConfig>;
 }
 
@@ -48,13 +49,12 @@ export class Server {
         let i: number = 0;
 
         // see for modules
-        let modules: Array<ModuleConfig> = config['modules'];
-        delete config['modules'];
+        let modules: Array<ModuleConfig> = config.modules;
 
         // set process variables from configuration
-        Object.keys(config).forEach((key: string) => {
-            process.env[key] = config[key];
-        });
+        process.env.LIMIT_UPLOAD_MB = config.config.limit_upload_mb;
+        process.env.PORT = config.config.port;
+        process.env.WHITELIST = config.config.whitelist;
 
         // check if worker forked by the cluster is a master
         if (cluster.isMaster) {
@@ -104,9 +104,11 @@ export class Server {
 }
 
 // this is just for testing
-let demo: Server = new Server({
-    LIMIT_UPLOAD_MB: 1,
-    PORT: 8000,
-    WHITELIST: [],
+export const demo: Server = new Server({
+    config: {
+        limit_upload_mb: 1,
+        port: 8000,
+        whitelist: []
+    },
     modules: [],
 });
