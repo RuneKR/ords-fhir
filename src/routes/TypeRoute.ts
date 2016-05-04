@@ -6,7 +6,14 @@ import {dbm} from '../lib/DBManager';
 import {requestparser} from '../lib/Requestparser';
 
 export class TypeRoute {
+    /**
+     * Express routing elemeent
+     * @type {Router}
+     */
     public route: Router;
+    /**
+     * Binding the routes their function
+     */
     constructor() {
 
         // setup router
@@ -14,15 +21,15 @@ export class TypeRoute {
 
         // bind model to router
         this.route.get('/:model/', this.search);
-        this.route.post('/:model/_search', this.search_body);
-        this.route.post('/:model/', this.create);
+        this.route.post('/:model/_search', requestparser.parseBody, this.search_body);
+        this.route.post('/:model/', requestparser.parseBody, this.create);
 
     }
     public search(req: Request, res: Response): Response {
 
         // read query or return error
         try {
-            req.query = requestparser.query(req.params.model, req.query);
+            req.query = requestparser.parseQuery(req.params.model, req.query);
         } catch (e) {
             return res.status(500).send(e.toString());
         }

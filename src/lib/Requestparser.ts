@@ -21,35 +21,32 @@ export interface StringRouter extends Router {
  */
 export class Requestparser {
     /**
-     * Setup a body parser to parse requestbodies to req.body for a router
-     * @param   {Router}        router      router to attach the body parser to
-     * @param   {Array<string>} methods     methods on router to attach the body parser to
+     * Parse the body of an request into the req.body
+     * @param   {Request}   req    the express request
+     * @param   {Response}  res    the express response object
+     * @param   {Function}  next   next function to be run during the request
      * @returns {void}          no feedback is provided back
      */
-    public setupBodyParser(router: StringRouter, methods: Array<string>): void {
+    public parseBody(req: Express.Request, res: Express.Response, next: Function): void {
 
-        // attach parser to every method
-        for (let method of methods) {
-
-            // parse application/x-www-form-urlencoded
-            router[method]('*', parser.urlencoded({
-                extended: false,
-                limit: process.env.LIMIT_UPLOAD_MB + 'mb'
-            }));
+        // parse application/x-www-form-urlencoded
+        parser.urlencoded({
+            extended: false,
+            limit: process.env.LIMIT_UPLOAD_MB + 'mb'
+        })(req, res, function (): void {
 
             // parse application/json
-            router[method]('*', parser.json({
+            parser.json({
                 limit: process.env.LIMIT_UPLOAD_MB + 'mb'
-            }));
-
-        }
+            })(req, res, next);
+        });
     }
     /**
      * Query params received from express based on FHIR
      * @param params
      * @returns new query
      */
-    public query(modelname: string, params: { [key: string]: any }): Object {
+    public parseQuery(modelname: string, params: { [key: string]: any }): Object {
 
         // holder for parsed query
         let query: { [key: string]: any } = {};

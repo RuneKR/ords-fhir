@@ -9,18 +9,17 @@ export class InstanceRoute {
      * @type {Router}
      */
     public route: Router = Router();
+    /**
+     * Binding the routes their function
+     */
     constructor() {
-        
-        // parse info
-        requestparser.setupBodyParser(this.route, ['put', 'post']);
 
         // bind model to router
         this.route.get('/:model/:id([0-9a-f]{24})', this.read);
         this.route.get('/:model/:id([0-9a-f]{24})/:vid', this.vread);
-        this.route.put('/:model/:id([0-9a-f]{24})', this.update);
+        this.route.put('/:model/:id([0-9a-f]{24})', requestparser.parseBody, this.update);
         this.route.delete('/:model/:id([0-9a-f]{24})', this.delete);
     }
-
     /**
      * Read a specific instance of an model
      * @param req
