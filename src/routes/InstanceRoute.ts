@@ -1,5 +1,3 @@
-/// <reference path='../../typings/tsd.d.ts' />
-
 import {ObjectID} from 'mongodb';
 import {Router, Request, Response} from 'express';
 import {dbm} from '../lib/DBManager';

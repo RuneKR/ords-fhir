@@ -2,12 +2,11 @@ import * as cluster                 from 'cluster';
 import * as os                      from 'os';
 import {ChildWorker, ModuleConfig}  from './lib/ChildWorker';
 import * as models                  from './resources/ResourceList';
-import {StringMapAny}               from './lib/Interfaces';
 
 /**
  * All avalable models that are also called resources by FHIR
  */
-export const resources: StringMapAny = models;
+export const resources: { [key: string]: any } = models;
 
 /**
  * Configuration element of ords-fhir

@@ -4,7 +4,6 @@ import * as express           from 'express';
 import * as cors              from 'cors';
 import {TypeRoute}            from '../routes/TypeRoute';
 import {InstanceRoute}        from '../routes/InstanceRoute';
-import {StringMapAny}         from './Interfaces';
 import {hm}                   from './HookManager';
 import {DI}                   from './DenpendenyInjector';
 
@@ -12,7 +11,7 @@ import {DI}                   from './DenpendenyInjector';
  * Configuration for every module
  */
 export interface ModuleConfig {
-    config: StringMapAny;
+    config: { [key: string]: any };
     module: {
         instance: any;
         name: string;
@@ -130,7 +129,7 @@ export class ChildWorker {
         };
 
         // ref to new avalable resources
-        let newModelMap: StringMapAny = {};
+        let newModelMap: { [key: string]: any } = {};
 
         for (let model of filter) {
             newModelMap[functionName(model)] = model;

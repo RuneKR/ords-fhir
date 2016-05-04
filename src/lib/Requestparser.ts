@@ -4,7 +4,7 @@ import {dbm} from './DBManager';
 import * as parser from 'body-parser';
 
 /**
- * Parse incomming requests into a MongoDB query form
+ * Parse incomming JSON syntax requests into a MongoDB query form
  */
 export class Requestparser {
     /**

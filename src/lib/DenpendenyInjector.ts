@@ -1,6 +1,7 @@
-import {hm, HookManager}      from './HookManager';
-import {dbm, DBManager}       from './DBManager';
-import * as express           from 'express';
+import {hm, HookManager}                 from './HookManager';
+import {dbm, DBManager}                  from './DBManager';
+import * as express                      from 'express';
+import {requestparser, Requestparser}    from './RequestParser';
 
 /**
  * Manage injections for external modules
@@ -9,15 +10,20 @@ import * as express           from 'express';
 export class DenpendenyInjector {
     [key: string]: any;             // hate this notation any better ideas?
     /**
-     * Instance of HookManager
+     * HookManager singleton
      * @type {HookManager}
      */
     public hm: HookManager = hm;
     /**
-     * Instance of DBManager
+     * DBManager singleton
      * @type {DBManager}
      */
     public dbm: DBManager = dbm;  
+    /**
+     * Requestparser singleton
+     * @type {DBManager}
+     */
+    public requestparser: Requestparser = requestparser;  
     /**
      * Main express router
      */

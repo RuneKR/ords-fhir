@@ -15,12 +15,6 @@ export class HookManager {
      */
     public hooks: StringMapFunction = {};
     /**
-     * Creates a new instance of HookManager
-     */
-    constructor() {
-        // dont do anything
-    }
-    /**
      * Add a named hook to a speicific command or create a new command and add the hook to that command
      * @param   {string}      command   command to be hooked into
      * @param   {string}      name      name of the hook being added
