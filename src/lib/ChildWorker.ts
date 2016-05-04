@@ -2,7 +2,6 @@ import * as express           from 'express';
 import * as cors              from 'cors';
 import {TypeRoute}            from '../routes/TypeRoute';
 import {InstanceRoute}        from '../routes/InstanceRoute';
-import {hm}                   from './HookManager';
 import {DI}                   from './DenpendenyInjector';
 
 /**
@@ -29,8 +28,8 @@ export class ChildWorker {
     constructor(modules: Array<ModuleConfig>, resources: Array<any>) {
 
         // setup route hooks
-        hm.addHook('routes.configure', 'filterRequest', this.SetUpRawRequestFiltering.bind(this));
-        hm.addHook('routes.configure', 'addFhirRoutes', this.addFhirRoutes.bind(this));
+        DI.hm.addHook('routes.configure', 'filterRequest', this.SetUpRawRequestFiltering.bind(this));
+        DI.hm.addHook('routes.configure', 'addFhirRoutes', this.addFhirRoutes.bind(this));
 
         // remove not needed resources
         this.updateResources(resources);
@@ -39,7 +38,7 @@ export class ChildWorker {
         this.loadModules(modules);
 
         // do hooks for routing
-        hm.doHooks('routes.configure', DI.router);
+        DI.hm.doHooks('routes.configure', DI.router);
 
         // start http server
         DI.router.listen(process.env.PORT);
