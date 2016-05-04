@@ -6,49 +6,22 @@ import {PopulationLevel}    from 'ts-objectschema';
 import {StringMapAny}       from './Interfaces';
 
 /**
- * Interface for a DbCon module in order to provide interoperability with the ConnectionBase
- */
-export interface DbCon {
-    read(model: string, query: Object, limit: number, cb: MongoCallback<any>): void;
-    vread(model: string, version: number, cb: MongoCallback<any>): void;
-    update(model: string, query: Object, dbUpdate: Object, cb: MongoCallback<any>, dbCreate: Object): void;
-    create(model: string, query: Object, dbUpdate: Object, cb: MongoCallback<any>): void;
-    delete(model: any, query: Object, cb: MongoCallback<any>): void;
-    createIndex(model: string, path: string): void;
-}
-
-/**
  * Base for the connection to any database
  */
 export class DBManager {
-    /**
-     * Conected database
-     * @type {DbCon}
-     */
-    public db: DbCon;
     /**
      * Container of models by their name
      * @type {StringMapAny}
      */
     public models: StringMapAny;
-    /**
-     * 
-     */
-    constructor() {
 
-        // init models
-        this.models = {};
+    constructor(){
+        
     }
-    /**
-     * init the connect to mongodb by supplying a open db socket
-     */
-    public init(db: any): void {
+    public init(): void {
         // holder for meta data
         let meta: Array<string>;
         let name: string;
-
-        // save the database
-        this.db = db;
 
         // read all models
         fs.readdir('build/resources/models', (err: Error, files: Array<string>) => {
@@ -67,7 +40,7 @@ export class DBManager {
                 // keep javascript models
                 if (meta[1] === 'js') {
                     // ensure index
-                    this.db.createIndex(name, 'id');
+                    
                     // save model
                     this.models[name] = require('../resources/models/' + name)[name];
                 }
