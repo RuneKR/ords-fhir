@@ -1,12 +1,19 @@
 import {MongoCallback}      from 'mongodb';
 import {enforce}            from 'ts-objectschema';
 import * as models          from '../resources/ResourceList';
-import {hm}                 from './HookManager';
+import {HookManager}        from './HookManager';
+import {DI}                 from './DependencyInjector';
 
 /**
  * Base for the connection to any database
  */
+
 export class DBManager {
+    /**
+     * Reference to the hookmanager singleton from the injector
+     */
+    @DI.injectSingleton(HookManager)
+    public hm: HookManager;
     /**
      * Container of models by their name
      * @type {{[key: string]: any}}
@@ -28,7 +35,7 @@ export class DBManager {
         }
 
         // return action
-        hm.doHooks('dbm.read', model, query, limit, cb);
+        this.hm.doHooks('dbm.read', model, query, limit, cb);
 
     }
     /**
@@ -46,7 +53,7 @@ export class DBManager {
         }
 
         // return action
-        hm.doHooks('dbm.readversion', model, version, cb);
+        this.hm.doHooks('dbm.readversion', model, version, cb);
 
     }
     /**
@@ -81,7 +88,7 @@ export class DBManager {
         }
 
         // do action
-        hm.doHooks('dbm.update', model, query, dbUpdate, cb, dbCreate);
+        this.hm.doHooks('dbm.update', model, query, dbUpdate, cb, dbCreate);
 
     }
     /**
@@ -103,7 +110,7 @@ export class DBManager {
         let dbUpdate: any = new this.models[model](create, enforce.required);
 
         // do action
-        hm.doHooks('dbm.create', model, query, dbUpdate, cb);
+        this.hm.doHooks('dbm.create', model, query, dbUpdate, cb);
     }
     /**
      * (description)
@@ -120,11 +127,6 @@ export class DBManager {
         }
 
         // return action
-        hm.doHooks('dbm.delete', model, query, cb);
+        this.hm.doHooks('dbm.delete', model, query, cb);
     }
 }
-
-/**
- * Singleton of ConnectionBase
- */
-export const dbm: DBManager = new DBManager();
