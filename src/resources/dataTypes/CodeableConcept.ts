@@ -1,18 +1,16 @@
-import {String, Validator, ElementDefinition, PopulationLevel} from 'ts-objectschema';
+import {String, Validator, ElementDefinition, enforce} from 'ts-objectschema';
 import {Coding} from './Coding';
 
 export class CodeableConcept extends Validator {
     public coding: ElementDefinition = {
         required: false,
-        search: false,
         type: [Coding]
     };
     public text: ElementDefinition = {
         required: false,
-        search: false,
         type: String
     };
-    public constructor(data: {[key: string]: any}, validate: PopulationLevel) {
+    public constructor(data: {[key: string]: any}, validate: enforce) {
 
         // do validation command
         super();

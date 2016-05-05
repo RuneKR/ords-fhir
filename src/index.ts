@@ -28,6 +28,8 @@ export interface WorkerByProcessid {
     [key: number]: cluster.Worker;
 }
 
+// pleas think of a better way to do declaration of the server class since it is in a cluster 
+
 /**
  * HL7 FHIR REST server main application
  * @class Server

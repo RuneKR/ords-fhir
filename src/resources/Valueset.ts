@@ -1,28 +1,25 @@
-import {String, Boolean, Validator, ElementDefinition, PopulationLevel} from 'ts-objectschema';
+import {String, Boolean, Validator, ElementDefinition, enforce} from 'ts-objectschema';
 import {DomainResource} from './DomainResource';
 
 // backbone elements
 class ConceptValue extends Validator {
     public code: ElementDefinition = {
         required: false,
-        search: true,
         type: String
     };
     public display: ElementDefinition = {
         required: false,
-        search: true,
         type: String
     };
     public abstract: ElementDefinition = {
         required: false,
-        search: true,
         type: Boolean
     };
     public constructor(data: {[key: string]: any}) {
 
         // do validation command
         super();
-        super.populate(data, PopulationLevel.required);
+        super.populate(data, enforce.required);
 
     }
 }
@@ -30,24 +27,21 @@ class ConceptValue extends Validator {
 class CodeSystem extends Validator {
     public system: ElementDefinition = {
         required: false,
-        search: true,
         type: String
     };
     public version: ElementDefinition = {
         required: false,
-        search: true,
         type: String
     };
     public concept: ElementDefinition = {
         required: false,
-        search: true,
         type: [ConceptValue]
     };
     public constructor(data: {[key: string]: any}) {
 
         // do validation command
         super();
-        super.populate(data, PopulationLevel.required);
+        super.populate(data, enforce.required);
 
     }
 }
@@ -56,14 +50,13 @@ class CodeSystem extends Validator {
 export class Valueset extends DomainResource {
     public codeSystem: ElementDefinition = {
         required: false,
-        search: true,
         type: CodeSystem
     };
     public constructor(data: {[key: string]: any}) {
 
         // do validation command
         super();
-        super.populate(data, PopulationLevel.required);
+        super.populate(data, enforce.required);
 
     }
     public isInValueSet(code: string): boolean {

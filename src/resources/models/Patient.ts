@@ -8,23 +8,19 @@ export class Patient extends DomainResource {
 
     public identifier: ElementDefinition = {
         required: false,
-        search: true,
         type: Identifier
     };
 
     public active: ElementDefinition = {
         required: false,
-        search: true,
         type: Boolean
     };
     public name: ElementDefinition = {
         required: true,
-        search: true,
         type: HumanName
     };
     public address: ElementDefinition = {
         required: true,
-        search: true,
         type: Address
     };
     public constructor(data: { [key: string]: any }, validate: enforce) {
