@@ -1,8 +1,13 @@
-import * as express           from 'express';
+import * as router            from 'express';
 import * as cors              from 'cors';
 import {TypeRoute}            from '../routes/TypeRoute';
 import {InstanceRoute}        from '../routes/InstanceRoute';
-import {DI}                   from './DenpendenyInjector';
+import {DI}                   from './DependencyInjector';
+
+// to be bootstrapped
+import {HookManager}          from './HookManager';
+import {DBManager}            from './DBManager';
+import {Requestparser}        from './Requestparser';
 
 /**
  * Configuration for every module
@@ -26,10 +31,18 @@ export class ChildWorker {
      * @param   {Array<ModuleConfig>}       modules   modules and be instanceiated and their config
      */
     constructor(modules: Array<ModuleConfig>, resources: Array<any>) {
+        
+        // rename router function from express
+        let renamed = Function("fn", "return (function Router(){\n  return fn.apply(this, arguments)\n});")(router);
+
+        // bootstrap all needed singletons
+        DI.bootstrap([HookManager, DBManager, Requestparser, renamed]);
+
+        let hm: HookManager = DI['HookManager'];
 
         // setup route hooks
-        DI.hm.addHook('routes.configure', 'filterRequest', this.SetUpRawRequestFiltering.bind(this));
-        DI.hm.addHook('routes.configure', 'addFhirRoutes', this.addFhirRoutes.bind(this));
+        hm.addHook('routes.configure', 'filterRequest', this.SetUpRawRequestFiltering.bind(this));
+        hm.addHook('routes.configure', 'addFhirRoutes', this.addFhirRoutes.bind(this));
 
         // remove not needed resources
         this.updateResources(resources);
@@ -38,10 +51,10 @@ export class ChildWorker {
         this.loadModules(modules);
 
         // do hooks for routing
-        DI.hm.doHooks('routes.configure', DI.router);
+        hm.doHooks('routes.configure', DI['Router']);
 
         // start http server
-        DI.router.listen(process.env.PORT);
+        DI['Router'].listen(process.env.PORT);
     }
     /**
      * Load all installed modules and supply the HookManager singleton and their config to them
@@ -53,7 +66,6 @@ export class ChildWorker {
 
         // external modules temp holder for loading them
         let plugin: any;
-        let scope: any;
         let dependencies: Array<any>;
 
         // load external modules and provide config and hooks to them
@@ -68,16 +80,8 @@ export class ChildWorker {
             // put in config
             dependencies.unshift(entry.config);
 
-            // create tmp scope
-            scope = Object.create(plugin.prototype);
-
-            // check if DI includes a module instance allready
-            if (DI[entry.module.name] !== undefined) {
-                throw new Error('Module allready exsits by name ' + entry.module.name);
-            }
-
-            // create new instance of the dependency and keep reference to it
-            DI[entry.module.name] = plugin.apply(scope, dependencies);
+            // inject paramters
+            DI.injectTo(plugin, entry.module.name, dependencies);
         }
     }
     /**
@@ -86,7 +90,7 @@ export class ChildWorker {
      * @param   {express.Express}   router  routing for the server
      * @returns {void}              no feedback is provided
      */
-    private SetUpRawRequestFiltering(next: Function, router: express.Router): void {
+    private SetUpRawRequestFiltering(next: Function, router: router.Router): void {
 
         // setup cors
         router.use(cors({
@@ -103,10 +107,10 @@ export class ChildWorker {
     /**
      * Adds FHIR routes to the router
      * @param   {Function}          next   next function in hook routes.configure
-     * @param   {express.Express}   router  routing for the server
+     * @param   {router.router}     router  routing for the server
      * @returns {void}              no feedback is provided
      */
-    private addFhirRoutes(next: Function, router: express.Router): void {
+    private addFhirRoutes(next: Function, router: router.Router): void {
 
         // setup routs
         router.use('/api/', new TypeRoute().route);
@@ -134,13 +138,19 @@ export class ChildWorker {
         // ref to new avalable resources
         let newModelMap: { [key: string]: any } = {};
 
+        // save new resource
         for (let model of filter) {
             newModelMap[functionName(model)] = model;
         }
 
         // only update reference if anything is applied in filter
         if (filter.length !== 0) {
-            DI.dbm.models = newModelMap;
+
+            // refere to dbm from DI
+            let dbm: DBManager = DI['DBManager'];
+
+            // update models
+            dbm.models = newModelMap;
         }
     }
 }

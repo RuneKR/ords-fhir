@@ -1,7 +1,8 @@
-import {ObjectID} from 'mongodb';
+import {ObjectID}                  from 'mongodb';
 import {Router, Request, Response} from 'express';
-import {dbm} from '../lib/DBManager';
-import {requestparser} from '../lib/Requestparser';
+import {DBManager}                 from '../lib/DBManager';
+import {DI}                        from '../lib/DependencyInjector';
+import {requestparser}             from '../lib/Requestparser';
 
 export class InstanceRoute {
     /**
@@ -9,6 +10,11 @@ export class InstanceRoute {
      * @type {Router}
      */
     public route: Router = Router();
+    /**
+     * Database connection management singleton
+     */
+    @DI.injectSingleton(DBManager)
+    private dbm: DBManager;
     /**
      * Binding the routes their function
      */
@@ -28,7 +34,7 @@ export class InstanceRoute {
     public read(req: Request, res: Response): void {
 
         // read from connection
-        dbm.read(
+        this.dbm.read(
             req.params.model, 
             {   id: { $eq: new ObjectID(req.params.id) } }, 
             1, 
@@ -75,7 +81,7 @@ export class InstanceRoute {
     public vread(req: Request, res: Response): void {
 
         // read from connection
-        dbm.read(
+        this.dbm.read(
             req.params.model, 
             { id: { $eq: new ObjectID(req.params.id) },
             'meta.versionId': { $eq: req.params.vid } }, 
@@ -123,7 +129,7 @@ export class InstanceRoute {
     public update(req: Request, res: Response): void {
         
         // do update
-        dbm.update(
+        this.dbm.update(
             req.params.model, 
             {   id: { $eq: new ObjectID(req.params.id) }    }, 
             req.body, 
@@ -175,7 +181,7 @@ export class InstanceRoute {
     public delete(req: Request, res: Response): void {
         
         // do update
-        dbm.delete(
+        this.dbm.delete(
             req.params.model, 
             { id: { $eq: new ObjectID(req.params.id) }}, 
             (err: Error, doc: any) => {

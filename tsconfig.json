@@ -7,7 +7,8 @@
         "preserveConstEnums": true,
         "declaration": true,
         "outDir": "dist",
-        "target": "es5"
+        "target": "es5",
+        "experimentalDecorators": true
     },
     "exclude": ["node_modules", "typings", "dist"]
 }

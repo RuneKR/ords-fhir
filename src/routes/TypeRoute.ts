@@ -1,9 +1,10 @@
 /// <reference path='../../typings/tsd.d.ts' />
 
-import {ObjectID} from 'mongodb';
+import {ObjectID}                  from 'mongodb';
 import {Router, Request, Response} from 'express';
-import {dbm} from '../lib/DBManager';
-import {requestparser} from '../lib/Requestparser';
+import {DBManager}                 from '../lib/DBManager';
+import {DI}                        from '../lib/DependencyInjector';
+import {requestparser}             from '../lib/Requestparser';
 
 export class TypeRoute {
     /**
@@ -11,6 +12,11 @@ export class TypeRoute {
      * @type {Router}
      */
     public route: Router;
+    /**
+     * Database connection management singleton
+     */
+    @DI.injectSingleton(DBManager)
+    private dbm: DBManager;
     /**
      * Binding the routes their function
      */
@@ -35,7 +41,7 @@ export class TypeRoute {
         }
 
         // read from connection
-        dbm.read(req.params.model, req.query, 1, (err: Error, docs: any) => {
+        this.dbm.read(req.params.model, req.query, 1, (err: Error, docs: any) => {
 
             // report error
             if (err) {
@@ -70,7 +76,7 @@ export class TypeRoute {
     public search_body(req: Request, res: Response): void {
 
         // read from connection
-        dbm.read(req.params.model, { id: { $eq: new ObjectID(req.params.id) } }, 1, (err: Error, docs: any) => {
+        this.dbm.read(req.params.model, { id: { $eq: new ObjectID(req.params.id) } }, 1, (err: Error, docs: any) => {
 
             // report error
             if (err) {
@@ -106,7 +112,7 @@ export class TypeRoute {
     public create(req: Request, res: Response): void {
 
         // do update
-        dbm.update(
+        this.dbm.update(
             req.params.model,
             { id: { $eq: new ObjectID(req.params.id) } },
             req.body,

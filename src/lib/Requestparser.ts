@@ -1,6 +1,7 @@
 import {enforce}                         from 'ts-objectschema';
 import {Request, Response, NextFunction} from 'express';
-import {dbm}                             from './DBManager';
+import {DBManager}                       from './DBManager';
+import {DI}                              from './DependencyInjector';
 import * as parser                       from 'body-parser';
 
 /**
@@ -8,6 +9,8 @@ import * as parser                       from 'body-parser';
  * @class Requestparser
  */
 export class Requestparser {
+    @DI.injectSingleton(DBManager)
+    private dbm: DBManager;
     /**
      * Parse the body of an request into the req.body
      * @param   {Request}   req    the express request
@@ -63,7 +66,7 @@ export class Requestparser {
         let queryValuePrefix: Array<string> = ['eq', 'ne', 'gt', 'lt', 'ge', 'le', 'sa', 'eb', 'ap'];
 
         try {
-            model = new dbm.models[modelname]({}, enforce.skip);
+            model = new this.dbm.models[modelname]({}, enforce.skip);
         } catch (e) {
             throw new Error('Model do not exsists and therefor cannot be searched');
         }

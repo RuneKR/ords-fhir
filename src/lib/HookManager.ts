@@ -84,8 +84,3 @@ export class HookManager {
         delete this.hooks[command][name];
     }
 }
-
-/**
- * Singelton of the hook class
- */
-export const hm: HookManager = new HookManager();
