@@ -108,14 +108,3 @@ export class Server {
         this.activeWorkers[child.process.pid] = child;
     }
 }
-
-// this is just for testing
-export const demo: Server = new Server({
-    config: {
-        limit_upload_mb: 1,
-        port: 8000,
-        whitelist: []
-    },
-    modules: [],
-    resources: []
-});
