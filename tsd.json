@@ -12,7 +12,7 @@
       "commit": "95b7178e0ef33b4b88327676418b4cc3ad61df0f"
     },
     "node/node.d.ts": {
-      "commit": "4ba57e605bd71bf7248de65aac0b4f50e3eb1c9e"
+      "commit": "067edc80b9b70a1a4f342a53e7dc1dd00708d3fd"
     },
     "mime/mime.d.ts": {
       "commit": "95b7178e0ef33b4b88327676418b4cc3ad61df0f"
@@ -22,6 +22,9 @@
     },
     "body-parser/body-parser.d.ts": {
       "commit": "95b7178e0ef33b4b88327676418b4cc3ad61df0f"
+    },
+    "mongodb/mongodb.d.ts": {
+      "commit": "067edc80b9b70a1a4f342a53e7dc1dd00708d3fd"
     }
   }
 }

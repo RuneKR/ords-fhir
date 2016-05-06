@@ -14,7 +14,7 @@ This project is a core and cannot be used alone as it depends on some modules. T
 Pleas see our [wiki page](https://github.com/MedSolve/ords-fhir/wiki) for information on this project and how to contact us. For information about contributing see below. You can also open an issue here on GitHub if you have any questions. 
 
 # Contribute
-We are very keen to have developers contributing. Please read [the guidelines for contribution](CONTRIBUTE.MD) if you want to contribute.
+We are very keen to have developers contributing. Please read [the guidelines for contribution](https://github.com/MedSolve/ords-fhir/wiki/Contribute) if you want to contribute.
 
 # Links
 * [HL7 FHIR](https://www.hl7.org/fhir/)

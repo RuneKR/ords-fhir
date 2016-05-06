@@ -8,13 +8,14 @@
     "body-parser": "^1.14.2",
     "cors": "^2.7.1",
     "express": "^4.13.4",
+    "mongodb": "^2.1.18",
     "ts-objectschema": "^0.3.0"
   },
   "devDependencies": {
     "jasmine-core": "2.4.1"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "tsc && node test/main",
     "postinstall": "tsd install -o && tsc"
   },
   "repository": {
