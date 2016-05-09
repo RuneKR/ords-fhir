@@ -1,3 +1,5 @@
+import * as express from 'express';
+
 // get functionname based on a function
 let functionName: Function = function (fun: Function): string {
 
@@ -15,7 +17,7 @@ export interface Singletons {
  * Manage injections of singletons into modules
  * @class DependencyInjector
  */
-export class DependencyInjector { 
+export class DependencyInjector {
     /**
      * Contains all initiated singletons
      */
@@ -36,14 +38,23 @@ export class DependencyInjector {
             // loop all the dependencies if a singleton allready exsists
             for (let entry of dependencies) {
 
-                // grap funciton name
-                name = functionName(entry);
-                
+                // express should be called Router they name it funny
+                if (entry === express) {
+
+                    // set name ass router
+                    name = 'Router';
+
+                } else {
+
+                    // grap funciton name
+                    name = functionName(entry);
+                }
+
                 // generate a new singleton
                 if (this.singleTons[name] === undefined) {
                     this.singleTons[name] = new entry();
                 }
-                
+
                 // get name that are to be set in the target prototype
                 propName = name.charAt(0).toLowerCase() + name.slice(1);
 
@@ -63,9 +74,18 @@ export class DependencyInjector {
         return (target: any, propertyKey: string | symbol) => {
 
             let name: string;
-            
-            // grap name of the function
-            name = functionName(dependency);
+
+            // express should be called Router they name it funny
+            if (dependency === express) {
+
+                // set name ass router
+                name = 'Router';
+
+            } else {
+
+                // grap funciton name
+                name = functionName(dependency);
+            }
 
             // if singleton do not exsists create a new one
             if (this.singleTons[name] === undefined) {

@@ -1,5 +1,4 @@
-import * as router            from 'express';
-import {Router}               from './Router';
+import * as Router            from 'express';
 import * as cors              from 'cors';
 import {TypeRoute}            from '../routes/TypeRoute';
 import {InstanceRoute}        from '../routes/InstanceRoute';
@@ -10,18 +9,6 @@ import {HookManager}          from './HookManager';
 import {DBManager}            from './DBManager';
 
 /**
- * Configuration for every module
- */
-export interface ModuleConfig {
-    config: { [key: string]: any };
-    module: {
-        instance: any;
-        name: string;
-        dependencies: Array<string>;
-    };
-}
-
-/**
  * Working child of the cluster
  * @class ChildWorker
  */
@@ -30,7 +17,7 @@ export class ChildWorker {
     /**
      * Reference to router
      */
-    private router: router.Express;
+    private router: Router.Express;
     /**
      * Reference to router
      */
@@ -61,10 +48,10 @@ export class ChildWorker {
     /**
      * Setup raw filtering of incomming requests based on allwed origins and request headers
      * @param   {Function}          next    next function in hook routes.configure
-     * @param   {express.Express}   router  routing for the server
+     * @param   {Router.Router}     router  routing for the server
      * @returns {void}              no feedback is provided
      */
-    private SetUpRawRequestFiltering(next: Function, router: router.Router): void {
+    private SetUpRawRequestFiltering(next: Function, router: Router.Router): void {
 
         // setup cors
         router.use(cors({
@@ -81,10 +68,10 @@ export class ChildWorker {
     /**
      * Adds FHIR routes to the router
      * @param   {Function}          next   next function in hook routes.configure
-     * @param   {router.router}     router  routing for the server
+     * @param   {Router.Router}     router  routing for the server
      * @returns {void}              no feedback is provided
      */
-    private addFhirRoutes(next: Function, router: router.Router): void {
+    private addFhirRoutes(next: Function, router: Router.Router): void {
 
         // setup routs
         router.use('/api/', new TypeRoute().route);
