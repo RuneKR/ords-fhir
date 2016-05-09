@@ -1,7 +1,6 @@
-tests
 node_modules
 dist
 .DS_Store
-CONTRIBUTE.md
 tslint.json
 .npmignore
+typings
