@@ -3,16 +3,13 @@ import * as cors              from 'cors';
 import {TypeRoute}            from '../routes/TypeRoute';
 import {InstanceRoute}        from '../routes/InstanceRoute';
 import {DI}                   from './DependencyInjector';
-
-// to be bootstrapped
 import {HookManager}          from './HookManager';
-import {DBManager}            from './DBManager';
 
 /**
  * Working child of the cluster
  * @class ChildWorker
  */
-@DI.inject(Router, HookManager, DBManager)
+@DI.inject(Router, HookManager)
 export class ChildWorker {
     /**
      * Reference to router
@@ -22,10 +19,6 @@ export class ChildWorker {
      * Reference to router
      */
     private hookManager: HookManager;
-    /**
-     * Reference to router
-     */
-    private dBManager: DBManager;
     /**
      * Startup all tasks for the worker 
      * @param   {Array<ModuleConfig>}       modules   modules and be instanceiated and their config
