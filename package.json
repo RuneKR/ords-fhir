@@ -2,8 +2,8 @@
   "name": "ords-fhir",
   "version": "0.9.0",
   "description": "HL7 FHIR cluster implementation on NodeJS with freely chosen data backend written in typescript",
-  "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
+  "main": "dist/src/index.js",
+  "typings": "dist/src/index.d.ts",
   "dependencies": {
     "body-parser": "^1.14.2",
     "cors": "^2.7.1",
@@ -15,7 +15,7 @@
     "jasmine-core": "2.4.1"
   },
   "scripts": {
-    "test": "tsc && node test/main",
+    "test": "tsc && node dist/test/main",
     "postinstall": "typings install -o && tsc"
   },
   "repository": {

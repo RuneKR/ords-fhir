@@ -1,3 +1,5 @@
+/// <reference path='../typings/main.d.ts' />
+
 import * as cluster                 from 'cluster';
 import * as os                      from 'os';
 import {ChildWorker, ModuleConfig}  from './lib/ChildWorker';

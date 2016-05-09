@@ -1,7 +1,6 @@
-var Server = require('../dist/index').Server;
+import {Server} from '../src/index';
 
-// this is just for testing
-new Server({
+export const server: Server = new Server({
     config: {
         limit_upload_mb: 1,
         port: 8000,
