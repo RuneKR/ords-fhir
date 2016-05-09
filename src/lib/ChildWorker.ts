@@ -30,14 +30,11 @@ export class ChildWorker {
      * Startup all tasks for the worker 
      * @param   {Array<ModuleConfig>}       modules   modules and be instanceiated and their config
      */
-    constructor(resources: Array<any>) {
+    constructor() {
 
         // setup route hooks
         this.hookManager.addHook('routes.configure', 'filterRequest', this.SetUpRawRequestFiltering.bind(this));
         this.hookManager.addHook('routes.configure', 'addFhirRoutes', this.addFhirRoutes.bind(this));
-
-        // remove not needed resources
-        this.updateResources(resources);
 
         // do hooks for routing
         this.hookManager.doHooks('routes.configure', this.router);
@@ -79,36 +76,5 @@ export class ChildWorker {
 
         // go next
         next(router);
-    }
-    /**
-     * Update the avalable resources in dbm based on the supplied filter
-     * @param   {Array<any}      filter     array of new resources to be used
-     * @returns {void}           no feedback is provided
-     */
-    private updateResources(filter: Array<any>): void {
-
-        // get functionname based on a function
-        let functionName: Function = function (fun: Function): string {
-
-            let ret: string = fun.toString();
-            ret = ret.substr('function '.length);
-            ret = ret.substr(0, ret.indexOf('('));
-            return ret;
-        };
-
-        // ref to new avalable resources
-        let newModelMap: { [key: string]: any } = {};
-
-        // save new resource
-        for (let model of filter) {
-            newModelMap[functionName(model)] = model;
-        }
-
-        // only update reference if anything is applied in filter
-        if (filter.length !== 0) {
-
-            // update models
-            this.dBManager.models = newModelMap;
-        }
     }
 }

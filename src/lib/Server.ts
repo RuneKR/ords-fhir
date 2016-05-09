@@ -11,7 +11,6 @@ export interface Configuration {
         port: number;
         whitelist: Array<string>;
     };
-    resources: Array<any>;
 }
 
 /*
@@ -81,7 +80,7 @@ export class Server {
         } else {
 
             // start child
-            this.child = new ChildWorker(config.resources);
+            this.child = new ChildWorker();
         }
     }
     /**
