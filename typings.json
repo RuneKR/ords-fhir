@@ -1,0 +1,13 @@
+{
+  "name": "ords-fhir",
+  "version": false,
+  "ambientDependencies": {
+    "serve-static": "github:DefinitelyTyped/DefinitelyTyped/serve-static/serve-static.d.ts#95b7178e0ef33b4b88327676418b4cc3ad61df0f",
+    "express": "github:DefinitelyTyped/DefinitelyTyped/express/express.d.ts#95b7178e0ef33b4b88327676418b4cc3ad61df0f",
+    "node": "github:DefinitelyTyped/DefinitelyTyped/node/node.d.ts#067edc80b9b70a1a4f342a53e7dc1dd00708d3fd",
+    "mime": "github:DefinitelyTyped/DefinitelyTyped/mime/mime.d.ts#95b7178e0ef33b4b88327676418b4cc3ad61df0f",
+    "cors": "github:DefinitelyTyped/DefinitelyTyped/cors/cors.d.ts#95b7178e0ef33b4b88327676418b4cc3ad61df0f",
+    "body-parser": "github:DefinitelyTyped/DefinitelyTyped/body-parser/body-parser.d.ts#95b7178e0ef33b4b88327676418b4cc3ad61df0f",
+    "mongodb": "github:DefinitelyTyped/DefinitelyTyped/mongodb/mongodb.d.ts#067edc80b9b70a1a4f342a53e7dc1dd00708d3fd"
+  }
+}

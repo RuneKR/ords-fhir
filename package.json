@@ -16,7 +16,7 @@
   },
   "scripts": {
     "test": "tsc && node test/main",
-    "postinstall": "tsd install -o && tsc"
+    "postinstall": "typings install -o && tsc"
   },
   "repository": {
     "type": "git",
