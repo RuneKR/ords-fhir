@@ -12,7 +12,7 @@ export class DBManager {
     /**
      * Reference to the hookmanager singleton from the injector
      */
-    @DI.injectSingleton(HookManager)
+    @DI.injectProperty(HookManager)
     public hm: HookManager;
     /**
      * Container of models by their name

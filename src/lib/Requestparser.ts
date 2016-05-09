@@ -9,7 +9,7 @@ import * as parser                       from 'body-parser';
  * @class Requestparser
  */
 export class Requestparser {
-    @DI.injectSingleton(DBManager)
+    @DI.injectProperty(DBManager)
     private dbm: DBManager;
     /**
      * Parse the body of an request into the req.body

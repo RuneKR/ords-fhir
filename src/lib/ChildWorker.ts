@@ -1,4 +1,5 @@
 import * as router            from 'express';
+import {Router}               from './Router';
 import * as cors              from 'cors';
 import {TypeRoute}            from '../routes/TypeRoute';
 import {InstanceRoute}        from '../routes/InstanceRoute';
@@ -7,7 +8,6 @@ import {DI}                   from './DependencyInjector';
 // to be bootstrapped
 import {HookManager}          from './HookManager';
 import {DBManager}            from './DBManager';
-import {Requestparser}        from './Requestparser';
 
 /**
  * Configuration for every module
@@ -25,64 +25,38 @@ export interface ModuleConfig {
  * Working child of the cluster
  * @class ChildWorker
  */
+@DI.inject(Router, HookManager, DBManager)
 export class ChildWorker {
+    /**
+     * Reference to router
+     */
+    private router: router.Express;
+    /**
+     * Reference to router
+     */
+    private hookManager: HookManager;
+    /**
+     * Reference to router
+     */
+    private dBManager: DBManager;
     /**
      * Startup all tasks for the worker 
      * @param   {Array<ModuleConfig>}       modules   modules and be instanceiated and their config
      */
-    constructor(modules: Array<ModuleConfig>, resources: Array<any>) {
-        
-        // rename router function from express
-        let renamed = Function("fn", "return (function Router(){\n  return fn.apply(this, arguments)\n});")(router);
-
-        // bootstrap all needed singletons
-        DI.bootstrap([HookManager, DBManager, Requestparser, renamed]);
-
-        let hm: HookManager = DI['HookManager'];
+    constructor(resources: Array<any>) {
 
         // setup route hooks
-        hm.addHook('routes.configure', 'filterRequest', this.SetUpRawRequestFiltering.bind(this));
-        hm.addHook('routes.configure', 'addFhirRoutes', this.addFhirRoutes.bind(this));
+        this.hookManager.addHook('routes.configure', 'filterRequest', this.SetUpRawRequestFiltering.bind(this));
+        this.hookManager.addHook('routes.configure', 'addFhirRoutes', this.addFhirRoutes.bind(this));
 
         // remove not needed resources
         this.updateResources(resources);
 
-        // do loading of modules
-        this.loadModules(modules);
-
         // do hooks for routing
-        hm.doHooks('routes.configure', DI['Router']);
+        this.hookManager.doHooks('routes.configure', this.router);
 
         // start http server
-        DI['Router'].listen(process.env.PORT);
-    }
-    /**
-     * Load all installed modules and supply the HookManager singleton and their config to them
-     * @param   {Array<ModuleConfig>}       modules   modules and be instanceiated and their config
-     * @returns {void}                      no feedback is provided  
-     * @throws  Error is thrown if multiple modules have the same name
-     */
-    private loadModules(modules: Array<ModuleConfig>): void {
-
-        // external modules temp holder for loading them
-        let plugin: any;
-        let dependencies: Array<any>;
-
-        // load external modules and provide config and hooks to them
-        for (let entry of modules) {
-
-            // update ref to plugin
-            plugin = entry.module.instance;
-
-            // update dependencies
-            dependencies = DI.getInjects(entry.module.dependencies);
-
-            // put in config
-            dependencies.unshift(entry.config);
-
-            // inject paramters
-            DI.injectTo(plugin, entry.module.name, dependencies);
-        }
+        this.router.listen(process.env.PORT);
     }
     /**
      * Setup raw filtering of incomming requests based on allwed origins and request headers
@@ -146,11 +120,8 @@ export class ChildWorker {
         // only update reference if anything is applied in filter
         if (filter.length !== 0) {
 
-            // refere to dbm from DI
-            let dbm: DBManager = DI['DBManager'];
-
             // update models
-            dbm.models = newModelMap;
+            this.dBManager.models = newModelMap;
         }
     }
 }

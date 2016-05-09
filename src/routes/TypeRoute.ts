@@ -13,7 +13,7 @@ export class TypeRoute {
     /**
      * Database connection management singleton
      */
-    @DI.injectSingleton(DBManager)
+    @DI.injectProperty(DBManager)
     private dbm: DBManager;
     /**
      * Binding the routes their function
