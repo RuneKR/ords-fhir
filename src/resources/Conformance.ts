@@ -25,10 +25,10 @@ export class Conformance extends DomainResource {
 /**
  * Interface for conformance
  */
-export interface IConformance extends DomainResource {
-    date: any;
-    kind: any;
-    acceptUnknown: boolean;
+export interface IConformance {
+    date?: any;
+    kind?: any;
+    acceptUnknown?: boolean;
 }
 
 export let conformance: Conformance;

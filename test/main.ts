@@ -7,6 +7,8 @@ export const server: Server = new Server({
         whitelist: []
     },
     conformance: {
-        
+        acceptUnknown: true,
+        date: 'change',
+        kind: 'change'
     }
 });
