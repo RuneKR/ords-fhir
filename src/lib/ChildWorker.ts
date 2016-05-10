@@ -1,9 +1,11 @@
-import * as Router            from 'express';
-import * as cors              from 'cors';
-import {TypeRoute}            from '../routes/TypeRoute';
-import {InstanceRoute}        from '../routes/InstanceRoute';
-import {DI}                   from './DependencyInjector';
-import {HookManager}          from './HookManager';
+import * as Router                          from 'express';
+import * as cors                            from 'cors';
+import {TypeRoute}                          from '../routes/TypeRoute';
+import * as cf                              from '../resources/Conformance';
+import {InstanceRoute}                      from '../routes/InstanceRoute';
+import {DI}                                 from './DependencyInjector';
+import {HookManager}                        from './HookManager';
+import {Enforce}                            from 'ts-objectschema';
 
 /**
  * Working child of the cluster
@@ -23,14 +25,21 @@ export class ChildWorker {
      * Startup all tasks for the worker 
      * @param   {Array<ModuleConfig>}       modules   modules and be instanceiated and their config
      */
-    constructor() {
+    constructor(conformance: cf.IConformance) {
+
+        // adding for conformance
+        this.hookManager.addHook('conformance', 'build', this.buildConformance.bind(this));
 
         // setup route hooks
         this.hookManager.addHook('routes.configure', 'filterRequest', this.SetUpRawRequestFiltering.bind(this));
         this.hookManager.addHook('routes.configure', 'addFhirRoutes', this.addFhirRoutes.bind(this));
+        
+        // set default values in conformance
+        conformance.acceptUnknown = false;  // etc
 
-        // do hooks for routing
+        // do hooks 
         this.hookManager.doHooks('routes.configure', this.router);
+        this.hookManager.doHooks('conformance', conformance);
 
         // start http server
         this.router.listen(process.env.PORT);
@@ -69,5 +78,18 @@ export class ChildWorker {
 
         // go next
         next(router);
+    }
+    /**
+     * Build conformance baased on the input
+     * @param   {Function}          next         next function in hook routes.configure
+     * @param   {IConformance}      conformance  the conformance that are to be builded
+     * @returns {void}              no feedback is provided
+     */
+    private buildConformance(next: Function, conformance: cf.IConformance): void {
+
+        // Læs alle models ind så de kan oprettes som structure defenition i conformance
+        
+        cf.conformance = new cf.Conformance(conformance, Enforce.required); 
+        
     }
 }

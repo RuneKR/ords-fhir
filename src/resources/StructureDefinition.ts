@@ -46,6 +46,7 @@ class StructureDefinition extends DomainResource {
 
         // do validation command
         super();
-
+        
+        // Her skal laves en extra function der laver input om til en correct sstructure defenition
     }
 }

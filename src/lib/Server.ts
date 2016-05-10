@@ -1,6 +1,7 @@
 import * as cluster                 from 'cluster';
 import * as os                      from 'os';
 import {ChildWorker}                from './ChildWorker';
+import {IConformance}                from '../resources/Conformance';
 
 /**
  * Configuration element of ords-fhir
@@ -11,7 +12,7 @@ export interface Configuration {
         port: number;
         whitelist: Array<string>;
     };
-    conformance: Object;
+    conformance: IConformance;
 }
 
 /*
@@ -81,7 +82,7 @@ export class Server {
         } else {
 
             // start child
-            this.child = new ChildWorker();
+            this.child = new ChildWorker(config.conformance);
         }
     }
     /**
