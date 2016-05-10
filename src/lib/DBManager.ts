@@ -7,7 +7,6 @@ import {DI}                 from './DependencyInjector';
 /**
  * Base for the connection to any database
  */
-
 export class DBManager {
     /**
      * Reference to the hookmanager singleton from the injector
@@ -20,12 +19,33 @@ export class DBManager {
      */
     public models: { [key: string]: any } = models;
     /**
-     * (description)
-     * @param {string} model (description)
-     * @param {Object} query (description)
-     * @param {number} limit (description)
-     * @param {MongoCallback<any>} cb (description)
-     * @returns {void} (description)
+     * Create a new instance of a resource with some given data and save it to a database
+     * @param {string}              model   name of the resource that is to be created a new instance of
+     * @param {Object}              query   MongoDB query that conditions if a created should be done
+     * @param {*}                   create  the data that is to be used in the creation of a resource
+     * @param {MongoCallback<any>}  cb      callback that will handle output of the async database call
+     * @returns {void}
+     */
+    public create(model: string, query: Object, create: any, cb: MongoCallback<any>): void {
+
+        // validate model exsists
+        if (typeof this.models[model] === 'undefined') {
+            return cb(new Error('Model do not exsists'), 404);
+        }
+
+        // do multiple validation one to check if we are doing an update and one to check if we are doing an create
+        let dbUpdate: any = new this.models[model](create, Enforce.required);
+
+        // do action
+        this.hm.doHooks('dbm.create', model, query, dbUpdate, cb);
+    }
+    /**
+     * Read from a specific resource by a specific query and limit the number of rows in the output
+     * @param {string}              model   name of the resource that is to be read from
+     * @param {Object}              query   MongoDB query that conditions the query of the read
+     * @param {number}              limit   limit the amount of data returned
+     * @param {MongoCallback<any>}  cb      callback that will handle output of the async database call
+     * @returns {void}
      */
     public read(model: string, query: Object, limit: number, cb: MongoCallback<any>): void {
 
@@ -39,30 +59,12 @@ export class DBManager {
 
     }
     /**
-     * (description)
-     * @param {string} model (description)
-     * @param {*} version (description)
-     * @param {MongoCallback<any>} cb (description)
-     * @returns {void} (description)
-     */
-    public vread(model: string, version: any, cb: MongoCallback<any>): void {
-
-        // validate model exsists
-        if (typeof this.models[model] === 'undefined') {
-            return cb(new Error('Model do not exsists'), 404);
-        }
-
-        // return action
-        this.hm.doHooks('dbm.readversion', model, version, cb);
-
-    }
-    /**
-     * (description)
-     * @param {string} model (description)
-     * @param {Object} query (description)
-     * @param {*} update (description)
-     * @param {MongoCallback<any>} cb (description)
-     * @returns {void} (description)
+     * Update a resource based on some data and if a query is true
+     * @param {string}              model   name of the resource that a instance is to be updated from
+     * @param {Object}              query   MongoDB query that conditions the update
+     * @param {*}                   update  the actual data to be used in the update
+     * @param {MongoCallback<any>}  cb      callback that will handle output of the async database call
+     * @returns {void}
      */
     public update(model: string, query: Object, update: any, cb: MongoCallback<any>): void {
 
@@ -92,32 +94,10 @@ export class DBManager {
 
     }
     /**
-     * (description)
-     * @param {string} model (description)
-     * @param {Object} query (description)
-     * @param {*} update (description)
-     * @param {MongoCallback<any>} cb (description)
-     * @returns {void} (description)
-     */
-    public create(model: string, query: Object, create: any, cb: MongoCallback<any>): void {
-
-        // validate model exsists
-        if (typeof this.models[model] === 'undefined') {
-            return cb(new Error('Model do not exsists'), 404);
-        }
-
-        // do multiple validation one to check if we are doing an update and one to check if we are doing an create
-        let dbUpdate: any = new this.models[model](create, Enforce.required);
-
-        // do action
-        this.hm.doHooks('dbm.create', model, query, dbUpdate, cb);
-    }
-    /**
-     * (description)
-     * @param {string} model (description)
-     * @param {Object} query (description)
-     * @param {MongoCallback<any>} cb (description)
-     * @returns {void} (description)
+     * Delete some resource given som conditions
+     * @param {string}              model   name of the resource that something should be deleted from
+     * @param {Object}              query   the conditions for the removal of an item
+     * @param {MongoCallback<any>}  cb      callback that will handle output of the async database call
      */
     public delete(model: string, query: Object, cb: MongoCallback<any>): void {
 
