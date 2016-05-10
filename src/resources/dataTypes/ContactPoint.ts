@@ -2,7 +2,7 @@ import {addressUse} from '../valueSets/AddressUse';
 import {datatypes, decorators, ElementDefinition, Binding, BindingStrength, Enforce} from 'ts-objectschema';
 
 @decorators.validate
-export class Reference {
+export class ContactPoint {
     public use: ElementDefinition = {
         binding: new Binding(BindingStrength.required, 'Description of valueset', addressUse),
         required: false,
@@ -21,6 +21,6 @@ export class Reference {
     }
 }
 
-export interface IReference {
+export interface IContactPoint {
     
 }
