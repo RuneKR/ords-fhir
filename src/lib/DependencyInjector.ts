@@ -3,6 +3,11 @@ import * as express from 'express';
 // get functionname based on a function
 let functionName: Function = function (fun: Function): string {
 
+    // monkey patching NOT good but this is unfortunetly how express works
+    if (fun === express || fun === express.Router) {
+        return 'Router';
+    }
+
     let ret: string = fun.toString();
     ret = ret.substr('function '.length);
     ret = ret.substr(0, ret.indexOf('('));
@@ -38,17 +43,8 @@ export class DependencyInjector {
             // loop all the dependencies if a singleton allready exsists
             for (let entry of dependencies) {
 
-                // express should be called Router they name it funny
-                if (entry === express) {
-
-                    // set name ass router
-                    name = 'Router';
-
-                } else {
-
-                    // grap funciton name
-                    name = functionName(entry);
-                }
+                // grap funciton name
+                name = functionName(entry);
 
                 // generate a new singleton
                 if (this.singleTons[name] === undefined) {
@@ -75,17 +71,8 @@ export class DependencyInjector {
 
             let name: string;
 
-            // express should be called Router they name it funny
-            if (dependency === express) {
-
-                // set name ass router
-                name = 'Router';
-
-            } else {
-
-                // grap funciton name
-                name = functionName(dependency);
-            }
+            // grap funciton name
+            name = functionName(dependency);
 
             // if singleton do not exsists create a new one
             if (this.singleTons[name] === undefined) {
