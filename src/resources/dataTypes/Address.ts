@@ -1,23 +1,22 @@
 import {addressUse} from '../valueSets/AddressUse';
-import {String, Validator, ElementDefinition, Binding, BindingStrength, enforce} from 'ts-objectschema';
+import {datatypes, decorators, ElementDefinition, Binding, BindingStrength, Enforce} from 'ts-objectschema';
 
-export class Address extends Validator {
+@decorators.validate
+export class Address {
     public use: ElementDefinition = {
         binding: new Binding(BindingStrength.required, 'Description of valueset', addressUse),
         required: false,
-        type: String
+        type: datatypes.String
     };
     // fortsæt herfra!!!
     public text: ElementDefinition = {
         required: false,
-        type: String
+        type: datatypes.String
     };
 
-    public constructor(data: {[key: string]: any}, validate: enforce) {
+    public constructor(data: {[key: string]: any}, validate: Enforce) {
 
-        // do validation command
-        super();
-        super.populate(data, validate);
+        // do nothing
 
     }
 }

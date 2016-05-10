@@ -1,18 +1,17 @@
-import {Validator, ElementDefinition, enforce} from 'ts-objectschema';
+import {decorators, datatypes, ElementDefinition, Enforce} from 'ts-objectschema';
 
-export class Reference extends Validator {
+@decorators.validate
+export class Reference {
     public reference: ElementDefinition = {
         required: false,
-        type: String
+        type: datatypes.String
     };
     public display: ElementDefinition = {
         required: false,
-        type: String
+        type: datatypes.String
     };
-    constructor(data: {[key: string]: any}, validate: enforce) {
+    constructor(data: {[key: string]: any}, validate: Enforce) {
 
-        // do validation command
-        super();
-        super.populate(data, validate);
+        // do nothing
     }
 }

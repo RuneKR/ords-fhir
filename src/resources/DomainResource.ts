@@ -1,10 +1,11 @@
-import {String, ElementDefinition, Validator} from 'ts-objectschema';
+import {datatypes, ElementDefinition, decorators} from 'ts-objectschema';
 import {Meta} from './dataTypes/Meta';
 
-export class DomainResource extends Validator {
+@decorators.validate
+export class DomainResource {
     public id: ElementDefinition = {
         required: false,
-        type: String
+        type: datatypes.String
     };
     public meta: ElementDefinition = {
         required: false,
@@ -12,6 +13,6 @@ export class DomainResource extends Validator {
     };
     public language: ElementDefinition = {
         required: false,
-        type: String
+        type: datatypes.String
     };
 }

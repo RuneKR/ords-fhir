@@ -1,4 +1,4 @@
-import {Valueset} from '../Valueset';
+import {Valueset} from 'ts-objectschema';
 
 export class AddressUse {
     public codeSystem: Object = {

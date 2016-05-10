@@ -1,14 +1,15 @@
 import {identifierUse} from '../valueSets/IdentifierUse';
 import {Period} from './Period';
 import {Reference} from './Reference';
-import {String, Validator, Uri, ElementDefinition, enforce, BindingStrength, Binding} from 'ts-objectschema';
+import {ElementDefinition, decorators, datatypes, Enforce, BindingStrength, Binding} from 'ts-objectschema';
 import {CodeableConcept} from './CodeableConcept';
 
-export class Identifier extends Validator {
+@decorators.validate
+export class Identifier {
     public use: ElementDefinition = {
         binding: new Binding(BindingStrength.required, 'Description of valueset', identifierUse),
         required: false,
-        type: String
+        type: datatypes.String
     };
     public type: ElementDefinition = {
         binding: new Binding(BindingStrength.extensible, 'Description of valueset', identifierUse),
@@ -17,11 +18,11 @@ export class Identifier extends Validator {
     };
     public system: ElementDefinition = {
         required: false,
-        type: Uri
+        type: datatypes.Uri
     };
     public value: ElementDefinition = {
         required: false,
-        type: [String]
+        type: [datatypes.String]
     };
     public period: ElementDefinition = {
         required: false,
@@ -32,11 +33,9 @@ export class Identifier extends Validator {
         type: Reference
     };
 
-    public constructor(data: {[key: string]: any}, validate: enforce) {
+    public constructor(data: {[key: string]: any}, validate: Enforce) {
 
-        // do validation command
-        super();
-        super.populate(data, validate);
+        // do nothing
 
     }
 }

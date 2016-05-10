@@ -1,4 +1,4 @@
-import {enforce}                         from 'ts-objectschema';
+import {Enforce}                         from 'ts-objectschema';
 import {Request, Response, NextFunction} from 'express';
 import {DBManager}                       from './DBManager';
 import {DI}                              from './DependencyInjector';
@@ -66,7 +66,7 @@ export class Requestparser {
         let queryValuePrefix: Array<string> = ['eq', 'ne', 'gt', 'lt', 'ge', 'le', 'sa', 'eb', 'ap'];
 
         try {
-            model = new this.dbm.models[modelname]({}, enforce.skip);
+            model = new this.dbm.models[modelname]({}, Enforce.skip);
         } catch (e) {
             throw new Error('Model do not exsists and therefor cannot be searched');
         }
@@ -92,7 +92,7 @@ export class Requestparser {
             type = this.deepLoopQuery(model, keys);
 
             // update value based on type 
-            value = model.getValueFromClass(type, value, enforce.skip);
+            value = model.getValueFromClass(type, value, Enforce.skip);
 
             // prepare query
             temp = {};
@@ -126,9 +126,9 @@ export class Requestparser {
 
             // set new model
             if (Array.isArray(model[key].type)) {
-                model = new model[key].type[0]({}, enforce.skip);
+                model = new model[key].type[0]({}, Enforce.skip);
             } else {
-                model = new model[key].type({}, enforce.skip);
+                model = new model[key].type({}, Enforce.skip);
             }
 
             // if this type is an array note in next loop

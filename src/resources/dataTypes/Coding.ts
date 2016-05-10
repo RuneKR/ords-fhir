@@ -1,32 +1,30 @@
-import {String, Code, Boolean, Validator, Uri, ElementDefinition, enforce} from 'ts-objectschema';
+import {datatypes, ElementDefinition, decorators, Enforce} from 'ts-objectschema';
 
-export class Coding extends Validator {
-
+@decorators.validate
+export class Coding {
     public system: ElementDefinition = {
         required: false,
-        type: Uri
+        type: datatypes.Uri
     };
     public version: ElementDefinition = {
         required: false,
-        type: String
+        type: datatypes.String
     };
     public display: ElementDefinition = {
         required: false,
-        type: String
+        type: datatypes.String
     };
     public userSelected: ElementDefinition = {
         required: false,
-        type: Boolean
+        type: datatypes.Boolean
     };
     public code: ElementDefinition = {
         required: false,
-        type: Code
+        type: datatypes.Code
     };
-    public constructor(data: {[key: string]: any}, validate: enforce) {
+    public constructor(data: {[key: string]: any}, validate: Enforce) {
 
-        // do validation command
-        super();
-        super.populate(data, validate);
+        // do nothing
 
     }
 }

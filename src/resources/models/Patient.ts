@@ -2,7 +2,7 @@ import {Identifier} from '../dataTypes/Identifier';
 import {HumanName} from '../dataTypes/HumanName';
 import {Address} from '../dataTypes/Address';
 import {DomainResource} from '../DomainResource';
-import {ElementDefinition, enforce} from 'ts-objectschema';
+import {ElementDefinition, Enforce} from 'ts-objectschema';
 
 export class Patient extends DomainResource {
 
@@ -23,11 +23,10 @@ export class Patient extends DomainResource {
         required: true,
         type: Address
     };
-    public constructor(data: { [key: string]: any }, validate: enforce) {
+    public constructor(data: { [key: string]: any }, validate: Enforce) {
 
         // do validation command
         super();
-        super.populate(data, validate);
 
     }
 }

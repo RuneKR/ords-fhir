@@ -1,38 +1,37 @@
 import {nameUse} from '../valueSets/NameUse';
 import {Period} from './Period';
-import {String, Validator, ElementDefinition, enforce, BindingStrength, Binding} from 'ts-objectschema';
+import {decorators, datatypes, ElementDefinition, Enforce, BindingStrength, Binding} from 'ts-objectschema';
 
-export class HumanName extends Validator {
+@decorators.validate
+export class HumanName {
     public use: ElementDefinition = {
         binding: new Binding(BindingStrength.required, 'Description of valueset', nameUse),
         required: false,
-        type: String
+        type: datatypes.String
     };
     public text: ElementDefinition = {
         required: false,
-        type: String
+        type: datatypes.String
     };
     public family: ElementDefinition = {
         required: false,
-        type: [String]
+        type: [datatypes.String]
     };
     public given: ElementDefinition = {
         required: false,
-        type: [String]
+        type: [datatypes.String]
     };
     public prefix: ElementDefinition = {
         required: false,
-        type: [String]
+        type: [datatypes.String]
     };
     public period: ElementDefinition = {
         required: false,
         type: Period
     };
-    public constructor(data: {[key: string]: any}, validate: enforce) {
+    public constructor(data: {[key: string]: any}, validate: Enforce) {
 
-        // do validation command
-        super();
-        super.populate(data, validate);
-
+        // do nothing
+        
     }
 }

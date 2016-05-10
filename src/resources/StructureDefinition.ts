@@ -1,20 +1,17 @@
 
 import {conformanceResourceStatus} from './valueSets/ConformanceResourceStatus';
-import {String, Validator, ElementDefinition, Binding, BindingStrength, enforce} from 'ts-objectschema';
+import {datatypes, decorators, ElementDefinition, Binding, BindingStrength, Enforce} from 'ts-objectschema';
 import {DomainResource} from './DomainResource';
 
 // back bone element
-class Snapshot extends Validator {
+@decorators.validate
+class Snapshot {
     public element: ElementDefinition = {
         required: false,
-        type: String
+        type: datatypes.String
     };
 
-    public constructor(data: {[key: string]: any}, validate: enforce) {
-
-        // do validation command
-        super();
-        super.populate(data, validate);
+    public constructor(data: {[key: string]: any}, validate: Enforce) {
 
         // ones element is build. "Re compile" it here to fit the requirements from FHIR
     }
@@ -24,20 +21,20 @@ class Snapshot extends Validator {
 class StructureDefinition extends DomainResource {
     public publisher: ElementDefinition = {
         required: false,
-        type: String
+        type: datatypes.String
     };
     public name: ElementDefinition = {
         required: true,
-        type: String
+        type: datatypes.String
     };
     public version: ElementDefinition = {
         required: true,
-        type: Number
+        type: datatypes.Number
     };
     public status: ElementDefinition = {
         binding: new Binding(BindingStrength.required, 'Description of valueset', conformanceResourceStatus),
         required: true,
-        type: String
+        type: datatypes.String
     };
     public snapshot: ElementDefinition = {
         binding: new Binding(BindingStrength.required, 'Description of valueset', conformanceResourceStatus),
@@ -45,11 +42,10 @@ class StructureDefinition extends DomainResource {
         type: Snapshot
     };
 
-    public constructor(data: {[key: string]: any}, validate: enforce) {
+    public constructor(data: {[key: string]: any}, validate: Enforce) {
 
         // do validation command
         super();
-        super.populate(data, validate);
 
     }
 }

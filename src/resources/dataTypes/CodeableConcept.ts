@@ -1,20 +1,19 @@
-import {String, Validator, ElementDefinition, enforce} from 'ts-objectschema';
+import {datatypes, decorators, ElementDefinition, Enforce} from 'ts-objectschema';
 import {Coding} from './Coding';
 
-export class CodeableConcept extends Validator {
+@decorators.validate
+export class CodeableConcept {
     public coding: ElementDefinition = {
         required: false,
         type: [Coding]
     };
     public text: ElementDefinition = {
         required: false,
-        type: String
+        type: datatypes.String
     };
-    public constructor(data: {[key: string]: any}, validate: enforce) {
+    public constructor(data: {[key: string]: any}, validate: Enforce) {
 
-        // do validation command
-        super();
-        super.populate(data, validate);
+        // do nothing
 
     }
 }

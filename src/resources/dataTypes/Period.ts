@@ -1,19 +1,18 @@
-import {Validator, DateTime, ElementDefinition, enforce} from 'ts-objectschema';
+import {decorators, datatypes, ElementDefinition, Enforce} from 'ts-objectschema';
 
-export class Period extends Validator {
+@decorators.validate
+export class Period {
     public start: ElementDefinition = {
         required: false,
-        type: DateTime
+        type: datatypes.DateTime
     };
     public end: ElementDefinition = {
         required: false,
-        type: DateTime
+        type: datatypes.DateTime
     };
-    constructor(data: {[key: string]: any}, validate: enforce) {
+    constructor(data: {[key: string]: any}, validate: Enforce) {
 
-        // do validation command
-        super();
-        super.populate(data, validate);
+        // do nothing
 
     }
 }

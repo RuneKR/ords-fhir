@@ -1,5 +1,5 @@
 import {MongoCallback}      from 'mongodb';
-import {enforce}            from 'ts-objectschema';
+import {Enforce}            from 'ts-objectschema';
 import * as models          from '../resources/ResourceList';
 import {HookManager}        from './HookManager';
 import {DI}                 from './DependencyInjector';
@@ -77,12 +77,12 @@ export class DBManager {
         }
 
         // do multiple validation one to check if we are doing an update and one to check if we are doing an create
-        let dbUpdate: any = new this.models[model](update, enforce.exists);
+        let dbUpdate: any = new this.models[model](update, Enforce.exists);
         let dbCreate: Object;
 
         // try to see if required could be done
         try {
-            dbCreate = new this.models[model](update, enforce.required);
+            dbCreate = new this.models[model](update, Enforce.required);
         } catch (e) {
             dbCreate = undefined;
         }
@@ -107,7 +107,7 @@ export class DBManager {
         }
 
         // do multiple validation one to check if we are doing an update and one to check if we are doing an create
-        let dbUpdate: any = new this.models[model](create, enforce.required);
+        let dbUpdate: any = new this.models[model](create, Enforce.required);
 
         // do action
         this.hm.doHooks('dbm.create', model, query, dbUpdate, cb);

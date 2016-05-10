@@ -1,32 +1,31 @@
-import {Validator, Uri, Id, Instant, ElementDefinition, enforce} from 'ts-objectschema';
+import {decorators, datatypes, ElementDefinition, Enforce} from 'ts-objectschema';
 import {Coding} from './Coding';
 
-export class Meta extends Validator {
+@decorators.validate
+export class Meta {
     public versionId: ElementDefinition = {
         required: false,
-        type: Id
+        type: datatypes.Id
     };
     public lastUpdated: ElementDefinition = {
         required: true,
-        type: Instant
+        type: datatypes.Instant
     };
     public profile: ElementDefinition = {
         required: false,
-        type: Uri
+        type: datatypes.Uri
     };
     public security: ElementDefinition = {
         required: false,
-        type: [Uri]
+        type: [datatypes.Uri]
     };
     public tag: ElementDefinition = {
         required: false,
         type: [Coding]
     };
-    public constructor(data: {[key: string]: any}, validate: enforce) {
+    public constructor(data: {[key: string]: any}, validate: Enforce) {
 
-        // do validation command
-        super();
-        super.populate(data, validate);
+        // do nothing
 
     }
 }

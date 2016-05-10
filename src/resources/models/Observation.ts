@@ -1,6 +1,6 @@
 import {DomainResource} from '../DomainResource';
 import {CodeableConcept} from '../dataTypes/CodeableConcept';
-import {ElementDefinition, enforce} from 'ts-objectschema';
+import {ElementDefinition, Enforce} from 'ts-objectschema';
 import {Identifier} from '../dataTypes/Identifier';
 
 export class Observation extends DomainResource {
@@ -19,11 +19,9 @@ export class Observation extends DomainResource {
         required: false,
         type: CodeableConcept
     };
-    public constructor(data: { [key: string]: any }, validate: enforce) {
+    public constructor(data: { [key: string]: any }, validate: Enforce) {
 
         // do validation command
         super();
-        super.populate(data, validate);
-
     }
 }
