@@ -89,6 +89,8 @@ export class ChildWorker {
 
         // Læs alle models ind så de kan oprettes som structure defenition i conformance
         
+        // listen kan hentes via dBManager.models
+        
         cf.conformance = new cf.Conformance(conformance, Enforce.required); 
         
     }
