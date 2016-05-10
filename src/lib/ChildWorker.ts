@@ -28,7 +28,7 @@ export class ChildWorker {
     constructor(conformance: cf.IConformance) {
 
         // adding for conformance
-        this.hookManager.addHook('buildconformance', 'build', this.buildConformance.bind(this));
+        this.hookManager.addHook('conformance.configure', 'build', this.buildConformance.bind(this));
 
         // setup route hooks
         this.hookManager.addHook('routes.configure', 'filterRequest', this.SetUpRawRequestFiltering.bind(this));
@@ -39,7 +39,7 @@ export class ChildWorker {
 
         // do hooks 
         this.hookManager.doHooks('routes.configure', this.router);
-        this.hookManager.doHooks('buildconformance', conformance);
+        this.hookManager.doHooks('conformance.configure', conformance);
 
         // start http server
         this.router.listen(process.env.PORT);
