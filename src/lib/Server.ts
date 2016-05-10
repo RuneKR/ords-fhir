@@ -11,6 +11,7 @@ export interface Configuration {
         port: number;
         whitelist: Array<string>;
     };
+    conformance: Object;
 }
 
 /*

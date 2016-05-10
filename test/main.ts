@@ -6,5 +6,7 @@ export const server: Server = new Server({
         port: 8000,
         whitelist: []
     },
-    resources: []
+    conformance: {
+        
+    }
 });
