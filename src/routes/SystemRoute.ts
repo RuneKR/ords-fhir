@@ -5,6 +5,7 @@ import {DI}                        from '../lib/DependencyInjector';
 import {requestparser}             from '../lib/Requestparser';
 import * as valueSets              from '../resources/ValueSetList';
 
+let tempRef: {[index: string]: any } = valueSets;    
 
 export class SystemRoute {
     /**
@@ -12,13 +13,6 @@ export class SystemRoute {
      * @type {Router}
      */
     public route: Router;
-    
-    /**
-     * Database connection management singleton
-     */
-    @DI.injectProperty(DBManager)
-    private dbm: DBManager;
-    
     /**
      * Binding the routes their function
      */
@@ -28,59 +22,19 @@ export class SystemRoute {
         this.route = Router();
 
         // bind functions to router
-        this.route.get('/ValueSet/:model', this.displayAddressUse);
-        this.route.get('/ValueSet/:model', this.displayConformanceResourceStatus);
-        this.route.get('/ValueSet/:model', this.displayIdentifierUse);
-        this.route.get('/ValueSet/:model', this.displayNameUse);        
+        this.route.get('/ValueSet/:model', this.displayValueSet);    
         this.route.get('/StructureDefinition/:model', this.displayStructureDef);
-        this.route.get('/Conformance/:model', this.displayConStatement);
+        this.route.get('/Conformance', this.displayConStatement);
 
     }
-    public displayAddressUse(req: Request, res: Response): void {
-
-        this.displayAddressUse.call(
-            req.param.model,
-            {   id: { $eq: new ObjectID(req.params.id) } }, 
-            1,
-            (err: Error, docs: any) => {
-              
-            // report error
-            if (err) {
-                return res.status(docs).send(err.toString());
-            }
-            
-            // if meta data is specified then use that in return
-            if (docs[0].meta) {
-
-                // set response headers of version
-                if (docs[0].meta.versionId) {
-                    res.set({
-                        'ETag': 'W/"' + docs[0].meta.versionId + '"'
-                    });
-                }
-
-                // set response headers of last updated
-                if (docs[0].meta.lastUpdated) {
-                    res.set({
-                        'Last-Modified': docs[0].meta.lastUpdated
-                    });
-                }
-            }
-            
-            res.send(docs[0]);     
-            }); 
-    }
-    public displayConformanceResourceStatus(req: Request, res: Response): Response {
-
-        return res.send(ConformanceResourceStatus);      
-    }
-    public displayIdentifierUse(req: Request, res: Response): Response {
-
-        return res.send(IdentifierUse);      
-    }
-    public displayNameUse(req: Request, res: Response): Response {
-
-        return res.send(NameUse);      
+    public displayValueSet(req: Request, res: Response): Response {        
+        
+        // not found any document
+        if (tempRef[req.params.model] === 'undefined') {
+            return res.status(404).send('Not found');
+        } else {
+            res.send(tempRef[req.params.model]);
+        }
     }
     public displayStructureDef(req: Request, res: Response): Response {
 
