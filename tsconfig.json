@@ -10,7 +10,7 @@
         "target": "es5",
         "experimentalDecorators": true
     },
-    "exclude": [
-        "node_modules", "dist", "typings/browser.d.ts", "typings/browser"   
+    "files": [
+        "main.d.ts", "src/index.ts"
     ]
 }
