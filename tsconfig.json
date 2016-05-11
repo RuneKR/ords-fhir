@@ -11,6 +11,6 @@
         "experimentalDecorators": true
     },
     "files": [
-        "main.d.ts", "src/index.ts"
+        "typings/main.d.ts", "src/index.ts"
     ]
 }
