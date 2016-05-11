@@ -1,7 +1,8 @@
 import * as Router                          from 'express';
 import * as cors                            from 'cors';
-import {TypeRoute}                          from '../routes/TypeRoute';
 import * as cf                              from '../resources/Conformance';
+import {TypeRoute}                          from '../routes/TypeRoute';
+import {SystemRoute}                        from '../routes/SystemRoute';
 import {InstanceRoute}                      from '../routes/InstanceRoute';
 import {DI}                                 from './DependencyInjector';
 import {HookManager}                        from './HookManager';
@@ -35,7 +36,7 @@ export class ChildWorker {
         this.hookManager.addHook('routes.configure', 'addFhirRoutes', this.addFhirRoutes.bind(this));
         
         // set default values in conformance
-        conformance.acceptUnknown = false;  // etc
+        conformance.fhirVersion = '1.0.2';  // etc
 
         // do hooks 
         this.hookManager.doHooks('routes.configure', this.router);
@@ -73,6 +74,7 @@ export class ChildWorker {
     private addFhirRoutes(next: Function, router: Router.Router): void {
 
         // setup routs
+        router.use('/api/', new SystemRoute().route);
         router.use('/api/', new TypeRoute().route);
         router.use('/api/', new InstanceRoute().route);
 
