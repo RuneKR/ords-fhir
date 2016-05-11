@@ -2,12 +2,7 @@ import {Router, Request, Response} from 'express';
 import {DBManager}                 from '../lib/DBManager';
 import {DI}                        from '../lib/DependencyInjector';
 import {requestparser}             from '../lib/Requestparser';
-import {StructureDefinition}       from '../resources/StructureDefinition';
-import {Conformance}               from '../resources/Conformance';
-import {AddressUse}                from '../resources/valueSets/AddressUse';
-import {ConformanceResourceStatus} from '../resources/valueSets/ConformanceResourceStatus';
-import {IdentifierUse}             from '../resources/valueSets/IdentifierUse';
-import {NameUse}                   from '../resources/valueSets/NameUse';
+import * as valueSets              from '../resources/ValueSetList';
 
 
 export class SystemRoute {
