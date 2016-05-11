@@ -1,5 +1,3 @@
-/// <reference path='../typings/main.d.ts' />
-
 export {Server}                     from './lib/server';
 export {DI, DependencyInjector}     from './lib/DependencyInjector';
 export {HookManager}                from './lib/HookManager';

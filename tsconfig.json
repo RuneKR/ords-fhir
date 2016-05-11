@@ -10,5 +10,9 @@
         "target": "es5",
         "experimentalDecorators": true
     },
-    "exclude": ["node_modules", "typings", "dist"]
+    "files": [
+        "typings/main.d.ts",
+        "src/index.ts",
+        "test/main.ts"
+    ]
 }
