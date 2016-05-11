@@ -29,6 +29,7 @@ export class SystemRoute {
         this.route.get('/Conformance', this.displayConStatement);
 
     }
+    
     public displayValueSet(req: Request, res: Response): Response {        
         
         // not found any document
@@ -45,13 +46,8 @@ export class SystemRoute {
       
     }
     
-    public displayConStatement(req: Request, res: Response): Response {
-        
-        // can structDef be found
-        if (req.params.model === 'undefined') {
-            return res.status(404).send('Not found');
-        } else {
-            return res.send(req.params.model);
-        }
+    public displayConStatement(req: Request, res: Response): Response {        
+     
+            return res.send(conformance);
     }
 }
