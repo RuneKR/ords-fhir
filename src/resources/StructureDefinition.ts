@@ -18,7 +18,7 @@ class Snapshot {
 }
 
 // actuall class 
-class StructureDefinition extends DomainResource {
+export class StructureDefinition extends DomainResource {
     public publisher: ElementDefinition = {
         required: false,
         type: datatypes.String
