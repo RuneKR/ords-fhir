@@ -28,6 +28,6 @@ export class SystemRoute {
     }
     public displayValueSets(req: Request, res: Response): Response {
 
-        
+        return res.send('woop');
     }
 }
