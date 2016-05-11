@@ -4,6 +4,8 @@ import {DBManager}                 from '../lib/DBManager';
 import {DI}                        from '../lib/DependencyInjector';
 import {requestparser}             from '../lib/Requestparser';
 import * as valueSets              from '../resources/ValueSetList';
+import {StructureDefinition}       from '../resources/StructureDefinition';
+import {conformance}               from '../resources/Conformance';
 
 let tempRef: {[index: string]: any } = valueSets;    
 
@@ -33,15 +35,23 @@ export class SystemRoute {
         if (tempRef[req.params.model] === 'undefined') {
             return res.status(404).send('Not found');
         } else {
-            res.send(tempRef[req.params.model]);
+            return res.send(tempRef[req.params.model]);
         }
     }
+    
     public displayStructureDef(req: Request, res: Response): Response {
-
-        return res.send(StructureDefinition);       
+        
+        return res.send('nothing');
+      
     }
+    
     public displayConStatement(req: Request, res: Response): Response {
-
-        return res.send(Conformance);
+        
+        // can structDef be found
+        if (req.params.model === 'undefined') {
+            return res.status(404).send('Not found');
+        } else {
+            return res.send(req.params.model);
+        }
     }
 }
