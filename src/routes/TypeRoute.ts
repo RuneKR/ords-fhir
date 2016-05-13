@@ -2,7 +2,8 @@ import {ObjectID}                  from 'mongodb';
 import {Router, Request, Response} from 'express';
 import {DBManager}                 from '../lib/DBManager';
 import {DI}                        from '../lib/DependencyInjector';
-import {requestparser}             from '../lib/Requestparser';
+import {Requestparser}             from '../lib/Requestparser';
+
 
 export class TypeRoute {
     /**
@@ -10,6 +11,12 @@ export class TypeRoute {
      * @type {Router}
      */
     public route: Router;
+    /**
+     * Express routing elemeent
+     * @type {Router}
+     */
+    @DI.injectProperty(Requestparser)
+    public requestparser: Requestparser;
     /**
      * Database connection management singleton
      */
@@ -25,15 +32,15 @@ export class TypeRoute {
 
         // bind model to router
         this.route.get('/:model/', this.search);
-        this.route.post('/:model/_search', requestparser.parseBody, this.search_body);
-        this.route.post('/:model/', requestparser.parseBody, this.create);
+        this.route.post('/:model/_search', this.requestparser.parseBody, this.search_body);
+        this.route.post('/:model/', this.requestparser.parseBody, this.create);
 
     }
     public search(req: Request, res: Response): Response {
 
         // read query or return error
         try {
-            req.query = requestparser.parseQuery(req.params.model, req.query);
+            req.query = this.requestparser.parseQuery(req.params.model, req.query);
         } catch (e) {
             return res.status(500).send(e.toString());
         }

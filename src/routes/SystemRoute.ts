@@ -2,7 +2,6 @@ import {Router, Request, Response} from 'express';
 import {ObjectID}                  from 'mongodb';
 import {DBManager}                 from '../lib/DBManager';
 import {DI}                        from '../lib/DependencyInjector';
-import {requestparser}             from '../lib/Requestparser';
 import * as valueSets              from '../resources/ValueSetList';
 import {StructureDefinition}       from '../resources/StructureDefinition';
 import {conformance}               from '../resources/Conformance';

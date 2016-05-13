@@ -2,14 +2,20 @@ import {ObjectID}                  from 'mongodb';
 import {Router, Request, Response} from 'express';
 import {DBManager}                 from '../lib/DBManager';
 import {DI}                        from '../lib/DependencyInjector';
-import {requestparser}             from '../lib/Requestparser';
+import {Requestparser}             from '../lib/Requestparser';
 
+@DI.inject(Requestparser)
 export class InstanceRoute {
     /**
      * Express routing elemeent
      * @type {Router}
      */
     public route: Router = Router();
+    /**
+     * Express routing elemeent
+     * @type {Router}
+     */
+    public requestparser: Requestparser;
     /**
      * Database connection management singleton
      */
@@ -23,7 +29,7 @@ export class InstanceRoute {
         // bind model to router
         this.route.get('/:model/:id([0-9a-f]{24})', this.read);
         this.route.get('/:model/:id([0-9a-f]{24})/:vid', this.vread);
-        this.route.put('/:model/:id([0-9a-f]{24})', requestparser.parseBody, this.update);
+        this.route.put('/:model/:id([0-9a-f]{24})', this.requestparser.parseBody, this.update);
         this.route.delete('/:model/:id([0-9a-f]{24})', this.delete);
     }
     /**

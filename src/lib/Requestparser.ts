@@ -140,8 +140,3 @@ export class Requestparser {
         }
     }
 }
-
-/**
- * Singleton of the request parser
- */
-export const requestparser: Requestparser = new Requestparser();
