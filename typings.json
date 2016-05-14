@@ -2,6 +2,9 @@
   "name": "ords-fhir",
   "version": false,
   "ambientDependencies": {
+    "node": "github:DefinitelyTyped/DefinitelyTyped/node/node.d.ts#067edc80b9b70a1a4f342a53e7dc1dd00708d3fd"  
+  },
+  "dependencies": {
     "body-parser": "github:DefinitelyTyped/DefinitelyTyped/body-parser/body-parser.d.ts#95b7178e0ef33b4b88327676418b4cc3ad61df0f",
     "cors": "github:DefinitelyTyped/DefinitelyTyped/cors/cors.d.ts#95b7178e0ef33b4b88327676418b4cc3ad61df0f",
     "es6-promise": "registry:dt/es6-promise#0.0.0+20160423074304",
