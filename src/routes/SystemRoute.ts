@@ -23,9 +23,9 @@ export class SystemRoute {
         this.route = Router();
 
         // bind functions to router
-        this.route.get('/ValueSet/:model', this.displayValueSet);    
-        this.route.get('/StructureDefinition/:model', this.displayStructureDef);
-        this.route.get('/Conformance', this.displayConStatement);
+        this.route.get('/ValueSet/:model', this.displayValueSet.bind(this));    
+        this.route.get('/StructureDefinition/:model', this.displayStructureDef.bind(this));
+        this.route.get('/Conformance', this.displayConStatement.bind(this));
 
     }
     

@@ -31,9 +31,9 @@ export class TypeRoute {
         this.route = Router();
 
         // bind model to router
-        this.route.get('/:model/', this.search);
-        this.route.post('/:model/_search', this.requestparser.parseBody, this.search_body);
-        this.route.post('/:model/', this.requestparser.parseBody, this.create);
+        this.route.get('/:model/', this.search.bind(this));
+        this.route.post('/:model/_search', this.requestparser.parseBody, this.search_body.bind(this));
+        this.route.post('/:model/', this.requestparser.parseBody, this.create.bind(this));
 
     }
     public search(req: Request, res: Response): Response {

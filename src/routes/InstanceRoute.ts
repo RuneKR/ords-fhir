@@ -27,9 +27,9 @@ export class InstanceRoute {
     constructor() {
 
         // bind model to router
-        this.route.get('/:model/:id([0-9a-f]{24})', this.read);
-        this.route.get('/:model/:id([0-9a-f]{24})/:vid', this.vread);
-        this.route.put('/:model/:id([0-9a-f]{24})', this.requestparser.parseBody, this.update);
+        this.route.get('/:model/:id([0-9a-f]{24})', this.read.bind(this));
+        this.route.get('/:model/:id([0-9a-f]{24})/:vid', this.vread).bind(this);
+        this.route.put('/:model/:id([0-9a-f]{24})', this.requestparser.parseBody, this.update.bind(this));
         this.route.delete('/:model/:id([0-9a-f]{24})', this.delete);
     }
     /**
