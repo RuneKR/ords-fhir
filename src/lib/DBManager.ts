@@ -1,7 +1,7 @@
 import {MongoCallback}      from 'mongodb';
 import {Enforce}            from 'ts-objectschema';
-import * as models          from '../resources/ResourceList';
 import {HookManager}        from './HookManager';
+import {ResourceManager}    from './ResourceManager';
 import {DI}                 from './DependencyInjector';
 
 /**
@@ -9,15 +9,15 @@ import {DI}                 from './DependencyInjector';
  */
 export class DBManager {
     /**
-     * Reference to the hookmanager singleton from the injector
+     * Reference to the resourcemanager
+     */
+    @DI.injectProperty(ResourceManager)
+    private rs: ResourceManager;
+    /**
+     * Reference to the hookmanager
      */
     @DI.injectProperty(HookManager)
-    public hm: HookManager;
-    /**
-     * Container of models by their name
-     * @type {{[key: string]: any}}
-     */
-    public models: { [key: string]: any } = models;
+    private hm: HookManager;
     /**
      * Create a new instance of a resource with some given data and save it to a database
      * @param {string}              model   name of the resource that is to be created a new instance of
@@ -29,12 +29,12 @@ export class DBManager {
     public create(model: string, query: Object, create: any, cb: MongoCallback<any>): void {
 
         // validate model exsists
-        if (typeof this.models[model] === 'undefined') {
+        if (typeof this.rs.models[model] === 'undefined') {
             return cb(new Error('Model do not exsists'), 404);
         }
 
         // do multiple validation one to check if we are doing an update and one to check if we are doing an create
-        let dbUpdate: any = new this.models[model](create, Enforce.required);
+        let dbUpdate: any = new this.rs.models[model](create, Enforce.required);
 
         // do action
         this.hm.doHooks('dbm.create', model, query, dbUpdate, cb);
@@ -50,7 +50,7 @@ export class DBManager {
     public read(model: string, query: Object, limit: number, cb: MongoCallback<any>): void {
 
         // validate model exsists
-        if (typeof this.models[model] === 'undefined') {
+        if (typeof this.rs.models[model] === 'undefined') {
             return cb(new Error('Model do not exsists'), 404);
         }
 
@@ -69,7 +69,7 @@ export class DBManager {
     public update(model: string, query: Object, update: any, cb: MongoCallback<any>): void {
 
         // validate model exsists
-        if (typeof this.models[model] === 'undefined') {
+        if (typeof this.rs.models[model] === 'undefined') {
             return cb(new Error('Model do not exsists'), 404);
         }
 
@@ -79,12 +79,12 @@ export class DBManager {
         }
 
         // do multiple validation one to check if we are doing an update and one to check if we are doing an create
-        let dbUpdate: any = new this.models[model](update, Enforce.exists);
+        let dbUpdate: any = new this.rs.models[model](update, Enforce.exists);
         let dbCreate: Object;
 
         // try to see if required could be done
         try {
-            dbCreate = new this.models[model](update, Enforce.required);
+            dbCreate = new this.rs.models[model](update, Enforce.required);
         } catch (e) {
             dbCreate = undefined;
         }
@@ -102,7 +102,7 @@ export class DBManager {
     public delete(model: string, query: Object, cb: MongoCallback<any>): void {
 
         // validate model exsists
-        if (typeof this.models[model] === 'undefined') {
+        if (typeof this.rs.models[model] === 'undefined') {
             return cb(new Error('Model do not exsists'), 404);
         }
 

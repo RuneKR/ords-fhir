@@ -1,5 +1,5 @@
-export {StructureDefinition}       from '../resources/StructureDefinition';
-export {conformance}               from '../resources/Conformance';
+// list all valuesets that are activliy used
+
 export {addressUse}                from '../resources/valueSets/AddressUse';
 export {conformanceResourceStatus} from '../resources/valueSets/ConformanceResourceStatus';
 export {identifierUse}             from '../resources/valueSets/IdentifierUse';

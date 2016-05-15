@@ -1,26 +1,22 @@
 import {Router, Request, Response} from 'express';
-import {ObjectID}                  from 'mongodb';
-import {DBManager}                 from '../lib/DBManager';
 import {DI}                        from '../lib/DependencyInjector';
-import * as valueSets              from '../resources/ValueSetList';
-import {StructureDefinition}       from '../resources/StructureDefinition';
-import {conformance}               from '../resources/Conformance';
+import {ResourceManager}           from '../lib/ResourceManager';
 
-let tempRef: {[index: string]: any } = valueSets;    
-
+@DI.inject(ResourceManager)
 export class SystemRoute {
     /**
      * Express routing elemeent
      * @type {Router}
      */
-    public route: Router;
+    public route: Router = Router();
+    /**
+     * Reference to database manager
+     */
+    private resourceManager: ResourceManager;
     /**
      * Binding the routes their function
      */
     constructor() {
-
-        // setup router
-        this.route = Router();
 
         // bind functions to router
         this.route.get('/ValueSet/:model', this.displayValueSet.bind(this));    
@@ -32,10 +28,10 @@ export class SystemRoute {
     public displayValueSet(req: Request, res: Response): Response {        
         
         // not found any document
-        if (tempRef[req.params.model] === 'undefined') {
+        if (this.resourceManager.models[req.params.model] === 'undefined') {
             return res.status(404).send('Not found');
         } else {
-            return res.send(tempRef[req.params.model]);
+            return res.send(this.resourceManager.models[req.params.model]);
         }
     }
     
@@ -47,6 +43,6 @@ export class SystemRoute {
     
     public displayConStatement(req: Request, res: Response): Response {        
      
-            return res.send(conformance);
+            return res.send('nothing');
     }
 }

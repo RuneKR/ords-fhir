@@ -1,23 +1,32 @@
 import * as Router                          from 'express';
 import * as cors                            from 'cors';
-import * as cf                              from '../resources/Conformance';
+import * as cf                              from '../resources/models/Conformance';
+
 import {TypeRoute}                          from '../routes/TypeRoute';
 import {SystemRoute}                        from '../routes/SystemRoute';
 import {InstanceRoute}                      from '../routes/InstanceRoute';
+
 import {DI}                                 from './DependencyInjector';
+
 import {HookManager}                        from './HookManager';
+import {ResourceManager}                    from './ResourceManager';
+
 import {Enforce}                            from 'ts-objectschema';
 
 /**
  * Working child of the cluster
  * @class ChildWorker
  */
-@DI.inject(Router, HookManager)
+@DI.inject(Router, HookManager, ResourceManager)
 export class ChildWorker {
+    /**
+     * Reference to resourcemanager
+     */
+    private router: Router.Express;
     /**
      * Reference to router
      */
-    private router: Router.Express;
+    private resourceManager: ResourceManager;
     /**
      * Reference to router
      */
@@ -29,18 +38,16 @@ export class ChildWorker {
     constructor(conformance: cf.IConformance) {
 
         // adding for conformance
-        this.hookManager.addHook('conformance.configure', 'build', this.buildConformance.bind(this));
+        this.hookManager.addHook('conformance.configure', 'ZZZZZbuild', this.buildConformance.bind(this));
 
         // setup route hooks
         this.hookManager.addHook('routes.configure', 'filterRequest', this.SetUpRawRequestFiltering.bind(this));
         this.hookManager.addHook('routes.configure', 'addFhirRoutes', this.addFhirRoutes.bind(this));
-        
-        // set default values in conformance
-        conformance.fhirVersion = '1.0.2';  // etc
 
         // do hooks 
         this.hookManager.doHooks('routes.configure', this.router);
         this.hookManager.doHooks('conformance.configure', conformance);
+        this.hookManager.doHooks('dbm.configure', this.resourceManager);
 
         // start http server
         this.router.listen(process.env.PORT);
@@ -89,10 +96,6 @@ export class ChildWorker {
      */
     private buildConformance(next: Function, conformance: cf.IConformance): void {
 
-        // Læs alle models ind så de kan oprettes som structure defenition i conformance
-        
-        // listen kan hentes via dBManager.models
-        
         cf.conformance = new cf.Conformance(conformance, Enforce.required); 
         
     }
