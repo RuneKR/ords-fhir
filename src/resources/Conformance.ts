@@ -1,8 +1,8 @@
 import {DomainResource}                 from './DomainResource';
 import * as tso                         from 'ts-objectschema';
-import {conformanceResourceStatus}      from '../valueSets/conformanceResourceStatus';
-import {ContactPoint, IContactPoint}    from '../datatypes/ContactPoint';
-import {Reference, IReference}          from '../datatypes/Reference';
+import {conformanceResourceStatus}      from './valueSets/conformanceResourceStatus';
+import {ContactPoint, IContactPoint}    from './datatypes/ContactPoint';
+import {Reference, IReference}          from './datatypes/Reference';
 
 /**
  * Back bone elements
@@ -163,5 +163,3 @@ export interface IConformance {
     formant: Array<string>;       
     profile?: Array<IReference>;
 }
-
-export let conformance: Conformance;

@@ -1,5 +1,5 @@
 
-import {conformanceResourceStatus} from '../valueSets/ConformanceResourceStatus';
+import {conformanceResourceStatus} from './valueSets/ConformanceResourceStatus';
 import {datatypes, decorators, ElementDefinition, Binding, BindingStrength, Enforce} from 'ts-objectschema';
 import {DomainResource} from './DomainResource';
 

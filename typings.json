@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "cors": "registry:npm/cors#2.7.0+20160505024722",
+    "es6-promise": "registry:npm/es6-promise#3.0.0+20160211003958",
     "mongodb": "registry:npm/mongodb#2.1.0+20160422172506"
   }
 }

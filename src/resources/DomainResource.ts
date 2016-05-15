@@ -1,5 +1,5 @@
 import {datatypes, ElementDefinition, decorators} from 'ts-objectschema';
-import {Meta} from '../dataTypes/Meta';
+import {Meta} from './dataTypes/Meta';
 
 @decorators.validate
 export class DomainResource {

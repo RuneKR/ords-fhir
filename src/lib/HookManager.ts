@@ -1,3 +1,5 @@
+import {Promise}    from 'es6-promise';
+
 export interface StringMapFunction {
     [key: string]: {
         [key: string]: Function;
@@ -35,37 +37,43 @@ export class HookManager {
      * Execute hooks for a specfic command and apply one or more arguments to the hooks
      * @param   {string}      command   command for which hooks is executed
      * @param   {...any}      args      arguments to be used in the hooks 
-     * @returns {boolean}     Indication of weather or not command exsists
+     * @returns {Promise}     Indication of weather or not command exsists
      */
-    public doHooks(command: string, ...args: Array<any>): boolean {
+    public doHooks(command: string, ...args: Array<any>): Promise<any> {
 
-        // validate it exsists
-        if (this.hooks[command] === undefined) {
-            return false;
-        }
+        // return the promise
+        return new Promise(function (resolve: Function, reject: Function): void {
+            
+            // validate it exsists
+            if (this.hooks[command] === undefined) {
 
-        // calculate functions to run and sort them by alpha
-        let funcsToRun: Array<string> = Object.keys(this.hooks[command]).sort();
+                reject(new Error('Command do not exsists'));
 
-        // keep ref to self
-        let self: any = this;
+            } else {
 
-        // the next funciton
-        let next: any = function (...innerArgs: Array<any>): void {
+                // calculate functions to run and sort them by alpha
+                let funcsToRun: Array<string> = Object.keys(this.hooks[command]).sort();
 
-            // check if any functions are left to run
-            if (funcsToRun.length === 0) {
-                return;
+                // keep ref to self
+                let self: any = this;
+
+                // the next funciton
+                let next: any = function (...innerArgs: Array<any>): void {
+
+                    // check if any functions are left to run
+                    if (funcsToRun.length === 0) {
+                        resolve(innerArgs);
+                    }
+
+                    innerArgs.unshift(next);
+                    let funcName: string = funcsToRun.shift();
+                    self.hooks[command][funcName].apply(undefined, innerArgs);
+                };
+
+                next.apply(undefined, args);
+
             }
-
-            innerArgs.unshift(next);
-            let funcName: string = funcsToRun.shift();
-            self.hooks[command][funcName].apply(undefined, innerArgs);
-        };
-
-        next.apply(undefined, args);
-        
-        return true;
+        });
     }
     /**
      * Remove a hook by a given name from a command

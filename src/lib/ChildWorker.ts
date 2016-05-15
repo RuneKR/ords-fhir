@@ -1,6 +1,6 @@
 import * as Router                          from 'express';
 import * as cors                            from 'cors';
-import * as cf                              from '../resources/models/Conformance';
+import {IConformance}                       from '../resources/Conformance';
 
 import {TypeRoute}                          from '../routes/TypeRoute';
 import {SystemRoute}                        from '../routes/SystemRoute';
@@ -10,8 +10,6 @@ import {DI}                                 from './DependencyInjector';
 
 import {HookManager}                        from './HookManager';
 import {ResourceManager}                    from './ResourceManager';
-
-import {Enforce}                            from 'ts-objectschema';
 
 /**
  * Working child of the cluster
@@ -35,19 +33,26 @@ export class ChildWorker {
      * Startup all tasks for the worker 
      * @param   {Array<ModuleConfig>}       modules   modules and be instanceiated and their config
      */
-    constructor(conformance: cf.IConformance) {
-
-        // adding for conformance
-        this.hookManager.addHook('conformance.configure', 'ZZZZZbuild', this.buildConformance.bind(this));
+    constructor(conformance: IConformance) {
 
         // setup route hooks
         this.hookManager.addHook('routes.configure', 'addRequestFilter', this.SetUpRawRequestFiltering.bind(this));
         this.hookManager.addHook('routes.configure', 'addFhirRoutes', this.addFhirRoutes.bind(this));
 
-        // do hooks 
+        // add routes
         this.hookManager.doHooks('routes.configure', this.router);
-        this.hookManager.doHooks('conformance.configure', conformance);
-        this.hookManager.doHooks('dbm.configure', this.resourceManager);
+        
+        // configure dbm. conformance should be generated after dbm has been configured 
+        this.hookManager.doHooks('dbm.configure', this.resourceManager).then((): void => {
+            
+            // build conformance
+            this.buildConformance(conformance);
+            
+        }).catch((): void => {
+            
+            // build conformance
+            this.buildConformance(conformance);
+        });
 
         // start http server
         this.router.listen(process.env.PORT);
@@ -89,14 +94,20 @@ export class ChildWorker {
         next(router);
     }
     /**
-     * Build conformance baased on the input
-     * @param   {Function}          next         next function in hook routes.configure
+     * Build conformance based on the input
      * @param   {IConformance}      conformance  the conformance that are to be builded
      * @returns {void}              no feedback is provided
      */
-    private buildConformance(next: Function, conformance: cf.IConformance): void {
+    private buildConformance(conformance: IConformance): void {
 
-        cf.conformance = new cf.Conformance(conformance, Enforce.required); 
-        
+        this.hookManager.doHooks('conformance.configure', conformance).then((conf: IConformance): void => {
+                
+                // build conformance
+                this.resourceManager.buildConformance(conf);
+        }).catch((conf: IConformance): void => {
+                
+                // build conformance
+                this.resourceManager.buildConformance(conf);
+        });
     }
 }

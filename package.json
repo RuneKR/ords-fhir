@@ -7,6 +7,7 @@
   "dependencies": {
     "body-parser": "^1.14.2",
     "cors": "^2.7.1",
+    "es6-promise": "^3.2.1",
     "express": "^4.13.4",
     "mongodb": "^2.1.18",
     "ts-objectschema": "^1.2.0"
