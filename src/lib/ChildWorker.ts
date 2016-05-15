@@ -41,7 +41,7 @@ export class ChildWorker {
         this.hookManager.addHook('conformance.configure', 'ZZZZZbuild', this.buildConformance.bind(this));
 
         // setup route hooks
-        this.hookManager.addHook('routes.configure', 'filterRequest', this.SetUpRawRequestFiltering.bind(this));
+        this.hookManager.addHook('routes.configure', 'addRequestFilter', this.SetUpRawRequestFiltering.bind(this));
         this.hookManager.addHook('routes.configure', 'addFhirRoutes', this.addFhirRoutes.bind(this));
 
         // do hooks 
@@ -63,10 +63,7 @@ export class ChildWorker {
         // setup cors
         router.use(cors({
             allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin', 'Authentication'],
-            credentials: true,
-            origin: function (origin: string, callback: Function): void {
-                callback(undefined, process.env.WHITELIST.indexOf(origin) !== -1);
-            }
+            credentials: true
         }));
 
         // go next
