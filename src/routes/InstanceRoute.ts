@@ -4,7 +4,7 @@ import {DBManager}                 from '../lib/DBManager';
 import {DI}                        from '../lib/DependencyInjector';
 import {Requestparser}             from '../lib/Requestparser';
 
-@DI.inject(Requestparser)
+@DI.inject(Requestparser, DBManager)
 export class InstanceRoute {
     /**
      * Express routing elemeent
@@ -17,10 +17,10 @@ export class InstanceRoute {
      */
     public requestparser: Requestparser;
     /**
-     * Database connection management singleton
+     * Database connection
+     * @type {DBManager}
      */
-    @DI.injectProperty(DBManager)
-    private dbm: DBManager;
+    private dBManager: DBManager;
     /**
      * Binding the routes their function
      */
@@ -28,19 +28,19 @@ export class InstanceRoute {
 
         // bind model to router
         this.route.get('/:model/:id([0-9a-f]{24})', this.read.bind(this));
-        this.route.get('/:model/:id([0-9a-f]{24})/:vid', this.vread).bind(this);
         this.route.put('/:model/:id([0-9a-f]{24})', this.requestparser.parseBody, this.update.bind(this));
         this.route.delete('/:model/:id([0-9a-f]{24})', this.delete);
     }
     /**
      * Read a specific instance of an model
-     * @param req
-     * @param res
+     * @param   {Request}     req     requrest from the client
+     * @param   {Response}    res     responsehandler for the client
+     * @returns {Void}
      */
     public read(req: Request, res: Response): void {
 
         // read from connection
-        this.dbm.read(
+        this.dBManager.read(
             req.params.model, 
             {   id: { $eq: new ObjectID(req.params.id) } }, 
             1, 
@@ -48,7 +48,7 @@ export class InstanceRoute {
 
             // report error
             if (err) {
-                return res.status(docs).send(err.toString());
+                return res.status(500).send(err);
             }
 
             // not found any document
@@ -78,64 +78,16 @@ export class InstanceRoute {
             res.send(docs[0]);
         });
     }
-
     /**
-     * Read a specific version of a resource instance
-     * @param req
-     * @param res
-     */
-    public vread(req: Request, res: Response): void {
-
-        // read from connection
-        this.dbm.read(
-            req.params.model, 
-            { id: { $eq: new ObjectID(req.params.id) },
-            'meta.versionId': { $eq: req.params.vid } }, 
-            1, 
-            (err: Error, docs: any) => {
-
-            // report error
-            if (err) {
-                return res.status(docs).send(err.toString());
-            }
-
-            // not found any document
-            if (docs.length === 0) {
-                return res.status(404).send('That version of the document is not found');
-            }
-
-            // if meta data is specified then use that in return
-            if (docs[0].meta) {
-
-                // set response headers
-                if (docs[0].meta.versionId) {
-                    res.set({
-                        'ETag': 'W/"' + docs[0].meta.versionId + '"'
-                    });
-                }
-
-                // set response headers of last updated
-                if (docs[0].meta.lastUpdated) {
-                    res.set({
-                        'Last-Modified': docs[0].meta.lastUpdated
-                    });
-                }
-            }
-
-            // send found doc back
-            res.send(docs[0]);
-        });
-    }
-
-    /**
-     * Update a specific resource instance
-     * @param req
-     * @param res
+     * Update a specific instance of a resource
+     * @param   {Request}     req     requrest from the client
+     * @param   {Response}    res     responsehandler for the client
+     * @returns {Void}
      */
     public update(req: Request, res: Response): void {
         
         // do update
-        this.dbm.update(
+        this.dBManager.update(
             req.params.model, 
             {   id: { $eq: new ObjectID(req.params.id) }    }, 
             req.body, 
@@ -143,7 +95,7 @@ export class InstanceRoute {
             
             // report err
             if (err) {
-                return res.status(doc).send(err.toString());
+                return res.status(500).send(err);
             }
             
             // if meta data is specified then use that in return
@@ -178,28 +130,30 @@ export class InstanceRoute {
             res.send(doc);
         });
     }
-
     /**
-     * Delete a specific resource instance
-     * @param req
-     * @param res
+     * Delete a specific instance of an model
+     * @param   {Request}     req     requrest from the client
+     * @param   {Response}    res     responsehandler for the client
+     * @returns {Void}
      */
     public delete(req: Request, res: Response): void {
         
         // do update
-        this.dbm.delete(
+        this.dBManager.delete(
             req.params.model, 
             { id: { $eq: new ObjectID(req.params.id) }}, 
             (err: Error, doc: any) => {
             
             // report err
             if (err) {
-                return res.status(doc).send(err.toString());
+                return res.status(doc).send(err);
             }
             
             if (doc) {
                 return res.status(204).send('OK');
             } else {
+                
+                // There should be na error here
                 return res.status(409).send('Allready deleted');
             }
             
