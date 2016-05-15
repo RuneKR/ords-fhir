@@ -63,7 +63,10 @@ export class ChildWorker {
         // setup cors
         router.use(cors({
             allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin', 'Authentication'],
-            credentials: true
+            credentials: true,
+            origin: function (origin: string, callback: Function): void {
+                callback(undefined, process.env.WHITELIST.indexOf(origin) !== -1);
+            }
         }));
 
         // go next
