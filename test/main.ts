@@ -6,5 +6,8 @@ export const server: Server = new Server({
         port: 8000,
         whitelist: []
     },
-    conformance: {}
+    conformance: {
+        date: new Date()
+    }
 });
+

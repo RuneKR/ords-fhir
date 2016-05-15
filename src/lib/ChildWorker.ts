@@ -1,6 +1,6 @@
 import * as Router                          from 'express';
 import * as cors                            from 'cors';
-import {IConformance}                       from '../resources/Conformance';
+import {IConformanceConfig, IConformance}   from '../resources/Conformance';
 
 import {TypeRoute}                          from '../routes/TypeRoute';
 import {SystemRoute}                        from '../routes/SystemRoute';
@@ -33,7 +33,7 @@ export class ChildWorker {
      * Startup all tasks for the worker 
      * @param   {Array<ModuleConfig>}       modules   modules and be instanceiated and their config
      */
-    constructor(conformance: IConformance) {
+    constructor(conformance: IConformanceConfig) {
 
         // setup route hooks
         this.hookManager.addHook('routes.configure', 'addRequestFilter', this.SetUpRawRequestFiltering.bind(this));
@@ -95,10 +95,10 @@ export class ChildWorker {
     }
     /**
      * Build conformance based on the input
-     * @param   {IConformance}      conformance  the conformance that are to be builded
-     * @returns {void}              no feedback is provided
+     * @param   {IConformanceConfig}      conformance  the conformance that are to be builded
+     * @returns {void} 
      */
-    private buildConformance(conformance: IConformance): void {
+    private buildConformance(conformance: IConformanceConfig): void {
 
         this.hookManager.doHooks('conformance.configure', conformance).then((conf: IConformance): void => {
                 

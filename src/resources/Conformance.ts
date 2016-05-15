@@ -51,6 +51,10 @@ class Implementation {
  * Conformance as specified by HL7 FHIR
  */
 export class Conformance extends DomainResource {
+    public url: tso.ElementDefinition = {
+        required: false,
+        type: tso.datatypes.Uri
+    };
     public version: tso.ElementDefinition = {
         required: false,
         type: tso.datatypes.String
@@ -98,10 +102,6 @@ export class Conformance extends DomainResource {
         required: false,
         type: tso.datatypes.Code
     };
-    public software: tso.ElementDefinition = {
-        required: false,
-        type: Software
-    };
     public implementation: tso.ElementDefinition = {
         required: false,
         type: Implementation
@@ -132,12 +132,10 @@ export class Conformance extends DomainResource {
 }
 
 /**
- * Interface for conformance
+ * Configurable config from an implementation
  */
-export interface IConformance {
+export interface IConformanceConfig {
     version?: string;
-    name?: string;
-    status?: boolean;
     experimental?: boolean;
     publisher?: string;
     contact?: Array<{
@@ -148,17 +146,21 @@ export interface IConformance {
     description?: string;
     requirements?: string;
     copyright?: string;
+}
+
+/**
+ * Auto generated config
+ */
+export interface IConformance extends IConformanceConfig {
+    url?: string;
+    name?: string;
+    status?: string;
     kind?: string;
-    software?: {
-        name?: string;
-        version?: string;
-        releaseDate?: Date;
-    };
     implementation?: {
         description?: string;
         url: string;
     };
-    fhirVersion?: string;
+    fhirVersion: string;
     acceptUnknown: string;
     formant: Array<string>;       
     profile?: Array<IReference>;

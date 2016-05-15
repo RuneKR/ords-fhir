@@ -1,7 +1,7 @@
 import * as cluster                 from 'cluster';
 import * as os                      from 'os';
 import {ChildWorker}                from './ChildWorker';
-import {IConformance}               from '../resources/models/Conformance';
+import {IConformanceConfig}         from '../resources/Conformance';
 
 /**
  * Configuration element of ords-fhir
@@ -12,7 +12,7 @@ export interface Configuration {
         port: number;
         whitelist: Array<string>;
     };
-    conformance: any;  // IConformance
+    conformance: IConformanceConfig;
 }
 
 /*
