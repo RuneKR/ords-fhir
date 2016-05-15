@@ -35,14 +35,13 @@ export class HookManager {
      * Execute hooks for a specfic command and apply one or more arguments to the hooks
      * @param   {string}      command   command for which hooks is executed
      * @param   {...any}      args      arguments to be used in the hooks 
-     * @returns {void}        no feedback is provided  
-     * @throws  Error is thrown if command does not exsists
+     * @returns {boolean}     Indication of weather or not command exsists
      */
-    public doHooks(command: string, ...args: Array<any>): void {
+    public doHooks(command: string, ...args: Array<any>): boolean {
 
         // validate it exsists
         if (this.hooks[command] === undefined) {
-            throw new Error('Command does not exsists');
+            return false;
         }
 
         // calculate functions to run and sort them by alpha
@@ -65,6 +64,8 @@ export class HookManager {
         };
 
         next.apply(undefined, args);
+        
+        return true;
     }
     /**
      * Remove a hook by a given name from a command
