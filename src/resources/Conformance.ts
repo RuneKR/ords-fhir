@@ -35,6 +35,23 @@ class Software {
     };
 }
 
+@tso.decorators.validate
+class Rest {
+    public mode: tso.ElementDefinition = {
+        required: true,
+        type: tso.datatypes.String
+    };
+    public documentation: tso.ElementDefinition = {
+        required: false,
+        type: tso.datatypes.String
+    };
+    public security: tso.ElementDefinition = {      // set something
+        required: false,
+        type: tso.datatypes.DateTime
+    };
+    // CONTINUE
+}
+
 /**
  * Conformance as specified by HL7 FHIR
  */
@@ -104,6 +121,10 @@ export class Conformance extends DomainResource {
         required: false,
         type: [Reference]
     };
+    public rest: tso.ElementDefinition =  {
+        required: false,
+        type: [Rest]
+    };
     public constructor(data: IConformance, validate: tso.Enforce) {
 
         // do noting
@@ -139,4 +160,5 @@ export interface IConformance extends IConformanceConfig {
     acceptUnknown: string;
     format: Array<string>;       
     profile?: Array<IReference>;
+    rest: any;      // set to any because of the depth pleas just look at how it is used in ConformanceManager
 }

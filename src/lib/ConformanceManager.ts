@@ -22,6 +22,9 @@ export class ConformanceManager {
         conformance.fhirVersion = 'v1.0.2-7202';
         conformance.acceptUnknown = 'no';
         conformance.format = ['json'];
+        conformance.rest = {
+            mode: 'client'
+        }
 
     }
     /**
