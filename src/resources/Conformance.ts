@@ -1,6 +1,8 @@
 import {DomainResource}                 from './DomainResource';
 import * as tso                         from 'ts-objectschema';
-import {conformanceResourceStatus}      from './valueSets/conformanceResourceStatus';
+import {conformanceResourceStatus}      from './valueSets/ConformanceResourceStatus';
+import {conformanceStatementKind}       from './valueSets/ConformanceStatementKind';
+import {unknownContentCode}             from './valueSets/UnknownContentCode';
 import {ContactPoint, IContactPoint}    from './datatypes/ContactPoint';
 import {Reference, IReference}          from './datatypes/Reference';
 
@@ -70,9 +72,8 @@ export class Conformance extends DomainResource {
         type: tso.datatypes.Code
     };
     public experimental: tso.ElementDefinition = {
-        binding: new tso.Binding(tso.BindingStrength.required, 'Something here', conformanceResourceStatus),
         required: false,
-        type: tso.datatypes.Code
+        type: tso.datatypes.Boolean
     };
     public publisher: tso.ElementDefinition = {
         required: false,
@@ -99,8 +100,8 @@ export class Conformance extends DomainResource {
         type: tso.datatypes.String
     };
     public kind: tso.ElementDefinition = {
-        binding: new tso.Binding(tso.BindingStrength.required, 'Something here', conformanceResourceStatus),
-        required: false,
+        binding: new tso.Binding(tso.BindingStrength.required, 'Something here', conformanceStatementKind),
+        required: true,
         type: tso.datatypes.Code
     };
     public fhirVersion: tso.ElementDefinition = {
@@ -108,7 +109,7 @@ export class Conformance extends DomainResource {
         type: tso.datatypes.Id
     };
     public acceptUnknown: tso.ElementDefinition = {
-        binding: new tso.Binding(tso.BindingStrength.required, 'Something here', conformanceResourceStatus),
+        binding: new tso.Binding(tso.BindingStrength.required, 'Something here', unknownContentCode),
         required: true,
         type: tso.datatypes.Code
     };
