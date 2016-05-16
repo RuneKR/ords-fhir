@@ -30,7 +30,7 @@ export class TypeRoute {
         this.route = Router();
 
         // bind model to router
-        this.route.get('/:model/', this.search.bind(this));
+        this.route.get('/:model/', this.requestparser.parseQuery, this.search.bind(this));
         this.route.post('/:model/_search', this.requestparser.parseBody, this.search_body.bind(this));
         this.route.post('/:model/', this.requestparser.parseBody, this.create.bind(this));
 
@@ -41,14 +41,7 @@ export class TypeRoute {
      * @param   {Response}    res     responsehandler for the client
      * @returns {Void}
      */
-    public search(req: Request, res: Response): Response {
-
-        // read query or return error
-        try {
-            req.query = this.requestparser.parseQuery(req.params.model, req.query);
-        } catch (e) {
-            return res.status(500).send(e.toString());
-        }
+    public search(req: Request, res: Response): void {
 
         // read from connection
         this.dbm.read(req.params.model, req.query, 1).then((docs: any) => {
