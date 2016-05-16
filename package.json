@@ -1,6 +1,6 @@
 {
   "name": "ords-fhir",
-  "version": "0.11.5",
+  "version": "0.11.6",
   "description": "HL7 FHIR cluster implementation on NodeJS with freely chosen data backend written in typescript",
   "main": "dist/src/index.js",
   "typings": "dist/src/index.d.ts",
