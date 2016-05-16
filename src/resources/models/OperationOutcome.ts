@@ -1,6 +1,7 @@
 import * as ts                  from 'ts-objectschema';
 import {CodeableConcept}        from '../dataTypes/CodeableConcept';
 import {issueSeverity}          from '../valueSets/IssueSeverity';
+import {issueType}              from '../valueSets/issueType';
 
 export class Issue {
     public severity: ts.ElementDefinition = {
@@ -9,6 +10,7 @@ export class Issue {
         type: ts.datatypes.Code
     };
     public code: ts.ElementDefinition = {
+        binding: new ts.Binding(ts.BindingStrength.required, 'Description of valueset', issueType),
         required: true,
         type: ts.datatypes.Code
     };
