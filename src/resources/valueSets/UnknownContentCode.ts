@@ -1,29 +1,34 @@
 import {Valueset} from 'ts-objectschema';
 
-export class ConformanceResourceStatus {
+export class UnknownContentCode {
 
     public codeSystem: Object = {
         concept: [
             {
                 abstract: true,
-                code: 'draft',
+                code: 'no',
                 display: 'string'
             },
             {
                 abstract: true,
-                code: 'active',
+                code: 'extentions',
                 display: 'string'
             },
             {
                 abstract: true,
-                code: 'retired',
+                code: 'elements',
+                display: 'string'
+            },
+            {
+                abstract: true,
+                code: 'both',
                 display: 'string'
             }
         ],
-        system: process.env.DOMAIN + '/ValueSet/ConformanceResourceStatus',
+        system: process.env.DOMAIN + '/ValueSet/UnknownContentCode',
         version: '1.0.0'
     };
 
 }
 
-export const conformanceResourceStatus: Valueset = new Valueset(new ConformanceResourceStatus());
+export const unknownContentCode: Valueset = new Valueset(new UnknownContentCode());

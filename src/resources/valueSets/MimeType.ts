@@ -1,29 +1,29 @@
 import {Valueset} from 'ts-objectschema';
 
-export class ConformanceResourceStatus {
+export class MimeType {
 
     public codeSystem: Object = {
         concept: [
             {
                 abstract: true,
-                code: 'draft',
+                code: 'xml',
                 display: 'string'
             },
             {
                 abstract: true,
-                code: 'active',
+                code: 'json',
                 display: 'string'
             },
             {
                 abstract: true,
-                code: 'retired',
+                code: 'mime type',
                 display: 'string'
             }
         ],
-        system: process.env.DOMAIN + '/ValueSet/ConformanceResourceStatus',
+        system: process.env.DOMAIN + '/ValueSet/MimeType',
         version: '1.0.0'
     };
 
 }
 
-export const conformanceResourceStatus: Valueset = new Valueset(new ConformanceResourceStatus());
+export const mimeType: Valueset = new Valueset(new MimeType());
