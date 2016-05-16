@@ -16,7 +16,18 @@ export class ConformanceManager {
      */
     public addAutoConformance(conformance: IConformance): void {
 
-        // see conformance for what fields to add here
+        conformance.url = 'https://domain/metadata';            // fix this for domain name
+        conformance.name = 'Main conformance statement';
+        conformance.status = 'active';
+        conformance.kind = 'instance';
+        conformance.fhirVersion = 'v1.0.2-7202';
+        conformance.acceptUnknown = 'no';
+        conformance.format = ['json'];
+        conformance.implementation = {
+             description: 'Implementation based on ords.io',
+             url:  'https://domain/metadata'                    // fix this for domain name
+        };
+
     }
     /**
      * Build the conformance
@@ -26,6 +37,8 @@ export class ConformanceManager {
     public buildConformance(conformance: IConformance): void {
         
         // some more fields should be added to the conformance here
+        
+        // generate profile etc     profile?: Array<IReference>;
 
         this.conformance = new Conformance(conformance, Enforce.required);
     }

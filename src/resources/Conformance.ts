@@ -162,6 +162,6 @@ export interface IConformance extends IConformanceConfig {
     };
     fhirVersion: string;
     acceptUnknown: string;
-    formant: Array<string>;       
+    format: Array<string>;       
     profile?: Array<IReference>;
 }
