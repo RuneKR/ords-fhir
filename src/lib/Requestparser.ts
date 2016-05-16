@@ -3,18 +3,23 @@ import {Request, Response, NextFunction} from 'express';
 import * as parser                       from 'body-parser';
 import {OperationOutcome}                from '../resources/models/OperationOutcome';
 import {ResourceManager}                 from '../lib/ResourceManager';
+import {HookManager}                     from '../lib/HookManager';
 import {DI}                              from '../lib/DependencyInjector';
 
 /**
  * Toolbox for handling incomming requests
  * @class Requestparser
  */
-@DI.inject(ResourceManager)
+@DI.inject(ResourceManager, HookManager)
 export class Requestparser {
     /**
      * reference to database
      */
     private resourceManager: ResourceManager;
+    /**
+     * reference to hooks
+     */
+    private hookManager: HookManager;
     /**
      * Parse the body of an request into the req.body
      * @param   {Request}   req    the express request
@@ -57,42 +62,97 @@ export class Requestparser {
      * @param   {Function}  next   next function to be run during the request
      * @returns {void}      no feedback is provided back req.query is updated
      */
-    public parseQuery(req: Request, res: Response, next: NextFunction): Response {
+    public parseQuery(req: Request, res: Response, next: NextFunction): void {
 
-        let newQuery: any = {};
+        this.hookManager.doHooks('routes.parsequery', req.query).then((oldQuery: any) => {
 
-        // parameters for all resources
-        try {
-            this.parseFhirGenParameters(newQuery, req.query);
-        } catch (err) {
+            let newQuery: any = {};
 
-            let code: any = err.httpcode;
-            return res.status(code).send(err);
-        }
+            // parameters for all resources
+            try {
+                this.parseFhirGenParameters(newQuery, oldQuery);
+            } catch (err) {
 
-        // to to set a new query format
-        try {
-            req.query = new this.resourceManager.models[req.params.model](newQuery, Enforce.exists);
-        } catch (context) {
+                let code: any = err.httpcode;
+                return res.status(code).send(err);
+            }
 
-            // OperationOutcome NEEEDS TO BE BUNDLED!
-            let err: OperationOutcome = new OperationOutcome({
-                httpcode: 400, issue: {
-                    code: 'invalid.invariant',
-                    diagnostics: context.message,
-                    severity: 'fatal'
-                }
+            // loop all keys
+            Object.keys(oldQuery).forEach(() => {
+                    parseFhirPrefixes
             });
-            let code: any = err.httpcode;
 
-            return res.status(code).send(err);
+            // to to set a new query format
+            try {
+                req.query = new this.resourceManager.models[req.params.model](newQuery, Enforce.exists);
+            } catch (context) {
+
+                // OperationOutcome NEEEDS TO BE BUNDLED!
+                let err: OperationOutcome = new OperationOutcome({
+                    httpcode: 400, issue: {
+                        code: 'invalid.invariant',
+                        diagnostics: context.message,
+                        severity: 'fatal'
+                    }
+                });
+                let code: any = err.httpcode;
+
+                return res.status(code).send(err);
+            }
+
+            next();
+
+        });
+    }
+    /**
+     * Read all search types that can have prefix values
+     * @param   {String}    value    the value to be passed
+     * @returns {void}      no feedback is provided back req.query is updated
+     */
+    private parseFhirPrefixes(value: any): Object {
+
+        if (isNaN(value.charAt(2))) {
+            return { $eq: value };
         }
 
-        next();
+        let prefix = value.substr(0, 2);
+
+        switch (prefix) {
+            case 'eq':
+                break;
+            case 'ne':
+                break;
+            case 'gt':
+                break;
+            case 'lt':
+                break;
+            case 'ge':
+                break;
+            case 'le':
+                break;
+            case 'sa':
+                break;
+            case 'eb':
+                break;
+            case 'ap':
+                break;
+            default:
+                // new error
+        }
+        return {
+
+
+        };
     }
+    /**
+     * Parse some general FHIR paramenters as specificed in https://www.hl7.org/fhir/search.html
+     * @param   {Object}    newQuery    the new query to be passed to
+     * @param   {Object}    query       old query that should be used to pass
+     * @returns {void}      no feedback is provided back req.query is updated
+     */
     private parseFhirGenParameters(newQuery: any, query: any): void {
 
-        // parameters for all resources https://www.hl7.org/fhir/search.html
+        // parameters for all resources
         if (query._id) {
             newQuery.id = query._id;
             delete query._id;
@@ -149,54 +209,6 @@ export class Requestparser {
                 };
             }
             delete query._security;
-        }
-
-        // obs mongodb do not have a perfect match with fhir specs
-        if (query._text) {
-            // search only on the specific narrative part
-            newQuery.text = {
-                div: {
-                    $text: {
-                        $caseSensitive: true,
-                        $search: query._text
-                    }
-                }
-            };
-            delete query._text;
-        }
-
-        // obs mongodb do not have a perfect match with fhir specs
-        if (query._content) {
-            // search text on every part of the resource
-            newQuery.$text = {
-                $caseSensitive: true,
-                $search: query._content
-            };
-            delete query._content;
-        }
-
-        if (query._list) {
-
-            // OperationOutcome NEEEDS TO BE BUNDLED!
-            throw new OperationOutcome({
-                httpcode: 400, issue: {
-                    code: 'processing.not-supported',
-                    diagnostics: '_list is not supported',
-                    severity: 'fatal'
-                }
-            });
-        }
-
-        if (query._query) {
-
-            // OperationOutcome NEEEDS TO BE BUNDLED!
-            throw new OperationOutcome({
-                httpcode: 400, issue: {
-                    code: 'processing.not-supported',
-                    diagnostics: '_query is not supported',
-                    severity: 'fatal'
-                }
-            });
         }
     }
 }

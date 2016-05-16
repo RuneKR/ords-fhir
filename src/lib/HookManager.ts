@@ -47,7 +47,8 @@ export class HookManager {
             // validate it exsists
             if (this.hooks[command] === undefined) {
 
-                reject(new Error('Command do not exsists'));
+                // do nothing
+                resolve(args[0]);
 
             } else {
 
