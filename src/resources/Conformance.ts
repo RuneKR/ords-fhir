@@ -35,26 +35,10 @@ class Software {
     };
 }
 
-@tso.decorators.validate
-class Implementation {
-    public description: tso.ElementDefinition = {
-        required: true,
-        type: tso.datatypes.String
-    };
-    public url: tso.ElementDefinition = {
-        required: false,
-        type: tso.datatypes.Uri
-    };
-}
-
 /**
  * Conformance as specified by HL7 FHIR
  */
 export class Conformance extends DomainResource {
-    public url: tso.ElementDefinition = {
-        required: false,
-        type: tso.datatypes.Uri
-    };
     public version: tso.ElementDefinition = {
         required: false,
         type: tso.datatypes.String
@@ -102,10 +86,6 @@ export class Conformance extends DomainResource {
         required: false,
         type: tso.datatypes.Code
     };
-    public implementation: tso.ElementDefinition = {
-        required: false,
-        type: Implementation
-    };
     public fhirVersion: tso.ElementDefinition = {
         required: true,
         type: tso.datatypes.Id
@@ -152,14 +132,9 @@ export interface IConformanceConfig {
  * Auto generated config
  */
 export interface IConformance extends IConformanceConfig {
-    url?: string;
     name?: string;
     status?: string;
     kind?: string;
-    implementation?: {
-        description?: string;
-        url: string;
-    };
     fhirVersion: string;
     acceptUnknown: string;
     format: Array<string>;       

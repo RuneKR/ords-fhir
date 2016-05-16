@@ -16,17 +16,12 @@ export class ConformanceManager {
      */
     public addAutoConformance(conformance: IConformance): void {
 
-        conformance.url = 'https://domain/metadata';            // fix this for domain name
         conformance.name = 'Main conformance statement';
         conformance.status = 'active';
         conformance.kind = 'instance';
         conformance.fhirVersion = 'v1.0.2-7202';
         conformance.acceptUnknown = 'no';
         conformance.format = ['json'];
-        conformance.implementation = {
-             description: 'Implementation based on ords.io',
-             url:  'https://domain/metadata'                    // fix this for domain name
-        };
 
     }
     /**
