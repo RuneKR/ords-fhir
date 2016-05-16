@@ -1,3 +1,5 @@
+import "./typings/main.d.ts";       // to typings work on external modules
+
 export {Server}                     from './lib/server';
 export {DI, DependencyInjector}     from './lib/DependencyInjector';
 export {HookManager}                from './lib/HookManager';
