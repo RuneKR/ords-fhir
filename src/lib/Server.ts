@@ -10,7 +10,7 @@ export interface Configuration {
     config: {
         limit_upload_mb: number;
         port: number;
-        whitelist: Array<string>;
+        whitelist?: Array<string>;
     };
     conformance: IConformanceConfig;
 }
