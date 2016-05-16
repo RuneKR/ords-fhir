@@ -29,16 +29,26 @@ export class Requestparser {
         });
     }
     /**
+     * Adds the body to the query params and generate
+     * @param   {Request}   req    the express request
+     * @param   {Response}  res    the express response object
+     * @param   {Function}  next   next function to be run during the request
+     * @returns {void}      no feedback is provided back req.query is updated
+     */
+     public parseQueryFromBody(req: Request, res: Response, next: NextFunction): void {
+         
+         // adds body to req
+         req.query = req.body;
+     }
+    /**
      * Generate MongoDB query based on a FHIR query
      * @param   {Request}   req    the express request
      * @param   {Response}  res    the express response object
      * @param   {Function}  next   next function to be run during the request
      * @returns {void}      no feedback is provided back req.query is updated
      */
-    public parseQuery(req: Request, res: Response, next: NextFunction): Object {
-
-       
-       
-       return {};
+    public parseQuery(req: Request, res: Response, next: NextFunction): void {
+        
+      
     }
 }

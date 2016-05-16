@@ -31,7 +31,12 @@ export class TypeRoute {
 
         // bind model to router
         this.route.get('/:model/', this.requestparser.parseQuery, this.search.bind(this));
-        this.route.post('/:model/_search', this.requestparser.parseBody, this.search_body.bind(this));
+        this.route.post(
+            '/:model/_search',
+            this.requestparser.parseBody, 
+            this.requestparser.parseQueryFromBody, 
+            this.search_body.bind(this)
+        );
         this.route.post('/:model/', this.requestparser.parseBody, this.create.bind(this));
 
     }
@@ -144,7 +149,7 @@ export class TypeRoute {
             }
 
             return res.send(doc);
-            
+
         }).catch((err: OperationOutcome) => {
 
             let code: any = err.httpcode;
