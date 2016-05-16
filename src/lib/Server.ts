@@ -8,6 +8,7 @@ import {IConformanceConfig}         from '../resources/Conformance';
  */
 export interface Configuration {
     config: {
+        domain: string;
         limit_upload_mb: number;
         port: number;
         whitelist?: Array<string>;
@@ -55,6 +56,7 @@ export class Server {
         process.env.LIMIT_UPLOAD_MB = config.config.limit_upload_mb;
         process.env.PORT = config.config.port;
         process.env.WHITELIST = config.config.whitelist;
+        process.env.DOMAIN = config.config.domain;
 
         // check if worker forked by the cluster is a master
         if (cluster.isMaster) {

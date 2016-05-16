@@ -29,8 +29,8 @@ export class IssueSeverity {
                 display: 'Information'
             },
         ],
-        system: 'Our system',
-        version: '1'
+        system: process.env.domain + '/ValueSet/IssueSeverity',
+        version: '1.0.0'
     };
 }
 

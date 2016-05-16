@@ -24,8 +24,8 @@ export class AddressUse {
                 display: 'string'
             },
         ],
-        system: 'Our system',
-        version: '1'
+        system: process.env.domain + '/ValueSet/AddressUse',
+        version: '1.0.0'
     };
 }
 

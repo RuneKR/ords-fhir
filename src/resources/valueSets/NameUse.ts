@@ -35,8 +35,8 @@ export class NameUse {
                 display: 'string'
             }
         ],
-        system: 'Our system',
-        version: '1'
+        system: process.env.domain + '/ValueSet/NameUse',
+        version: '1.0.0'
     };
 
 }

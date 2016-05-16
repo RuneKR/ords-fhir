@@ -25,8 +25,8 @@ export class IdentifierUse {
                 display: 'string'
             }
         ],
-        system: 'Our system',
-        version: '1'
+        system: process.env.domain + '/ValueSet/IdentifierUse',
+        version: '1.0.0'
     };
 }
 

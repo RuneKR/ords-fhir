@@ -157,8 +157,8 @@ export class IssueType {
                 'definition': 'A message unrelated to the processing success of the completed operation (examples of the latter include things like reminders of password expiry, system maintenance times, etc.).'
             }
         ],
-        system: 'Our system',
-        version: '1'
+         system: process.env.domain + '/ValueSet/IssueType',
+        version: '1.0.0'
     };
 }
 

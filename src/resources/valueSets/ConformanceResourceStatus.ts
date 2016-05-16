@@ -20,8 +20,8 @@ export class ConformanceResourceStatus {
                 display: 'string'
             }
         ],
-        system: 'Our system',
-        version: '1'
+        system: process.env.domain + '/ValueSet/ConformanceResourceStatus',
+        version: '1.0.0'
     };
 
 }
