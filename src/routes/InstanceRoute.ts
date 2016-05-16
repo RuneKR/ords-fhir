@@ -67,8 +67,6 @@ export class InstanceRoute {
         }).catch((err: OperationOutcome) => {
 
             let code: any = err.httpcode;
-            delete err.httpcode;
-
             return res.status(code).send(err);
         });
     }
@@ -84,14 +82,13 @@ export class InstanceRoute {
         if (req.body.id !== undefined && new ObjectID(req.params.id) !== req.body.id) {
             
             let err: OperationOutcome = new OperationOutcome({
-                httpcode: 404, issue: {
+                httpcode: 400, issue: {
                     code: 'invalid.invariant',
                     diagnostics: 'id field cannot be changed',
                     severity: 'fatal'
                 }
             });
             let code: any = err.httpcode;
-            delete err.httpcode;
 
             return res.status(code).send(err);
         }
@@ -133,8 +130,6 @@ export class InstanceRoute {
         }).catch((err: OperationOutcome) => {
 
             let code: any = err.httpcode;
-            delete err.httpcode;
-
             return res.status(code).send(err);
         });
     }
@@ -154,8 +149,6 @@ export class InstanceRoute {
         }).catch((err: OperationOutcome) => {
 
             let code: any = err.httpcode;
-            delete err.httpcode;
-
             return res.status(code).send(err);
         });
     }

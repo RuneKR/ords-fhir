@@ -75,8 +75,6 @@ export class TypeRoute {
         }).catch((err: OperationOutcome) => {
 
             let code: any = err.httpcode;
-            delete err.httpcode;
-
             return res.status(code).send(err);
         });
     }
@@ -113,8 +111,6 @@ export class TypeRoute {
         }).catch((err: OperationOutcome) => {
 
             let code: any = err.httpcode;
-            delete err.httpcode;
-
             return res.status(code).send(err);
         });
     }
@@ -159,8 +155,6 @@ export class TypeRoute {
         }).catch((err: OperationOutcome) => {
 
             let code: any = err.httpcode;
-            delete err.httpcode;
-
             return res.status(code).send(err);
         });
     }
