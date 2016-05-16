@@ -40,8 +40,21 @@ export class DBManager {
                 }));
             }
 
+            let dbUpdate: any;
+
             // do multiple validation one to check if we are doing an update and one to check if we are doing an create
-            let dbUpdate: any = new this.rs.models[model](create, Enforce.required);
+            try {
+                dbUpdate = new this.rs.models[model](create, Enforce.required);
+            } catch (err) {
+
+                return reject(new OperationOutcome({
+                    httpcode: 400, issue: {
+                        code: 'invalid.invariant',
+                        diagnostics: err.message,
+                        severity: 'fatal'
+                    }
+                }));
+            }
 
             // do action
             this.hm.doHooks('dbm.create', model, query, dbUpdate, function (err: OperationOutcome, doc: any): void {
@@ -114,8 +127,23 @@ export class DBManager {
                 }));
             }
 
-            // do multiple validation one to check if we are doing an update and one to check if we are doing an create
-            let dbUpdate: any = new this.rs.models[model](update, Enforce.exists);
+            let dbUpdate: any;
+
+            try {
+                // do multiple validation one to check if we are doing an update and one to check if we are doing an create
+                dbUpdate = new this.rs.models[model](update, Enforce.exists);
+
+            } catch (err) {
+
+                return reject(new OperationOutcome({
+                    httpcode: 400, issue: {
+                        code: 'invalid.invariant',
+                        diagnostics: err.message,
+                        severity: 'fatal'
+                    }
+                }));
+            }
+
             let dbCreate: Object;
 
             // try to see if required could be done
