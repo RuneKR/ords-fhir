@@ -65,7 +65,7 @@ export class Requestparser {
         try {
             this.parseFhirGenParameters(newQuery, req.query);
         } catch (err) {
-            
+
             let code: any = err.httpcode;
             return res.status(code).send(err);
         }
@@ -151,13 +151,28 @@ export class Requestparser {
             delete query._security;
         }
 
-        // oPS mongodb do not have a perfect match with fhir specs
+        // obs mongodb do not have a perfect match with fhir specs
         if (query._text) {
-            newQuery.text.div = {
-                $caseSensitive: true,
-                $text: query._text
+            // search only on the specific narrative part
+            newQuery.text = {
+                div: {
+                    $text: {
+                        $caseSensitive: true,
+                        $search: query._text
+                    }
+                }
             };
             delete query._text;
+        }
+
+        // obs mongodb do not have a perfect match with fhir specs
+        if (query._content) {
+            // search text on every part of the resource
+            newQuery.$text = {
+                $caseSensitive: true,
+                $search: query._content
+            };
+            delete query._content;
         }
 
         if (query._list) {
