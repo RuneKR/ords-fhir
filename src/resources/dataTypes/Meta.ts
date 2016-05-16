@@ -13,7 +13,7 @@ export class Meta {
     };
     public profile: ElementDefinition = {
         required: false,
-        type: datatypes.Uri
+        type: [datatypes.Uri]
     };
     public security: ElementDefinition = {
         required: false,
