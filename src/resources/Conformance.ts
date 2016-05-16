@@ -1,9 +1,12 @@
 import {DomainResource}                 from './DomainResource';
 import * as tso                         from 'ts-objectschema';
+import {restfulSecurityService}         from './valueSets/RestfulSecurityService';
+import {restfulConformanceMode}         from './valueSets/RestfulConformanceMode';
 import {conformanceResourceStatus}      from './valueSets/ConformanceResourceStatus';
 import {conformanceStatementKind}       from './valueSets/ConformanceStatementKind';
 import {unknownContentCode}             from './valueSets/UnknownContentCode';
 import {mimeType}                       from './valueSets/MimeType';
+import {CodeableConcept}                from './datatypes/CodeableConcept';
 import {ContactPoint, IContactPoint}    from './datatypes/ContactPoint';
 import {Reference, IReference}          from './datatypes/Reference';
 
@@ -39,10 +42,27 @@ class Software {
 }
 
 @tso.decorators.validate
+class Security {
+    public cors: tso.ElementDefinition = {
+        required: false,
+        type: tso.datatypes.Boolean
+    };
+    public service: tso.ElementDefinition = {
+        binding: new tso.Binding(tso.BindingStrength.extensible, 'Types of security services used with FHIR.', restfulSecurityService),
+        required: false,
+        type: CodeableConcept
+        
+        // continue
+    };
+    
+}
+
+@tso.decorators.validate
 class Rest {
     public mode: tso.ElementDefinition = {
+        binding: new tso.Binding(tso.BindingStrength.required, 'The RESTful mode of this implementation', restfulConformanceMode),
         required: true,
-        type: tso.datatypes.String
+        type: tso.datatypes.Code
     };
     public documentation: tso.ElementDefinition = {
         required: false,
@@ -50,7 +70,7 @@ class Rest {
     };
     public security: tso.ElementDefinition = {      // set something
         required: false,
-        type: tso.datatypes.DateTime
+        type: [Security]
     };
     // CONTINUE
 }

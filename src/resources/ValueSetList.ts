@@ -6,4 +6,5 @@ export {ConformanceStatementKind}  from '../resources/valueSets/ConformanceState
 export {IdentifierUse}             from '../resources/valueSets/IdentifierUse';
 export {MimeType}                  from '../resources/valueSets/MimeType';
 export {NameUse}                   from '../resources/valueSets/NameUse';
+export {RestfulConformanceMode}    from '../resources/valueSets/RestfulConformanceMode';
 export {UnknownContentCode}        from '../resources/valueSets/UnknownContentCode';
