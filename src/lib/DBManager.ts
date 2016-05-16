@@ -3,7 +3,7 @@ import {HookManager}        from './HookManager';
 import {ResourceManager}    from './ResourceManager';
 import {Promise}            from 'es6-promise';
 import {DI}                 from './DependencyInjector';
-import {OperationOutcome}          from '../resources/models/OperationOutcome';
+import {OperationOutcome}   from '../resources/models/OperationOutcome';
 
 /**
  * Base for the connection to any database
@@ -32,14 +32,26 @@ export class DBManager {
 
             // validate model exsists
             if (typeof this.rs.models[model] === 'undefined') {
-                return reject();        // write operation outcome
+                return reject(new OperationOutcome({
+                    httpcode: 404, issue: {
+                        code: 'processing.not-supported',
+                        severity: 'fatal'
+                    }
+                }));
             }
 
             // do multiple validation one to check if we are doing an update and one to check if we are doing an create
             let dbUpdate: any = new this.rs.models[model](create, Enforce.required);
 
             // do action
-            this.hm.doHooks('dbm.create', model, query, dbUpdate);
+            this.hm.doHooks('dbm.create', model, query, dbUpdate, function (err: OperationOutcome, doc: any): void {
+
+                if (err) {
+                    reject(OperationOutcome);
+                } else {
+                    resolve(doc);
+                }
+            });
         });
     }
     /**
@@ -55,12 +67,30 @@ export class DBManager {
 
             // validate model exsists
             if (typeof this.rs.models[model] === 'undefined') {
-                return reject();        // write operation outcome
+                return reject(new OperationOutcome({
+                    httpcode: 404, issue: {
+                        code: 'processing.not-supported',
+                        severity: 'fatal'
+                    }
+                }));
             }
 
             // return action
-            this.hm.doHooks('dbm.read', model, query, limit);
+            this.hm.doHooks('dbm.read', model, query, limit, function (err: OperationOutcome, docs: Array<any>): void {
 
+                if (err) {
+                    reject(OperationOutcome);
+                } else if (docs.length === 0) {
+                    reject(new OperationOutcome({
+                        httpcode: 404, issue: {
+                            code: 'processing.not-found',
+                            severity: 'warning'
+                        }
+                    }));
+                } else {
+                    resolve(docs);
+                }
+            });
         });
     }
     /**
@@ -73,15 +103,15 @@ export class DBManager {
     public update(model: string, query: Object, update: any): Promise<any> {
 
         return new Promise((resolve: Function, reject: Function) => {
-            
+
             // validate model exsists
             if (typeof this.rs.models[model] === 'undefined') {
-                return reject();
-            }
-
-            // id field should not be present in an update
-            if (update.id) {
-                throw new Error('id field is not allowed to be included in an update');
+                return reject(new OperationOutcome({
+                    httpcode: 404, issue: {
+                        code: 'processing.not-supported',
+                        severity: 'fatal'
+                    }
+                }));
             }
 
             // do multiple validation one to check if we are doing an update and one to check if we are doing an create
@@ -96,10 +126,22 @@ export class DBManager {
             }
 
             // do action
-            this.hm.doHooks('dbm.update', model, query, dbUpdate, cb, dbCreate);
+            this.hm.doHooks('dbm.update', model, query, dbUpdate, dbCreate, function (err: OperationOutcome, doc: any): void {
 
+                if (err) {
+                    reject(OperationOutcome);
+                } else if (doc === undefined) {
+                    reject(new OperationOutcome({
+                        httpcode: 404, issue: {
+                            code: 'processing.not-found',
+                            severity: 'warning'
+                        }
+                    }));
+                } else {
+                    resolve(doc);
+                }
+            });
         });
-
     }
     /**
      * Delete some resource given som conditions
@@ -113,11 +155,30 @@ export class DBManager {
 
             // validate model exsists
             if (typeof this.rs.models[model] === 'undefined') {
-                return reject();
+                return reject(new OperationOutcome({
+                    httpcode: 404, issue: {
+                        code: 'processing.not-supported',
+                        severity: 'fatal'
+                    }
+                }));
             }
 
             // return action
-            this.hm.doHooks('dbm.delete', model, query, cb);
+            this.hm.doHooks('dbm.delete', model, query, function (err: OperationOutcome, doc: any): void {
+
+                if (err) {
+                    reject(OperationOutcome);
+                } else if (doc === undefined) {
+                    reject(new OperationOutcome({
+                        httpcode: 404, issue: {
+                            code: 'processing.not-found',
+                            severity: 'warning'
+                        }
+                    }));
+                } else {
+                    resolve(doc);
+                }
+            });
         });
     }
 }

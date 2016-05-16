@@ -1,4 +1,4 @@
-import {Promise}    from 'es6-promise';
+import {Promise}            from 'es6-promise';
 
 export interface StringMapFunction {
     [key: string]: {
@@ -43,7 +43,7 @@ export class HookManager {
 
         // return the promise
         return new Promise(function (resolve: Function, reject: Function): void {
-            
+
             // validate it exsists
             if (this.hooks[command] === undefined) {
 
@@ -67,7 +67,12 @@ export class HookManager {
 
                     innerArgs.unshift(next);
                     let funcName: string = funcsToRun.shift();
-                    self.hooks[command][funcName].apply(undefined, innerArgs);
+
+                    try {
+                        self.hooks[command][funcName].apply(undefined, innerArgs);
+                    } catch (err) {
+                        reject(err);
+                    }
                 };
 
                 next.apply(undefined, args);

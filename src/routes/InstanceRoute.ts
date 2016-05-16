@@ -62,7 +62,7 @@ export class InstanceRoute {
             }
 
             // send resulting doc back
-            res.send(docs[0]);
+            return res.send(docs[0]);
 
         }).catch((err: OperationOutcome) => {
 
@@ -78,7 +78,23 @@ export class InstanceRoute {
      * @param   {Response}    res     responsehandler for the client
      * @returns {Void}
      */
-    public update(req: Request, res: Response): void {
+    public update(req: Request, res: Response): Response {
+
+        // check if id is set for update and do not match with params.id
+        if (req.body.id !== undefined && new ObjectID(req.params.id) !== req.body.id) {
+            
+            let err: OperationOutcome = new OperationOutcome({
+                httpcode: 404, issue: {
+                    code: 'invalid.invariant',
+                    diagnostics: 'id field cannot be changed',
+                    severity: 'fatal'
+                }
+            });
+            let code: any = err.httpcode;
+            delete err.httpcode;
+
+            return res.status(code).send(err);
+        }
 
         // do update
         this.dBManager.update(req.params.model, { id: { $eq: new ObjectID(req.params.id) } }, req.body).then((doc: any) => {
@@ -112,7 +128,7 @@ export class InstanceRoute {
             }
 
             // return result to user
-            res.send(doc);
+            return res.send(doc);
 
         }).catch((err: OperationOutcome) => {
 
@@ -132,8 +148,8 @@ export class InstanceRoute {
 
         // do delete
         this.dBManager.delete(req.params.model, { id: { $eq: new ObjectID(req.params.id) } }).then((doc: any) => {
-            
-            return res.status(204).send('OK');
+
+            return res.status(204).send({});
 
         }).catch((err: OperationOutcome) => {
 
