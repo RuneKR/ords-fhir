@@ -35,6 +35,10 @@ export class OperationOutcome {
         required: true,
         type: Issue
     };
+    public httpcode: ts.ElementDefinition = {
+        required: true,
+        type: Number
+    };
     public constructor(data: { [key: string]: any }) {
 
         // do nothing

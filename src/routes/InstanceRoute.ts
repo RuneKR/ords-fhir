@@ -3,6 +3,7 @@ import {Router, Request, Response} from 'express';
 import {DBManager}                 from '../lib/DBManager';
 import {DI}                        from '../lib/DependencyInjector';
 import {Requestparser}             from '../lib/Requestparser';
+import {OperationOutcome}          from '../resources/models/OperationOutcome';
 
 @DI.inject(Requestparser, DBManager)
 export class InstanceRoute {
@@ -40,21 +41,7 @@ export class InstanceRoute {
     public read(req: Request, res: Response): void {
 
         // read from connection
-        this.dBManager.read(
-            req.params.model, 
-            {   id: { $eq: new ObjectID(req.params.id) } }, 
-            1, 
-            (err: Error, docs: any) => {
-
-            // report error
-            if (err) {
-                return res.status(500).send(err);
-            }
-
-            // not found any document
-            if (docs.length === 0) {
-                return res.status(404).send('No document found');
-            }
+        this.dBManager.read(req.params.model, { id: { $eq: new ObjectID(req.params.id) } }, 1).then((docs: Array<any>) => {
 
             // if meta data is specified then use that in return
             if (docs[0].meta) {
@@ -76,6 +63,13 @@ export class InstanceRoute {
 
             // send resulting doc back
             res.send(docs[0]);
+
+        }).catch((err: OperationOutcome) => {
+
+            let code: any = err.httpcode;
+            delete err.httpcode;
+
+            return res.status(code).send(err);
         });
     }
     /**
@@ -85,19 +79,10 @@ export class InstanceRoute {
      * @returns {Void}
      */
     public update(req: Request, res: Response): void {
-        
+
         // do update
-        this.dBManager.update(
-            req.params.model, 
-            {   id: { $eq: new ObjectID(req.params.id) }    }, 
-            req.body, 
-            (err: Error, doc: any) => {
-            
-            // report err
-            if (err) {
-                return res.status(500).send(err);
-            }
-            
+        this.dBManager.update(req.params.model, { id: { $eq: new ObjectID(req.params.id) } }, req.body).then((doc: any) => {
+
             // if meta data is specified then use that in return
             if (doc.meta) {
 
@@ -108,13 +93,13 @@ export class InstanceRoute {
                     res.set({
                         'ETag': 'W/"' + doc.meta.versionId + '"'
                     });
-                    
+
                     // an insert has occurred report if so
                     if (doc.meta.versionId === 0) {
                         res.set({
                             'Location': '/' + req.params.model + '/' + req.params.id
                         });
-                        res.status(201);   
+                        res.status(201);
                     }
                 }
 
@@ -128,6 +113,13 @@ export class InstanceRoute {
 
             // return result to user
             res.send(doc);
+
+        }).catch((err: OperationOutcome) => {
+
+            let code: any = err.httpcode;
+            delete err.httpcode;
+
+            return res.status(code).send(err);
         });
     }
     /**
@@ -137,26 +129,18 @@ export class InstanceRoute {
      * @returns {Void}
      */
     public delete(req: Request, res: Response): void {
-        
-        // do update
-        this.dBManager.delete(
-            req.params.model, 
-            { id: { $eq: new ObjectID(req.params.id) }}, 
-            (err: Error, doc: any) => {
+
+        // do delete
+        this.dBManager.delete(req.params.model, { id: { $eq: new ObjectID(req.params.id) } }).then((doc: any) => {
             
-            // report err
-            if (err) {
-                return res.status(doc).send(err);
-            }
-            
-            if (doc) {
-                return res.status(204).send('OK');
-            } else {
-                
-                // There should be na error here
-                return res.status(409).send('Allready deleted');
-            }
-            
+            return res.status(204).send('OK');
+
+        }).catch((err: OperationOutcome) => {
+
+            let code: any = err.httpcode;
+            delete err.httpcode;
+
+            return res.status(code).send(err);
         });
     }
 }
