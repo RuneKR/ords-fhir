@@ -59,9 +59,9 @@ class Security {
 
 @tso.decorators.validate
 class Resource {
-    public cors: tso.ElementDefinition = {
-        required: false,
-        type: tso.datatypes.Boolean
+    public type: tso.ElementDefinition = {
+        required: true,
+        type: tso.datatypes.Code
     };
     public service: tso.ElementDefinition = {
         binding: new tso.Binding(tso.BindingStrength.extensible, 'Types of security services used with FHIR.', restfulSecurityService),
