@@ -1,7 +1,9 @@
 import {DomainResource}                 from './DomainResource';
 import * as tso                         from 'ts-objectschema';
+import {StructureDefinition}            from './StructureDefinition';
 import {restfulSecurityService}         from '../valueSets/RestfulSecurityService';
 import {restfulConformanceMode}         from '../valueSets/RestfulConformanceMode';
+import {resourceType}                   from '../valueSets/ResourceType';
 import {conformanceResourceStatus}      from '../valueSets/ConformanceResourceStatus';
 import {conformanceStatementKind}       from '../valueSets/ConformanceStatementKind';
 import {unknownContentCode}             from '../valueSets/UnknownContentCode';
@@ -60,15 +62,13 @@ class Security {
 @tso.decorators.validate
 class Resource {
     public type: tso.ElementDefinition = {
+        binding: new tso.Binding(tso.BindingStrength.required, 'A resource type that is supported', resourceType),
         required: true,
         type: tso.datatypes.Code
     };
-    public service: tso.ElementDefinition = {
-        binding: new tso.Binding(tso.BindingStrength.extensible, 'Types of security services used with FHIR.', restfulSecurityService),
+    public profile: tso.ElementDefinition = {
         required: false,
-        type: CodeableConcept
-        
-        // continue
+        type: [Reference]
     };
     
 }
