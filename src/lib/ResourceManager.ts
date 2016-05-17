@@ -20,26 +20,28 @@ export class ResourceManager {
      * Container of all active models by their name
      * @type {{[key: string]: any}}
      */
-    public rest: { [key: string]: any } = models;
+    public rest: { [key: string]: any };
     /**
      * Container of all active valueSets by their name
      * @type {{[key: string]: any}}
      */
-    public valueSets: { [key: string]: any } = valueSets;
+    public valueSets: { [key: string]: any };
     /**
      * Container of all active dataTypes by their name
      * @type {{[key: string]: any}}
      */
-    public dataTypes: { [key: string]: any } = dataTypes;
+    public dataTypes: { [key: string]: any };
     /**
      * Container of all active dataTypes by their name
      * @type {{[key: string]: any}}
      */
-    public internal: { [key: string]: any } = dataTypes;
+    public internal: { [key: string]: any };
     /**
      * Generatee all the fields
      */
-    constructor(){
-       // fs.readdirSync(path[, options])
+    constructor() {
+
+        // read rest resources
+        console.log(fs.readdirSync('./resources'));
     }
 }

@@ -1,14 +1,14 @@
 import {DomainResource}                 from './DomainResource';
 import * as tso                         from 'ts-objectschema';
-import {restfulSecurityService}         from './valueSets/RestfulSecurityService';
-import {restfulConformanceMode}         from './valueSets/RestfulConformanceMode';
-import {conformanceResourceStatus}      from './valueSets/ConformanceResourceStatus';
-import {conformanceStatementKind}       from './valueSets/ConformanceStatementKind';
-import {unknownContentCode}             from './valueSets/UnknownContentCode';
-import {mimeType}                       from './valueSets/MimeType';
-import {CodeableConcept}                from './datatypes/CodeableConcept';
-import {ContactPoint, IContactPoint}    from './datatypes/ContactPoint';
-import {Reference, IReference}          from './datatypes/Reference';
+import {restfulSecurityService}         from '../valueSets/RestfulSecurityService';
+import {restfulConformanceMode}         from '../valueSets/RestfulConformanceMode';
+import {conformanceResourceStatus}      from '../valueSets/ConformanceResourceStatus';
+import {conformanceStatementKind}       from '../valueSets/ConformanceStatementKind';
+import {unknownContentCode}             from '../valueSets/UnknownContentCode';
+import {mimeType}                       from '../valueSets/MimeType';
+import {CodeableConcept}                from '../datatypes/CodeableConcept';
+import {ContactPoint, IContactPoint}    from '../datatypes/ContactPoint';
+import {Reference, IReference}          from '../datatypes/Reference';
 
 /**
  * Back bone elements
