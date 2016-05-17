@@ -76,9 +76,21 @@ export class Requestparser {
                 let code: any = err.httpcode;
                 return res.status(code).send(err);
             }
+            
+            // validate that the model do exsist
+            if (this.resourceManager.rest[req.params.model] === undefined) {
 
-            if (this.resourceManager.rest[req.params.model]) {
-
+                // OperationOutcome NEEEDS TO BE BUNDLED!
+                let err: OperationOutcome = new OperationOutcome({
+                    httpcode: 400, issue: {
+                        code: 'invalid.invariant',
+                        diagnostics: 'rest model do not exsists',
+                        severity: 'fatal'
+                    }
+                });
+                
+                let code: any = err.httpcode;
+                return res.status(code).send(err);      
             }
 
             // to to set a new query format
@@ -95,12 +107,9 @@ export class Requestparser {
                     }
                 });
                 let code: any = err.httpcode;
-
                 return res.status(code).send(err);
             }
-
             next();
-
         });
     }
     /**

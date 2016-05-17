@@ -1,4 +1,4 @@
 
-export interface IBoundle {
+export class Boundle {
     
 }
