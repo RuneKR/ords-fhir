@@ -58,6 +58,22 @@ class Security {
 }
 
 @tso.decorators.validate
+class Resource {
+    public cors: tso.ElementDefinition = {
+        required: false,
+        type: tso.datatypes.Boolean
+    };
+    public service: tso.ElementDefinition = {
+        binding: new tso.Binding(tso.BindingStrength.extensible, 'Types of security services used with FHIR.', restfulSecurityService),
+        required: false,
+        type: CodeableConcept
+        
+        // continue
+    };
+    
+}
+
+@tso.decorators.validate
 class Rest {
     public mode: tso.ElementDefinition = {
         binding: new tso.Binding(tso.BindingStrength.required, 'The RESTful mode of this implementation', restfulConformanceMode),
