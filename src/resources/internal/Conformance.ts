@@ -1,6 +1,5 @@
 import {DomainResource}                 from './DomainResource';
 import * as tso                         from 'ts-objectschema';
-import {StructureDefinition}            from './StructureDefinition';
 import {restfulSecurityService}         from '../valueSets/RestfulSecurityService';
 import {restfulConformanceMode}         from '../valueSets/RestfulConformanceMode';
 import {resourceType}                   from '../valueSets/ResourceType';
