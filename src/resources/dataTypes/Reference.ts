@@ -3,13 +3,12 @@ import {datatypes, decorators, ElementDefinition, Binding, BindingStrength, Enfo
 
 @decorators.validate
 export class Reference {
-    public use: ElementDefinition = {
-        binding: new Binding(BindingStrength.required, 'Description of valueset', addressUse),
+    public reference: ElementDefinition = {
         required: false,
         type: datatypes.String
     };
     // fortsæt herfra!!!
-    public text: ElementDefinition = {
+    public display: ElementDefinition = {
         required: false,
         type: datatypes.String
     };
