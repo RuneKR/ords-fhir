@@ -77,11 +77,6 @@ export class Requestparser {
                 return res.status(code).send(err);
             }
 
-            // loop all keys
-            Object.keys(oldQuery).forEach(() => {
-                    parseFhirPrefixes
-            });
-
             // to to set a new query format
             try {
                 req.query = new this.resourceManager.models[req.params.model](newQuery, Enforce.exists);
@@ -103,46 +98,6 @@ export class Requestparser {
             next();
 
         });
-    }
-    /**
-     * Read all search types that can have prefix values
-     * @param   {String}    value    the value to be passed
-     * @returns {void}      no feedback is provided back req.query is updated
-     */
-    private parseFhirPrefixes(value: any): Object {
-
-        if (isNaN(value.charAt(2))) {
-            return { $eq: value };
-        }
-
-        let prefix = value.substr(0, 2);
-
-        switch (prefix) {
-            case 'eq':
-                break;
-            case 'ne':
-                break;
-            case 'gt':
-                break;
-            case 'lt':
-                break;
-            case 'ge':
-                break;
-            case 'le':
-                break;
-            case 'sa':
-                break;
-            case 'eb':
-                break;
-            case 'ap':
-                break;
-            default:
-                // new error
-        }
-        return {
-
-
-        };
     }
     /**
      * Parse some general FHIR paramenters as specificed in https://www.hl7.org/fhir/search.html
