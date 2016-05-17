@@ -1,9 +1,9 @@
 import {Router, Request, Response} from 'express';
 import {DI}                        from '../lib/DependencyInjector';
 import {ResourceManager}           from '../lib/ResourceManager';
-import {OperationOutcome}          from '../resources/models/OperationOutcome';
+import {OperationOutcome}          from '../resources/internal/OperationOutcome';
 import {ConformanceManager}        from '../lib/ConformanceManager';
-import {StructureDefinition}       from '../resources/StructureDefinition';
+import {StructureDefinition}       from '../resources/internal/StructureDefinition';
 import {Enforce}                   from 'ts-objectschema';
 
 @DI.inject(ResourceManager, ConformanceManager)
@@ -41,7 +41,7 @@ export class SystemRoute {
     public displayValueSet(req: Request, res: Response): Response {
 
         // not found any document
-        if (this.resourceManager.models[req.params.model] === 'undefined') {
+        if (this.resourceManager.valueSets[req.params.model] === 'undefined') {
             let err: OperationOutcome = new OperationOutcome({
                 httpcode: 404, issue: {
                     code: 'processing.not-found',
@@ -55,7 +55,7 @@ export class SystemRoute {
         } else {
 
             // create a new valueset that can be anything
-            let valueset: any = new this.resourceManager.models[req.params.model]();
+            let valueset: any = new this.resourceManager.valueSets[req.params.model]();
 
             // set meta if needed
             if (valueset.meta) {
@@ -86,7 +86,7 @@ export class SystemRoute {
      */
     public displayStructureDef(req: Request, res: Response): Response {
 
-        if (this.resourceManager.models[req.params.model] === 'undefined') {
+        if (this.resourceManager.rest[req.params.model] === 'undefined') {
             let err: OperationOutcome = new OperationOutcome({
                 httpcode: 404, issue: {
                     code: 'processing.not-found',
@@ -103,7 +103,7 @@ export class SystemRoute {
 
             // calculate new structre here and anything ETAG osv.
             try {
-                structuredef = new StructureDefinition(this.resourceManager.models[req.params.model], Enforce.exists);
+                structuredef = new StructureDefinition(this.resourceManager.rest[req.params.model], Enforce.exists);
 
             } catch (err) {
                 

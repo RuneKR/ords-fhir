@@ -1,10 +1,10 @@
 import {Enforce}                         from 'ts-objectschema';
 import {Request, Response, NextFunction} from 'express';
 import * as parser                       from 'body-parser';
-import {OperationOutcome}                from '../resources/models/OperationOutcome';
 import {ResourceManager}                 from '../lib/ResourceManager';
 import {HookManager}                     from '../lib/HookManager';
 import {DI}                              from '../lib/DependencyInjector';
+import {OperationOutcome}                from '../resources/internal/OperationOutcome';
 
 /**
  * Toolbox for handling incomming requests
@@ -77,9 +77,13 @@ export class Requestparser {
                 return res.status(code).send(err);
             }
 
+            if (this.resourceManager.rest[req.params.model]) {
+
+            }
+
             // to to set a new query format
             try {
-                req.query = new this.resourceManager.models[req.params.model](newQuery, Enforce.exists);
+                req.query = new this.resourceManager.rest[req.params.model](newQuery, Enforce.exists);
             } catch (context) {
 
                 // OperationOutcome NEEEDS TO BE BUNDLED!

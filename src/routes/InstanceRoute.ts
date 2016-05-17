@@ -3,7 +3,7 @@ import {Router, Request, Response} from 'express';
 import {DBManager}                 from '../lib/DBManager';
 import {DI}                        from '../lib/DependencyInjector';
 import {Requestparser}             from '../lib/Requestparser';
-import {OperationOutcome}          from '../resources/models/OperationOutcome';
+import {OperationOutcome}          from '../resources/internal/OperationOutcome';
 
 @DI.inject(Requestparser, DBManager)
 export class InstanceRoute {

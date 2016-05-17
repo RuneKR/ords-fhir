@@ -1,6 +1,6 @@
 import * as Router                          from 'express';
 import * as cors                            from 'cors';
-import {IConformance}                       from '../resources/Conformance';
+import {IConformance}                       from '../resources/internal/Conformance';
 
 import {TypeRoute}                          from '../routes/TypeRoute';
 import {SystemRoute}                        from '../routes/SystemRoute';

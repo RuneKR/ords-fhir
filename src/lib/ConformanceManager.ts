@@ -1,4 +1,4 @@
-import {IConformance, Conformance}  from '../resources/Conformance';
+import {IConformance, Conformance}  from '../resources/internal/Conformance';
 import {Enforce}                    from 'ts-objectschema';
 
 /**

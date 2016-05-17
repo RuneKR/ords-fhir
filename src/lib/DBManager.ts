@@ -3,7 +3,7 @@ import {HookManager}        from './HookManager';
 import {ResourceManager}    from './ResourceManager';
 import {Promise}            from 'es6-promise';
 import {DI}                 from './DependencyInjector';
-import {OperationOutcome}   from '../resources/models/OperationOutcome';
+import {OperationOutcome}   from '../resources/internal/OperationOutcome';
 
 /**
  * Base for the connection to any database
@@ -31,7 +31,7 @@ export class DBManager {
         return new Promise((resolve: Function, reject: Function) => {
 
             // validate model exsists
-            if (typeof this.rs.models[model] === 'undefined') {
+            if (typeof this.rs.rest[model] === 'undefined') {
                 return reject(new OperationOutcome({
                     httpcode: 404, issue: {
                         code: 'processing.not-supported',
@@ -44,7 +44,7 @@ export class DBManager {
 
             // do multiple validation one to check if we are doing an update and one to check if we are doing an create
             try {
-                dbUpdate = new this.rs.models[model](create, Enforce.required);
+                dbUpdate = new this.rs.rest[model](create, Enforce.required);
             } catch (err) {
 
                 return reject(new OperationOutcome({
@@ -79,7 +79,7 @@ export class DBManager {
         return new Promise((resolve: Function, reject: Function) => {
 
             // validate model exsists
-            if (typeof this.rs.models[model] === 'undefined') {
+            if (typeof this.rs.rest[model] === 'undefined') {
                 return reject(new OperationOutcome({
                     httpcode: 404, issue: {
                         code: 'processing.not-supported',
@@ -118,7 +118,7 @@ export class DBManager {
         return new Promise((resolve: Function, reject: Function) => {
 
             // validate model exsists
-            if (typeof this.rs.models[model] === 'undefined') {
+            if (typeof this.rs.rest[model] === 'undefined') {
                 return reject(new OperationOutcome({
                     httpcode: 404, issue: {
                         code: 'processing.not-supported',
@@ -131,7 +131,7 @@ export class DBManager {
 
             try {
                 // do multiple validation one to check if we are doing an update and one to check if we are doing an create
-                dbUpdate = new this.rs.models[model](update, Enforce.exists);
+                dbUpdate = new this.rs.rest[model](update, Enforce.exists);
 
             } catch (err) {
 
@@ -148,7 +148,7 @@ export class DBManager {
 
             // try to see if required could be done
             try {
-                dbCreate = new this.rs.models[model](update, Enforce.required);
+                dbCreate = new this.rs.rest[model](update, Enforce.required);
             } catch (e) {
                 dbCreate = undefined;
             }
@@ -182,7 +182,7 @@ export class DBManager {
         return new Promise((resolve: Function, reject: Function) => {
 
             // validate model exsists
-            if (typeof this.rs.models[model] === 'undefined') {
+            if (typeof this.rs.rest[model] === 'undefined') {
                 return reject(new OperationOutcome({
                     httpcode: 404, issue: {
                         code: 'processing.not-supported',
