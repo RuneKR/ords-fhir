@@ -23,7 +23,39 @@ export class ConformanceManager {
         conformance.acceptUnknown = 'no';
         conformance.format = ['json'];
         conformance.rest = {
-            mode: 'client'
+            mode: 'client',
+            searchParam: [
+                {
+                    definition: 'http://hl7.org/fhir/SearchParameter/resource-security',
+                    documentation: 'Security Labels applied to this resource',
+                    name: '_security',
+                    type: 'token',
+                },
+                {
+                    definition: 'http://hl7.org/fhir/SearchParameter/resource-lastUpdated',
+                    documentation: 'When the resource version last changed',
+                    name: '_lastUpdated',
+                    type: 'date'
+                },
+                {
+                    definition: 'http://hl7.org/fhir/SearchParameter/resource-id',
+                    documentation: 'Logical id of this artifact',
+                    name: '_id',
+                    type: 'token'
+                },
+                {
+                    definition: 'http://hl7.org/fhir/SearchParameter/resource-profile',
+                    documentation: 'Profiles this resource claims to conform to',
+                    name: '_profile',
+                    type: 'uri'
+                },
+                {
+                    definition: 'http://hl7.org/fhir/SearchParameter/resource-tag',
+                    documentation: 'Tags applied to this resource',
+                    name: '_tag',
+                    type: 'token'
+                }
+            ],
         }
 
     }
@@ -33,9 +65,9 @@ export class ConformanceManager {
      * @returns {Void}
      */
     public buildConformance(conformance: IConformance): void {
-        
+
         // some more fields should be added to the conformance here
-        
+
         // generate profile etc     profile?: Array<IReference>;
 
         this.conformance = new Conformance(conformance, Enforce.required);

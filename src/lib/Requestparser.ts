@@ -57,7 +57,7 @@ export class Requestparser {
     }
     /**
      * Generate MongoDB query based on a FHIR query
-     * @param   {Request}   req    the express request
+     * @param   {Request}   req    the express request needs params.model and query contained
      * @param   {Response}  res    the express response object
      * @param   {Function}  next   next function to be run during the request
      * @returns {void}      no feedback is provided back req.query is updated
