@@ -62,35 +62,55 @@ export class Requestparser {
      * @param   {Function}  next   next function to be run during the request
      * @returns {void}      no feedback is provided back req.query is updated
      */
-    public parseQuery(req: Request, res: Response, next: NextFunction): void {
+    public parseQuery(req: Request, res: Response, next: NextFunction): Response {
 
-        this.hookManager.doHooks('routes.parsequery', req.query).then((oldQuery: any) => {
+        // validate that the model do exsist
+        if (this.resourceManager.rest[req.params.model] === undefined) {
 
-            let newQuery: any = {};
+            // OperationOutcome NEEEDS TO BE BUNDLED!
+            let err: OperationOutcome = new OperationOutcome({
+                httpcode: 400, issue: {
+                    code: 'invalid.invariant',
+                    diagnostics: 'rest model do not exsists',
+                    severity: 'fatal'
+                }
+            });
+
+            let code: any = err.httpcode;
+            return res.status(code).send(err);
+        }
+
+        // container for new query
+        let newQuery: any = {};
+
+        this.hookManager.doHooks('routes.parsequery', newQuery, req.query).then((newQuery: any) => {
 
             // parameters for all resources
             try {
-                this.parseFhirGenParameters(newQuery, oldQuery);
+                this.parseFhirGenParameters(newQuery, req.query);
             } catch (err) {
 
                 let code: any = err.httpcode;
                 return res.status(code).send(err);
             }
-            
-            // validate that the model do exsist
-            if (this.resourceManager.rest[req.params.model] === undefined) {
+
+            // look at the rest of keys in query
+            let keys: Array<string> = Object.keys(req.query);
+
+            // if more key are left then something is wrong
+            if (keys.length !== 0) {
 
                 // OperationOutcome NEEEDS TO BE BUNDLED!
                 let err: OperationOutcome = new OperationOutcome({
                     httpcode: 400, issue: {
                         code: 'invalid.invariant',
-                        diagnostics: 'rest model do not exsists',
+                        diagnostics: 'These parameters are not supported in search: ' + keys.join(','),
                         severity: 'fatal'
                     }
                 });
-                
                 let code: any = err.httpcode;
-                return res.status(code).send(err);      
+                return res.status(code).send(err);
+                
             }
 
             // to to set a new query format
