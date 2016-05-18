@@ -80,10 +80,8 @@ export class Requestparser {
             return res.status(code).send(err);
         }
 
-        // container for new query
-        let newQuery: any = {};
-
-        this.hookManager.doHooks('routes.parsequery', newQuery, req.query).then((newQuery: any) => {
+        // parse a container containing the new query and the old query
+        this.hookManager.doHooks('routes.parsequery', {} , req.query).then((newQuery: any) => {
 
             // parameters for all resources
             try {
