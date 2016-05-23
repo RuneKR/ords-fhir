@@ -26,8 +26,15 @@ export class SystemRoute {
         this.conformanceManager = cm;
 
         // bind functions to router
-        router.get('/ValueSet/:model', this.displayValueSet.bind(this));
-        router.get('/StructureDefinition/:model', this.displayStructureDef.bind(this));
+        router.get(
+            '/ValueSet/:model',
+            this.displayValueSet.bind(this)
+        );
+        router.get(
+            '/StructureDefinition/:resource',
+            { },
+            this.displayStructureDef.bind(this)
+        );
         router.get('/metadata', this.displayConStatement.bind(this));
 
     }
@@ -85,7 +92,7 @@ export class SystemRoute {
      */
     public displayStructureDef(req: Request, res: Response): Response {
 
-        if (this.resourceManager.resources[req.params.model] === 'undefined') {
+        if (this.resourceManager.resources[req.params.resource] === 'undefined') {
             let err: OperationOutcome = new OperationOutcome({
                 httpcode: 404, issue: {
                     code: 'processing.not-found',
@@ -102,7 +109,7 @@ export class SystemRoute {
 
             // calculate new structre here and anything ETAG osv.
             try {
-                structuredef = new StructureDefinition(this.resourceManager.resources[req.params.model], Enforce.exists);
+                structuredef = new StructureDefinition(this.resourceManager.resources[req.params.resource], Enforce.exists);
 
             } catch (err) {
 

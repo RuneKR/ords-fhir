@@ -1,11 +1,28 @@
 import * as express                          from 'express';
 import * as cors                             from 'cors';
 import {DI}                                  from './DependencyInjector';
+import {Requestparser}                           from '../lib/Requestparser';
 
 export {Request, Response, NextFunction}     from 'express';
 
-@DI.createWith()
+export interface Options {
+    parseQuery?: boolean;
+    parseBody?: boolean;
+    merge?: boolean;
+    boundle?: boolean;
+    /**
+     * Force req.params.resource to be this
+     */
+    forceResource?: string;
+}
+
+@DI.createWith(Requestparser)
 export class Router {
+    /**
+     * request parser
+     * @type {Requestparser}
+     */
+    private rp: Requestparser;
     /**
      * Reference to express main application
      */
@@ -13,7 +30,10 @@ export class Router {
     /**
      * Create new express router and adds cors based on the whitelist
      */
-    constructor() {
+    constructor(rp: Requestparser) {
+
+        // save injected reference
+        this.rp = rp;
 
         // setup cors
         this.app.use(cors({
@@ -25,7 +45,26 @@ export class Router {
         }));
 
     }
-    public get(path: string, ...handlers: Array<express.RequestHandler>): void {
+    public get(path: string, options: Options, ...handlers: Array<express.RequestHandler>): void {
+
+        let args: Array<any> = handlers;
+
+        // if query is enabled
+        if (options.parseQuery) {
+            args.unshift(this.rp.parseQuery);
+        }
+        
+        // if query is enabled
+        if (options.parseQuery) {
+            args.unshift(this.rp.parseQuery);
+        }
+
+        // add paths
+        args.unshift(path);
+
+        this.app.get.apply(undefined, args);
+    }
+    public post(path: string, options: Options, ...handlers: Array<express.RequestHandler>): void {
 
         let args: Array<any> = handlers;
 
@@ -34,7 +73,7 @@ export class Router {
 
         this.app.get.apply(undefined, args);
     }
-    public post(path: string, ...handlers: Array<express.RequestHandler>): void {
+    public put(path: string, options: Options, ...handlers: Array<express.RequestHandler>): void {
 
         let args: Array<any> = handlers;
 
@@ -43,16 +82,7 @@ export class Router {
 
         this.app.get.apply(undefined, args);
     }
-    public put(path: string, ...handlers: Array<express.RequestHandler>): void {
-
-        let args: Array<any> = handlers;
-
-        // add paths
-        args.unshift(path);
-
-        this.app.get.apply(undefined, args);
-    }
-    public delete(path: string, ...handlers: Array<express.RequestHandler>): void {
+    public delete(path: string, options: Options, ...handlers: Array<express.RequestHandler>): void {
 
         let args: Array<any> = handlers;
 

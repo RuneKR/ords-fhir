@@ -16,7 +16,6 @@ export class TypeRoute {
      */
     private dbm: DBManager;
     /**
-    /**
      * Binding the routes their function
      */
     constructor(route: Router, requestparser: Requestparser, dbm: DBManager) {
@@ -25,13 +24,21 @@ export class TypeRoute {
         this.dbm = dbm;
 
         // bind model to router
-        route.get('/:model/', this.search.bind(this));
+        route.get(
+            '/:resource/',
+            { merge: true, parseBody: true, parseQuery: true },
+            this.search.bind(this)
+        );
         route.post(
-            '/:model/_search',
+            '/:resource/_search',
+            { merge: true, parseBody: true, parseQuery: true },
             this.search_body.bind(this)
         );
-        route.post('/:model/', this.create.bind(this));
-
+        route.post(
+            '/:resource/',
+            { parseBody: true},
+            this.create.bind(this)
+        );
     }
 
     /**

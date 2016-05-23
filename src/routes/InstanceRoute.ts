@@ -4,13 +4,8 @@ import {DI}                                      from '../lib/DependencyInjector
 import {Requestparser}                           from '../lib/Requestparser';
 import {OperationOutcome}                        from '../models/internal/OperationOutcome';
 
-@DI.createWith(Router, Requestparser, DBManager)
+@DI.createWith(Router, DBManager)
 export class InstanceRoute {
-    /**
-     * Express routing elemeent
-     * @type {Router}
-     */
-    private rp: Requestparser;
     /**
      * Database connection
      * @type {DBManager}
@@ -19,16 +14,15 @@ export class InstanceRoute {
     /**
      * Binding the routes their function
      */
-    constructor(router: Router, rp: Requestparser, dbm: DBManager) {
+    constructor(router: Router, dbm: DBManager) {
 
         // bind injected values
-        this.rp = rp;
         this.dbm = dbm;
 
         // bind model to router
-        router.get('/:model/:id', this.read.bind(this));
-        router.put('/:model/:id', this.update.bind(this));
-        router.delete('/:model/:id', this.delete);
+        router.get('/:resource/:id', { parseQuery: true }, this.read.bind(this));
+        router.put('/:resource/:id', { parseBody: true }, this.update.bind(this));
+        router.delete('/:resource/:id', { parseQuery: true }, this.delete);
     }
     /**
      * Read a specific instance of an model
@@ -39,7 +33,7 @@ export class InstanceRoute {
     public read(req: Request, res: Response): void {
 
         // read from connection
-        this.dbm.read(req.params.model, req.query, 1).then((docs: Array<any>) => {
+        this.dbm.read(req.params.resource, req.query, 1).then((docs: Array<any>) => {
 
             // if meta data is specified then use that in return
             if (docs[0].meta) {
@@ -77,7 +71,7 @@ export class InstanceRoute {
     public update(req: Request, res: Response): Response {
 
         // check if id is set for update and do not match with params.id
-        if (req.body.id !== undefined && new req.params.id != req.body.id) {
+        if (req.body.id !== undefined && req.params.id !== req.body.id) {
 
             let err: OperationOutcome = new OperationOutcome({
                 httpcode: 400, issue: {
@@ -92,7 +86,7 @@ export class InstanceRoute {
         }
 
         // do update
-        this.dbm.update(req.params.model, req.query, req.body).then((doc: any) => {
+        this.dbm.update(req.params.resource, req.query, req.body).then((doc: any) => {
 
             // if meta data is specified then use that in return
             if (doc.meta) {
@@ -108,7 +102,7 @@ export class InstanceRoute {
                     // an insert has occurred report if so
                     if (doc.meta.versionId === 0) {
                         res.set({
-                            'Location': '/' + req.params.model + '/' + req.params.id
+                            'Location': '/' + req.params.resource + '/' + req.params.id
                         });
                         res.status(201);
                     }
@@ -140,7 +134,7 @@ export class InstanceRoute {
     public delete(req: Request, res: Response): void {
 
         // do delete
-        this.dbm.delete(req.params.model, req.query).then((doc: any) => {
+        this.dbm.delete(req.params.resource, req.query).then((doc: any) => {
 
             return res.status(204).send({});
 
