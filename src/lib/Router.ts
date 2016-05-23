@@ -31,8 +31,6 @@ export class Router {
      * Create new express router and adds cors based on the whitelist
      */
     constructor(rp: Requestparser) {
-
-        console.log(rp);
         
         // save injected reference
         this.rp = rp;
@@ -62,7 +60,7 @@ export class Router {
         // add paths
         args.unshift(path);
 
-        this.app.get.apply(undefined, args);
+        this.app.get.apply(this.app, args);
     }
     public post(path: string, options: Options, ...handlers: Array<express.RequestHandler>): void {
 
@@ -89,7 +87,7 @@ export class Router {
         // add paths
         args.unshift(path);
 
-        this.app.get.apply(undefined, args);
+        this.app.get.apply(this.app, args);
     }
     public put(path: string, options: Options, ...handlers: Array<express.RequestHandler>): void {
 
@@ -116,7 +114,7 @@ export class Router {
         // add paths
         args.unshift(path);
 
-        this.app.get.apply(undefined, args);
+        this.app.get.apply(this.app, args);
     }
     public delete(path: string, options: Options, ...handlers: Array<express.RequestHandler>): void {
 
@@ -133,7 +131,7 @@ export class Router {
         // add paths
         args.unshift(path);
 
-        this.app.get.apply(undefined, args);
+        this.app.get.apply(this.app, args);
     }
     public listen(port: number): void {
 
