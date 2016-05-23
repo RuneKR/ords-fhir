@@ -1,4 +1,4 @@
-import {IConformance, Conformance}  from '../resources/internal/Conformance';
+import {IConformance, Conformance}  from '../models/internal/Conformance';
 import {Enforce}                    from 'ts-objectschema';
 
 /**
@@ -25,39 +25,8 @@ export class ConformanceManager {
         conformance.rest = {
             mode: 'client',
             searchParam: [
-                {
-                    definition: 'http://hl7.org/fhir/SearchParameter/resource-security',
-                    documentation: 'Security Labels applied to this resource',
-                    name: '_security',
-                    type: 'token',
-                },
-                {
-                    definition: 'http://hl7.org/fhir/SearchParameter/resource-lastUpdated',
-                    documentation: 'When the resource version last changed',
-                    name: '_lastUpdated',
-                    type: 'date'
-                },
-                {
-                    definition: 'http://hl7.org/fhir/SearchParameter/resource-id',
-                    documentation: 'Logical id of this artifact',
-                    name: '_id',
-                    type: 'token'
-                },
-                {
-                    definition: 'http://hl7.org/fhir/SearchParameter/resource-profile',
-                    documentation: 'Profiles this resource claims to conform to',
-                    name: '_profile',
-                    type: 'uri'
-                },
-                {
-                    definition: 'http://hl7.org/fhir/SearchParameter/resource-tag',
-                    documentation: 'Tags applied to this resource',
-                    name: '_tag',
-                    type: 'token'
-                }
-            ],
-        }
-
+            ]
+        };
     }
     /**
      * Build the conformance
