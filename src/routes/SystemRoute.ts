@@ -1,18 +1,13 @@
-import {Router, Request, Response} from 'express';
+import {Request, Response, Router} from '../lib/Router';
 import {DI}                        from '../lib/DependencyInjector';
 import {ResourceManager}           from '../lib/ResourceManager';
-import {OperationOutcome}          from '../resources/internal/OperationOutcome';
+import {OperationOutcome}          from '../models/internal/OperationOutcome';
 import {ConformanceManager}        from '../lib/ConformanceManager';
-import {StructureDefinition}       from '../resources/internal/StructureDefinition';
+import {StructureDefinition}       from '../models/internal/StructureDefinition';
 import {Enforce}                   from 'ts-objectschema';
 
-@DI.inject(ResourceManager, ConformanceManager)
+@DI.createWith(Router, ResourceManager, ConformanceManager)
 export class SystemRoute {
-    /**
-     * Express routing elemeent
-     * @type {Router}
-     */
-    public route: Router = Router();
     /**
      * Reference to database manager
      */
@@ -24,12 +19,16 @@ export class SystemRoute {
     /**
      * Binding the routes their function
      */
-    constructor() {
+    constructor(router: Router, rm: ResourceManager, cm: ConformanceManager) {
+
+        // bind injected references
+        this.resourceManager = rm;
+        this.conformanceManager = cm;
 
         // bind functions to router
-        this.route.get('/ValueSet/:model', this.displayValueSet.bind(this));
-        this.route.get('/StructureDefinition/:model', this.displayStructureDef.bind(this));
-        this.route.get('/metadata', this.displayConStatement.bind(this));
+        router.get('/ValueSet/:model', this.displayValueSet.bind(this));
+        router.get('/StructureDefinition/:model', this.displayStructureDef.bind(this));
+        router.get('/metadata', this.displayConStatement.bind(this));
 
     }
     /**
@@ -86,7 +85,7 @@ export class SystemRoute {
      */
     public displayStructureDef(req: Request, res: Response): Response {
 
-        if (this.resourceManager.rest[req.params.model] === 'undefined') {
+        if (this.resourceManager.resources[req.params.model] === 'undefined') {
             let err: OperationOutcome = new OperationOutcome({
                 httpcode: 404, issue: {
                     code: 'processing.not-found',
@@ -103,10 +102,10 @@ export class SystemRoute {
 
             // calculate new structre here and anything ETAG osv.
             try {
-                structuredef = new StructureDefinition(this.resourceManager.rest[req.params.model], Enforce.exists);
+                structuredef = new StructureDefinition(this.resourceManager.resources[req.params.model], Enforce.exists);
 
             } catch (err) {
-                
+
                 let oc: OperationOutcome = new OperationOutcome({
                     httpcode: 500, issue: {
                         code: 'transient.exception',

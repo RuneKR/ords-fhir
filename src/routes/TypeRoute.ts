@@ -1,43 +1,31 @@
-import {Router, Request, Response} from 'express';
+import {Router, Request, Response} from '../lib/Router';
 import {DBManager}                 from '../lib/DBManager';
 import {DI}                        from '../lib/DependencyInjector';
 import {Requestparser}             from '../lib/Requestparser';
-import {OperationOutcome}          from '../resources/internal/OperationOutcome';
+import {OperationOutcome}          from '../models/internal/OperationOutcome';
 
+@DI.createWith(Router, Requestparser, DBManager)
 export class TypeRoute {
-    /**
-     * Express routing elemeent
-     * @type {Router}
-     */
-    public route: Router;
-    /**
-     * Express routing elemeent
-     * @type {Router}
-     */
-    @DI.injectProperty(Requestparser)
-    public requestparser: Requestparser;
     /**
      * Database connection management singleton
      */
-    @DI.injectProperty(DBManager)
     private dbm: DBManager;
     /**
      * Binding the routes their function
      */
-    constructor() {
+    constructor(route: Router, requestparser: Requestparser, dbm: DBManager) {
 
-        // setup router
-        this.route = Router();
+        // bind reference
+        this.dbm = dbm;
 
         // bind model to router
-        this.route.get('/:model/', this.requestparser.parseQuery, this.search.bind(this));
-        this.route.post(
+        route.get('/:model/', requestparser.parseQuery, this.search.bind(this));
+        route.post(
             '/:model/_search',
-            this.requestparser.parseBody, 
             this.requestparser.parseQueryFromBody, 
             this.search_body.bind(this)
         );
-        this.route.post('/:model/', this.requestparser.parseBody, this.create.bind(this));
+        route.post('/:model/', this.create.bind(this));
 
     }
     /**

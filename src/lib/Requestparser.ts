@@ -7,6 +7,11 @@ import {DI}                              from '../lib/DependencyInjector';
 import {OperationOutcome}                from '../models/internal/OperationOutcome';
 import {Promise}                         from 'es6-promise';
 
+
+interface IFormatter {
+    (data: any, toUpper: any, toUppero: any): string;
+};
+
 /**
  * Toolbox for handling incomming requests
  * @class Requestparser
@@ -29,6 +34,7 @@ export class Requestparser {
         // binds references to class instance
         this.rm = rm;
         this.hm = hm;
+
     }
     /**
      * Parse the body of an request into the req.body
@@ -57,7 +63,7 @@ export class Requestparser {
      * @param   {object}    query      query to be validated
      * @returns {Promise}   
      */
-    public parseQuery(resource: string, query: Object): Promise<any> {
+    public parseQuery(resource: string, query: Object): Promise<Object> {
 
         return new Promise((resolve: Function, reject: Function) => {
 
@@ -73,47 +79,34 @@ export class Requestparser {
                 }));
             }
 
-            // parse a container containing the new query and the old query
-            this.hm.doHooks('routes.parsequery', {}, req.query).then((newQuery: any) => {
+            // set arguments for hooks
+            let args: any = {
+                parsed: {},
+                query: query,
+                resource: resource,
+            };
+
+            // do the hooking
+            this.hm.doHooks('Requestparser.parseQuery', args).then((params: Array<any>) => {
 
                 // look at the rest of keys in query
-                let keys: Array<string> = Object.keys(req.query);
+                let keys: Array<string> = Object.keys(query);
 
                 // if more key are left then something is wrong
                 if (keys.length !== 0) {
 
-                    // OperationOutcome NEEEDS TO BE BUNDLED!
-                    let err: OperationOutcome = new OperationOutcome({
+                    return reject(new OperationOutcome({
                         httpcode: 400, issue: {
                             code: 'invalid.invariant',
                             diagnostics: 'These parameters are not supported in search: ' + keys.join(','),
                             severity: 'fatal'
                         }
-                    });
-                    let code: any = err.httpcode;
-                    return res.status(code).send(err);
-
+                    }));
                 }
-
-                // to to set a new query format
-                try {
-                    req.query = new this.rm.rest[req.params.model](newQuery, Enforce.exists);
-                } catch (context) {
-
-                    // OperationOutcome NEEEDS TO BE BUNDLED!
-                    let err: OperationOutcome = new OperationOutcome({
-                        httpcode: 400, issue: {
-                            code: 'invalid.invariant',
-                            diagnostics: context.message,
-                            severity: 'fatal'
-                        }
-                    });
-                    let code: any = err.httpcode;
-                    return res.status(code).send(err);
-                }
-                next();
+                
+                // resolve with the query
+                resolve(args.parsed);
             });
-
         });
     }
 }

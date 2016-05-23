@@ -1,6 +1,7 @@
 import {Promise}            from 'es6-promise';
 
-export interface StringMapFunction {
+
+export interface Stack {
     [key: string]: {
         [key: string]: Function;
     };
@@ -15,7 +16,7 @@ export class HookManager {
      * Container of all hooks related to their commands
      * @type {StringMapFunction}
      */
-    public hooks: StringMapFunction = {};
+    private stack: Stack = {   };
     /**
      * Add a named hook to a speicific command or create a new command and add the hook to that command
      * @param   {string}      command   command to be hooked into
@@ -23,32 +24,16 @@ export class HookManager {
      * @param   {Function}    hook      the hook function itself
      * @returns {void}        no feedback is provided  
      */
-    public createHookable(command: string, name: string, hook: Function): void {
+    public addHook(cmd: any, name: string, hook: Function): void {
 
         // add hooks
-        if (this.hooks[command] === undefined) {
-            this.hooks[command] = {};
+        if (this.stack[cmd] === undefined) {
+            
+            this.stack[cmd] = {};
         }
 
         // save hook
-        this.hooks[command][name] = hook;
-    }
-    /**
-     * Add a named hook to a speicific command or create a new command and add the hook to that command
-     * @param   {string}      command   command to be hooked into
-     * @param   {string}      name      name of the hook being added
-     * @param   {Function}    hook      the hook function itself
-     * @returns {void}        no feedback is provided  
-     */
-    public addHook(command: string, name: string, hook: Function): void {
-
-        // add hooks
-        if (this.hooks[command] === undefined) {
-            this.hooks[command] = {};
-        }
-
-        // save hook
-        this.hooks[command][name] = hook;
+        this.stack[cmd][name] = hook;
     }
     /**
      * Execute hooks for a specfic command and apply one or more arguments to the hooks
@@ -56,7 +41,7 @@ export class HookManager {
      * @param   {...any}      args      arguments to be used in the hooks 
      * @returns {Promise}     Indication of weather or not command exsists
      */
-    public doHooks(command: string, ...args: Array<any>): Promise<any> {
+    public doHooks(command: string, out: any): Promise<any> {
 
         // return the promise
         return new Promise(function (resolve: Function, reject: Function): void {
@@ -65,7 +50,7 @@ export class HookManager {
             if (this.hooks[command] === undefined) {
 
                 // do nothing
-                resolve(args[0]);
+                resolve(out);
 
             } else {
 
@@ -76,24 +61,23 @@ export class HookManager {
                 let self: any = this;
 
                 // the next funciton
-                let next: any = function (...innerArgs: Array<any>): void {
+                let next: any = function (): void {
 
                     // check if any functions are left to run
                     if (funcsToRun.length === 0) {
-                        resolve(innerArgs);
+                        resolve(out);
                     }
 
-                    innerArgs.unshift(next);
                     let funcName: string = funcsToRun.shift();
 
                     try {
-                        self.hooks[command][funcName].apply(undefined, innerArgs);
+                        self.hooks[command][funcName].apply(undefined, [out]);
                     } catch (err) {
                         reject(err);
                     }
                 };
 
-                next.apply(undefined, args);
+                next.apply(undefined, [out]);
 
             }
         });
@@ -105,14 +89,14 @@ export class HookManager {
      * @returns {void}        no feedback is provided 
      * @throws  Error is thrown if command does not exsists 
      */
-    public removeHook(command: string, name: string): void {
+    public removeHook(cmd: string, name: string): void {
 
         // validate it exsists
-        if (this.hooks[command] === undefined) {
+        if (this.stack[cmd] === undefined) {
             throw new Error('Command does not exsists');
         }
 
         // delete hook
-        delete this.hooks[command][name];
+        delete this.stack[cmd][name];
     }
 }
