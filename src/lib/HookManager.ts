@@ -23,6 +23,23 @@ export class HookManager {
      * @param   {Function}    hook      the hook function itself
      * @returns {void}        no feedback is provided  
      */
+    public createHookable(command: string, name: string, hook: Function): void {
+
+        // add hooks
+        if (this.hooks[command] === undefined) {
+            this.hooks[command] = {};
+        }
+
+        // save hook
+        this.hooks[command][name] = hook;
+    }
+    /**
+     * Add a named hook to a speicific command or create a new command and add the hook to that command
+     * @param   {string}      command   command to be hooked into
+     * @param   {string}      name      name of the hook being added
+     * @param   {Function}    hook      the hook function itself
+     * @returns {void}        no feedback is provided  
+     */
     public addHook(command: string, name: string, hook: Function): void {
 
         // add hooks

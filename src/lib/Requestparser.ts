@@ -5,6 +5,7 @@ import {ResourceManager}                 from '../lib/ResourceManager';
 import {HookManager}                     from '../lib/HookManager';
 import {DI}                              from '../lib/DependencyInjector';
 import {OperationOutcome}                from '../models/internal/OperationOutcome';
+import {Promise}                         from 'es6-promise';
 
 /**
  * Toolbox for handling incomming requests
@@ -51,83 +52,68 @@ export class Requestparser {
         });
     }
     /**
-     * Adds the body to the query params and generate
-     * @param   {Request}   req    the express request
-     * @param   {Response}  res    the express response object
-     * @param   {Function}  next   next function to be run during the request
-     * @returns {void}      no feedback is provided back req.query is updated
-     */
-    public parseQueryFromBody(req: Request, res: Response, next: NextFunction): void {
-
-        // adds body to req
-        req.query = req.body;
-
-        next();
-    }
-    /**
      * Generate MongoDB query based on a FHIR query
-     * @param   {Request}   req    the express request needs params.model and query contained
-     * @param   {Response}  res    the express response object
-     * @param   {Function}  next   next function to be run during the request
-     * @returns {void}      no feedback is provided back req.query is updated
+     * @param   {string}    resource   name of the resource 
+     * @param   {object}    query      query to be validated
+     * @returns {Promise}   
      */
-    public parseQuery(req: Request, res: Response, next: NextFunction): Response {
+    public parseQuery(resource: string, query: Object): Promise<any> {
 
-        // validate that the model do exsist
-        if (this.rm.rest[req.params.model] === undefined) {
+        return new Promise((resolve: Function, reject: Function) => {
 
-            // OperationOutcome NEEEDS TO BE BUNDLED!
-            let err: OperationOutcome = new OperationOutcome({
-                httpcode: 400, issue: {
-                    code: 'invalid.invariant',
-                    diagnostics: 'rest model do not exsists',
-                    severity: 'fatal'
+            // validate that the resource do exsist
+            if (this.rm.resources[resource] === undefined) {
+
+                reject(new OperationOutcome({
+                    httpcode: 400, issue: {
+                        code: 'invalid.invariant',
+                        diagnostics: 'Resource do not exist',
+                        severity: 'fatal'
+                    }
+                }));
+            }
+
+            // parse a container containing the new query and the old query
+            this.hm.doHooks('routes.parsequery', {}, req.query).then((newQuery: any) => {
+
+                // look at the rest of keys in query
+                let keys: Array<string> = Object.keys(req.query);
+
+                // if more key are left then something is wrong
+                if (keys.length !== 0) {
+
+                    // OperationOutcome NEEEDS TO BE BUNDLED!
+                    let err: OperationOutcome = new OperationOutcome({
+                        httpcode: 400, issue: {
+                            code: 'invalid.invariant',
+                            diagnostics: 'These parameters are not supported in search: ' + keys.join(','),
+                            severity: 'fatal'
+                        }
+                    });
+                    let code: any = err.httpcode;
+                    return res.status(code).send(err);
+
                 }
+
+                // to to set a new query format
+                try {
+                    req.query = new this.rm.rest[req.params.model](newQuery, Enforce.exists);
+                } catch (context) {
+
+                    // OperationOutcome NEEEDS TO BE BUNDLED!
+                    let err: OperationOutcome = new OperationOutcome({
+                        httpcode: 400, issue: {
+                            code: 'invalid.invariant',
+                            diagnostics: context.message,
+                            severity: 'fatal'
+                        }
+                    });
+                    let code: any = err.httpcode;
+                    return res.status(code).send(err);
+                }
+                next();
             });
 
-            let code: any = err.httpcode;
-            return res.status(code).send(err);
-        }
-
-        // parse a container containing the new query and the old query
-        this.hm.doHooks('routes.parsequery', {}, req.query).then((newQuery: any) => {
-
-            // look at the rest of keys in query
-            let keys: Array<string> = Object.keys(req.query);
-
-            // if more key are left then something is wrong
-            if (keys.length !== 0) {
-
-                // OperationOutcome NEEEDS TO BE BUNDLED!
-                let err: OperationOutcome = new OperationOutcome({
-                    httpcode: 400, issue: {
-                        code: 'invalid.invariant',
-                        diagnostics: 'These parameters are not supported in search: ' + keys.join(','),
-                        severity: 'fatal'
-                    }
-                });
-                let code: any = err.httpcode;
-                return res.status(code).send(err);
-
-            }
-
-            // to to set a new query format
-            try {
-                req.query = new this.rm.rest[req.params.model](newQuery, Enforce.exists);
-            } catch (context) {
-
-                // OperationOutcome NEEEDS TO BE BUNDLED!
-                let err: OperationOutcome = new OperationOutcome({
-                    httpcode: 400, issue: {
-                        code: 'invalid.invariant',
-                        diagnostics: context.message,
-                        severity: 'fatal'
-                    }
-                });
-                let code: any = err.httpcode;
-                return res.status(code).send(err);
-            }
-            next();
         });
     }
 }
