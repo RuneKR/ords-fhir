@@ -1,5 +1,6 @@
-import {Promise}            from 'es6-promise';
+import {Promise}                    from 'es6-promise';
 
+export *                            from './HookableFunctions'; 
 
 export interface Stack {
     [key: string]: {
@@ -16,7 +17,7 @@ export class HookManager {
      * Container of all hooks related to their commands
      * @type {StringMapFunction}
      */
-    private stack: Stack = {   };
+    private stack: Stack = {};
     /**
      * Add a named hook to a speicific command or create a new command and add the hook to that command
      * @param   {string}      command   command to be hooked into
@@ -28,7 +29,7 @@ export class HookManager {
 
         // add hooks
         if (this.stack[cmd] === undefined) {
-            
+
             this.stack[cmd] = {};
         }
 
@@ -41,7 +42,7 @@ export class HookManager {
      * @param   {...any}      args      arguments to be used in the hooks 
      * @returns {Promise}     Indication of weather or not command exsists
      */
-    public doHooks(command: string, out: any): Promise<any> {
+    public doHooks(command: string, args: Function): Promise<any> {
 
         // return the promise
         return new Promise(function (resolve: Function, reject: Function): void {
@@ -50,7 +51,7 @@ export class HookManager {
             if (this.hooks[command] === undefined) {
 
                 // do nothing
-                resolve(out);
+                resolve(args);
 
             } else {
 
@@ -65,20 +66,19 @@ export class HookManager {
 
                     // check if any functions are left to run
                     if (funcsToRun.length === 0) {
-                        resolve(out);
+                        resolve(args);
                     }
 
                     let funcName: string = funcsToRun.shift();
 
                     try {
-                        self.hooks[command][funcName].apply(undefined, [out]);
+                        self.hooks[command][funcName].apply(undefined, [args]);
                     } catch (err) {
                         reject(err);
                     }
                 };
 
-                next.apply(undefined, [out]);
-
+                next.apply(undefined, [args]);
             }
         });
     }

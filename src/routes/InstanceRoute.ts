@@ -1,7 +1,6 @@
 import {Request, Response, Router}               from '../lib/Router';
 import {DBManager}                               from '../lib/DBManager';
 import {DI}                                      from '../lib/DependencyInjector';
-import {Requestparser}                           from '../lib/Requestparser';
 import {OperationOutcome}                        from '../models/internal/OperationOutcome';
 
 @DI.createWith(Router, DBManager)

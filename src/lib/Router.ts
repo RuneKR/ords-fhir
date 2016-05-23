@@ -48,12 +48,10 @@ export class Router {
     public get(path: string, options: Options, ...handlers: Array<express.RequestHandler>): void {
 
         let args: Array<any> = handlers;
-
-        // if query is enabled
-        if (options.parseQuery) {
-            args.unshift(this.rp.parseQuery);
-        }
         
+        // DO SOMETHING WITH forceResource
+        // DO SOMETHING WITH BOUNDLE FLAG
+               
         // if query is enabled
         if (options.parseQuery) {
             args.unshift(this.rp.parseQuery);
@@ -67,6 +65,24 @@ export class Router {
     public post(path: string, options: Options, ...handlers: Array<express.RequestHandler>): void {
 
         let args: Array<any> = handlers;
+        
+        // DO SOMETHING WITH forceResource
+        // DO SOMETHING WITH BOUNDLE FLAG
+        
+        // if body should be parsed
+        if (options.parseBody) {
+            args.unshift(this.rp.parseBody);
+        }
+        
+        // if body should be merged to query
+        if (options.merge) {
+            args.unshift(this.rp.merge);
+        }
+        
+        // if query is enabled
+        if (options.parseQuery) {
+            args.unshift(this.rp.parseQuery);
+        }
 
         // add paths
         args.unshift(path);
@@ -76,6 +92,24 @@ export class Router {
     public put(path: string, options: Options, ...handlers: Array<express.RequestHandler>): void {
 
         let args: Array<any> = handlers;
+        
+        // DO SOMETHING WITH forceResource
+        // DO SOMETHING WITH BOUNDLE FLAG
+        
+        // if body should be parsed
+        if (options.parseBody) {
+            args.unshift(this.rp.parseBody);
+        }
+        
+        // if body should be merged to query
+        if (options.merge) {
+            args.unshift(this.rp.merge);
+        }
+        
+        // if query is enabled
+        if (options.parseQuery) {
+            args.unshift(this.rp.parseQuery);
+        }
 
         // add paths
         args.unshift(path);
@@ -85,6 +119,14 @@ export class Router {
     public delete(path: string, options: Options, ...handlers: Array<express.RequestHandler>): void {
 
         let args: Array<any> = handlers;
+        
+        // DO SOMETHING WITH forceResource
+        // DO SOMETHING WITH BOUNDLE FLAG
+        
+         // if query is enabled
+        if (options.parseQuery) {
+            args.unshift(this.rp.parseQuery);
+        }
 
         // add paths
         args.unshift(path);

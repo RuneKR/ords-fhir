@@ -1,12 +1,9 @@
-import {Enforce}            from 'ts-objectschema';
-import {HookManager}        from './HookManager';
-import {ResourceManager}    from './ResourceManager';
-import {Promise}            from 'es6-promise';
-import {DI}                 from './DependencyInjector';
-import {OperationOutcome}   from '../models/internal/OperationOutcome';
-
-// THIS GUY SHOULD DO VALIDATION OF QUERY :D :D or so?
-
+import {Enforce}                            from 'ts-objectschema';
+import {HookManager, DBManager as dbm}      from './HookManager';
+import {ResourceManager}                    from './ResourceManager';
+import {Promise}                            from 'es6-promise';
+import {DI}                                 from './DependencyInjector';
+import {OperationOutcome}                   from '../models/internal/OperationOutcome';
 
 /**
  * Base for the connection to any database
@@ -64,14 +61,25 @@ export class DBManager {
                 }));
             }
 
-            // do action
-            this.hm.doHooks('dbm.create', model, query, dbUpdate, function (err: OperationOutcome, doc: any): void {
+            let arg: any = {
+                action: {
+                    data: dbUpdate,
+                    query: query,
+                    resource: model
+                },
+                result: {}
+            };
 
-                if (err) {
-                    reject(err);
-                } else {
-                    resolve(doc);
-                }
+            // do action
+            this.hm.doHooks('DBManager.Create', arg).then((args: dbm.Create) => {
+
+                // retrun result
+                resolve(args.result);
+
+                // send back operation outcome
+            }).catch((err: any) => {
+
+                reject(err);
             });
         });
     }
@@ -96,12 +104,19 @@ export class DBManager {
                 }));
             }
 
-            // return action
-            this.hm.doHooks('dbm.read', model, query, limit, function (err: OperationOutcome, docs: Array<any>): void {
+            let arg: any = {
+                action: {
+                    limit: limit,
+                    query: query,
+                    resource: model
+                },
+                result: []
+            };
 
-                if (err) {
-                    reject(err);
-                } else if (docs.length === 0) {
+            // return action
+            this.hm.doHooks('DBManager.Read', arg).then((out: dbm.Read) => {
+
+                if (out.result.length === 0) {
                     reject(new OperationOutcome({
                         httpcode: 404, issue: {
                             code: 'processing.not-found',
@@ -109,8 +124,12 @@ export class DBManager {
                         }
                     }));
                 } else {
-                    resolve(docs);
+                    resolve(out.result);
                 }
+                
+            // operation outcome catch
+            }).catch((err: any) => {
+                reject(err);
             });
         });
     }
@@ -139,7 +158,7 @@ export class DBManager {
 
             try {
                 // do multiple validation one to check if we are doing an update and one to check if we are doing an create
-                dbUpdate = new this.rs.resources[model](update, Enforce.exists);
+                dbUpdate = new this.rs.resources[model](update, Enforce.required);
 
             } catch (err) {
 
@@ -152,30 +171,23 @@ export class DBManager {
                 }));
             }
 
-            let dbCreate: Object;
+            let arg: any = {
+                action: {
+                    data: dbUpdate,
+                    query: query,
+                    resource: model
+                },
+                result: {}
+            };
 
-            // try to see if required could be done
-            try {
-                dbCreate = new this.rs.resources[model](update, Enforce.required);
-            } catch (e) {
-                dbCreate = undefined;
-            }
-
-            // do action
-            this.hm.doHooks('dbm.update', model, query, dbUpdate, dbCreate, function (err: OperationOutcome, doc: any): void {
-
-                if (err) {
-                    reject(err);
-                } else if (doc === undefined) {
-                    reject(new OperationOutcome({
-                        httpcode: 404, issue: {
-                            code: 'processing.not-found',
-                            severity: 'warning'
-                        }
-                    }));
-                } else {
-                    resolve(doc);
-                }
+            // return action
+            this.hm.doHooks('DBManager.Update', arg).then((out: dbm.Update) => {
+    
+               resolve(out.result);
+                
+            // operation outcome catch
+            }).catch((err: any) => {
+                reject(err);
             });
         });
     }
@@ -199,21 +211,22 @@ export class DBManager {
                 }));
             }
 
-            // return action
-            this.hm.doHooks('dbm.delete', model, query, function (err: OperationOutcome, doc: any): void {
+            let arg: any = {
+                action: {
+                    query: query,
+                    resource: model
+                },
+                result: {}
+            };
 
-                if (err) {
-                    reject(err);
-                } else if (doc === undefined) {
-                    reject(new OperationOutcome({
-                        httpcode: 404, issue: {
-                            code: 'processing.not-found',
-                            severity: 'warning'
-                        }
-                    }));
-                } else {
-                    resolve(doc);
-                }
+            // return action
+            this.hm.doHooks('DBManager.Delete', arg).then((out: dbm.Delete) => {
+    
+               resolve(out.result);
+                
+            // operation outcome catch
+            }).catch((err: any) => {
+                reject(err);
             });
         });
     }

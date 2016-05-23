@@ -56,6 +56,8 @@ export class Requestparser {
                         severity: 'fatal'
                     }
                 }));
+
+                // just send a normal operation outcome back   
             } else {
                 res.status(404).send(new OperationOutcome({
                     httpcode: 404, issue: {
@@ -103,42 +105,46 @@ export class Requestparser {
         });
     }
     /**
-     * Generate MongoDB query based on a FHIR query
+     * Generate MongoDB query based on a FHIR query from req.query and req.params
+     * Skips params that follow _param syntax
      * @param   {Request}     req     requrest from the client
      * @param   {Response}    res     responsehandler for the client
      * @returns {Promise}   
      */
     public parseQuery(req: Request, res: Response, next: NextFunction): void {
 
-        // validate that the resource do exsist
-        if (this.rm.resources[req.params.resource] === undefined) {
+        // DO SOMETHING WITH BOUNDLE FLAG
 
-            reject(new OperationOutcome({
-                httpcode: 400, issue: {
-                    code: 'invalid.invariant',
-                    diagnostics: 'Resource do not exist',
-                    severity: 'fatal'
-                }
-            }));
-        }
+        // look through all the keys and add the params key to query object
+        Object.keys(req.params).forEach(function (key: string): void {
+
+            // validate that key is to be set in query
+            if (key !== 'resource' || key[0] !== '_') {
+
+                // parse value from params to query
+                req.query[key] = req.params[key];
+            }
+        });
 
         // set arguments for hooks
         let args: any = {
-            parsed: {},
-            query: query,
-            resource: resource,
+            action: {
+                query: req.query,
+                resource: req.params.resource
+            },
+            result: {}
         };
 
         // do the hooking
-        this.hm.doHooks('Requestparser.parseQuery', args).then((params: Array<any>) => {
+        this.hm.doHooks('Requestparser.ParseQuery', args).then((params: any) => {
 
             // look at the rest of keys in query
-            let keys: Array<string> = Object.keys(query);
+            let keys: Array<string> = Object.keys(params.query);
 
             // if more key are left then something is wrong
             if (keys.length !== 0) {
 
-                return reject(new OperationOutcome({
+                return res.status(400).send(new OperationOutcome({
                     httpcode: 400, issue: {
                         code: 'invalid.invariant',
                         diagnostics: 'These parameters are not supported in search: ' + keys.join(','),
@@ -147,8 +153,16 @@ export class Requestparser {
                 }));
             }
 
-            // resolve with the query
-            resolve(args.parsed);
+            req.query = params.result;
+
+            // go next in line
+            next();
+
+            // catch OperationOutcome
+        }).catch((err: any) => {
+
+            // send back result mabye boundle
+            res.status(err.httpcode).send(err);
         });
     }
 }

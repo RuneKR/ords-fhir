@@ -1,16 +1,10 @@
-import {Router, Request, Response, NextFunction} from '../lib/Router';
+import {Router, Request, Response}               from '../lib/Router';
 import {DBManager}                               from '../lib/DBManager';
 import {DI}                                      from '../lib/DependencyInjector';
-import {Requestparser}                           from '../lib/Requestparser';
 import {OperationOutcome}                        from '../models/internal/OperationOutcome';
 
-@DI.createWith(Router, Requestparser, DBManager)
+@DI.createWith(Router, DBManager)
 export class TypeRoute {
-    /**
-     * Express routing elemeent
-     * @type {Router}
-     */
-    private rp: Requestparser;
     /**
      * Database connection management singleton
      */
@@ -18,7 +12,7 @@ export class TypeRoute {
     /**
      * Binding the routes their function
      */
-    constructor(route: Router, requestparser: Requestparser, dbm: DBManager) {
+    constructor(route: Router, dbm: DBManager) {
 
         // bind reference
         this.dbm = dbm;
