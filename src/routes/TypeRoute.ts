@@ -1,15 +1,21 @@
-import {Router, Request, Response} from '../lib/Router';
-import {DBManager}                 from '../lib/DBManager';
-import {DI}                        from '../lib/DependencyInjector';
-import {Requestparser}             from '../lib/Requestparser';
-import {OperationOutcome}          from '../models/internal/OperationOutcome';
+import {Router, Request, Response, NextFunction} from '../lib/Router';
+import {DBManager}                               from '../lib/DBManager';
+import {DI}                                      from '../lib/DependencyInjector';
+import {Requestparser}                           from '../lib/Requestparser';
+import {OperationOutcome}                        from '../models/internal/OperationOutcome';
 
 @DI.createWith(Router, Requestparser, DBManager)
 export class TypeRoute {
     /**
+     * Express routing elemeent
+     * @type {Router}
+     */
+    private rp: Requestparser;
+    /**
      * Database connection management singleton
      */
     private dbm: DBManager;
+    /**
     /**
      * Binding the routes their function
      */
@@ -19,15 +25,15 @@ export class TypeRoute {
         this.dbm = dbm;
 
         // bind model to router
-        route.get('/:model/', requestparser.parseQuery, this.search.bind(this));
+        route.get('/:model/', this.search.bind(this));
         route.post(
             '/:model/_search',
-            this.requestparser.parseQueryFromBody, 
             this.search_body.bind(this)
         );
         route.post('/:model/', this.create.bind(this));
 
     }
+
     /**
      * Search a given model
      * @param   {Request}     req     requrest from the client

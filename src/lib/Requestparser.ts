@@ -1,16 +1,11 @@
-import {Enforce}                         from 'ts-objectschema';
 import {Request, Response, NextFunction} from '../lib/Router';
-import * as parser                       from 'body-parser';
 import {ResourceManager}                 from '../lib/ResourceManager';
 import {HookManager}                     from '../lib/HookManager';
 import {DI}                              from '../lib/DependencyInjector';
 import {OperationOutcome}                from '../models/internal/OperationOutcome';
+
+import * as parser                       from 'body-parser';
 import {Promise}                         from 'es6-promise';
-
-
-interface IFormatter {
-    (data: any, toUpper: any, toUppero: any): string;
-};
 
 /**
  * Toolbox for handling incomming requests
@@ -27,7 +22,7 @@ export class Requestparser {
      */
     private hm: HookManager;
     /**
-     * Create new instance of Requestparser
+     * Create new instance of Requestparser and save injected references
      */
     constructor(rm: ResourceManager, hm: HookManager) {
 
@@ -55,6 +50,20 @@ export class Requestparser {
             parser.json({
                 limit: process.env.LIMIT_UPLOAD_MB + 'mb'
             })(req, res, next);
+        });
+    }
+    /**
+     * Copy content from the body into query
+     * @param   {Request}     req     requrest from the client
+     * @param   {Response}    res     responsehandler for the client
+     * @returns {Void}
+     */
+    public queryFromBody(req: Request, res: Response, next: NextFunction): void {
+
+        // copy everything from body to query
+        Object.keys(req.body).forEach(function (value: string): void {
+            
+            req.query[value] = req.body[value];
         });
     }
     /**

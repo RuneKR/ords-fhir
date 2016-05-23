@@ -1,8 +1,8 @@
-import {Request, Response, Router} from '../lib/Router';
-import {DBManager}                 from '../lib/DBManager';
-import {DI}                        from '../lib/DependencyInjector';
-import {Requestparser}             from '../lib/Requestparser';
-import {OperationOutcome}          from '../models/internal/OperationOutcome';
+import {Request, Response, Router}               from '../lib/Router';
+import {DBManager}                               from '../lib/DBManager';
+import {DI}                                      from '../lib/DependencyInjector';
+import {Requestparser}                           from '../lib/Requestparser';
+import {OperationOutcome}                        from '../models/internal/OperationOutcome';
 
 @DI.createWith(Router, Requestparser, DBManager)
 export class InstanceRoute {
@@ -10,25 +10,25 @@ export class InstanceRoute {
      * Express routing elemeent
      * @type {Router}
      */
-    public requestparser: Requestparser;
+    private rp: Requestparser;
     /**
      * Database connection
      * @type {DBManager}
      */
-    private dBManager: DBManager;
+    private dbm: DBManager;
     /**
      * Binding the routes their function
      */
     constructor(router: Router, rp: Requestparser, dbm: DBManager) {
-        
+
         // bind injected values
-        this.requestparser = rp;
-        this.dBManager = dbm;
+        this.rp = rp;
+        this.dbm = dbm;
 
         // bind model to router
-        router.get('/:model/:id([0-9a-f]{24})', this.read.bind(this));
-        router.put('/:model/:id([0-9a-f]{24})', this.requestparser.parseBody, this.update.bind(this));
-        router.delete('/:model/:id([0-9a-f]{24})', this.delete);
+        router.get('/:model/:id', this.read.bind(this));
+        router.put('/:model/:id', this.update.bind(this));
+        router.delete('/:model/:id', this.delete);
     }
     /**
      * Read a specific instance of an model
@@ -39,7 +39,7 @@ export class InstanceRoute {
     public read(req: Request, res: Response): void {
 
         // read from connection
-        this.dBManager.read(req.params.model, { id: { $eq: new ObjectID(req.params.id) } }, 1).then((docs: Array<any>) => {
+        this.dbm.read(req.params.model, req.query, 1).then((docs: Array<any>) => {
 
             // if meta data is specified then use that in return
             if (docs[0].meta) {
@@ -77,7 +77,7 @@ export class InstanceRoute {
     public update(req: Request, res: Response): Response {
 
         // check if id is set for update and do not match with params.id
-        if (req.body.id !== undefined && new ObjectID(req.params.id) !== req.body.id) {
+        if (req.body.id !== undefined && new req.params.id != req.body.id) {
 
             let err: OperationOutcome = new OperationOutcome({
                 httpcode: 400, issue: {
@@ -92,7 +92,7 @@ export class InstanceRoute {
         }
 
         // do update
-        this.dBManager.update(req.params.model, { id: { $eq: new ObjectID(req.params.id) } }, req.body).then((doc: any) => {
+        this.dbm.update(req.params.model, req.query, req.body).then((doc: any) => {
 
             // if meta data is specified then use that in return
             if (doc.meta) {
@@ -140,7 +140,7 @@ export class InstanceRoute {
     public delete(req: Request, res: Response): void {
 
         // do delete
-        this.dBManager.delete(req.params.model, { id: { $eq: new ObjectID(req.params.id) } }).then((doc: any) => {
+        this.dbm.delete(req.params.model, req.query).then((doc: any) => {
 
             return res.status(204).send({});
 

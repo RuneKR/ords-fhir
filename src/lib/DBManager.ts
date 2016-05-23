@@ -5,20 +5,28 @@ import {Promise}            from 'es6-promise';
 import {DI}                 from './DependencyInjector';
 import {OperationOutcome}   from '../models/internal/OperationOutcome';
 
+// THIS GUY SHOULD DO VALIDATION OF QUERY :D :D or so?
+
+
 /**
  * Base for the connection to any database
  */
+@DI.createWith(ResourceManager, HookManager)
 export class DBManager {
     /**
      * Reference to the resourcemanager
      */
-    @DI.inject(ResourceManager)
     private rs: ResourceManager;
     /**
      * Reference to the hookmanager
      */
-    @DI.inject(HookManager)
     private hm: HookManager;
+    constructor(rs: ResourceManager, hm: HookManager) {
+
+        // keep injected references
+        this.rs = rs;
+        this.hm = hm;
+    }
     /**
      * Create a new instance of a resource with some given data and save it to a database
      * @param   {string}              model   name of the resource that is to be created a new instance of

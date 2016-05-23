@@ -1,7 +1,6 @@
 import * as express                          from 'express';
 import * as cors                             from 'cors';
 import {DI}                                  from './DependencyInjector';
-import {Requestparser}                       from './Requestparser';
 
 export {Request, Response, NextFunction}     from 'express';
 
@@ -12,16 +11,9 @@ export class Router {
      */
     private app: express.Express = express();
     /**
-     * Reference request parser
-     */
-    private rp: Requestparser;
-    /**
      * Create new express router and adds cors based on the whitelist
      */
-    constructor(rp: Requestparser) {
-        
-        // save reference
-        this.rp = rp;
+    constructor() {
 
         // setup cors
         this.app.use(cors({
@@ -47,7 +39,7 @@ export class Router {
         let args: Array<any> = handlers;
 
         // add paths
-        args.unshift(path, this.rp.parseBody);
+        args.unshift(path);
 
         this.app.get.apply(undefined, args);
     }
@@ -56,7 +48,7 @@ export class Router {
         let args: Array<any> = handlers;
 
         // add paths
-        args.unshift(path, this.rp.parseBody);
+        args.unshift(path);
 
         this.app.get.apply(undefined, args);
     }
