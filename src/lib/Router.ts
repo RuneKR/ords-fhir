@@ -32,6 +32,8 @@ export class Router {
      */
     constructor(rp: Requestparser) {
 
+        console.log(rp);
+        
         // save injected reference
         this.rp = rp;
 

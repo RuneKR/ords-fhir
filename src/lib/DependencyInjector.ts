@@ -23,12 +23,16 @@ export class DependencyInjector {
 
         // return the function specified by ts documentation
         return (target: any) => {
+            
+            console.log(target.name, Object.keys(this.singleTons));
 
             let args: Array<Function> = [];
 
             // loop all the dependencies if a singleton allready exsists
             for (let entry of dependencies) {
-
+                
+                console.log(typeof this.singleTons[entry.name], entry.name);
+                
                 // generate a new singleton
                 if (this.singleTons[entry.name] === undefined) {
                     this.singleTons[entry.name] = new entry();
