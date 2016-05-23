@@ -46,7 +46,7 @@ export class Router {
 
     }
     public get(path: string, options: Options, ...handlers: Array<express.RequestHandler>): void {
-
+        
         let args: Array<any> = handlers;
         
         // DO SOMETHING WITH forceResource

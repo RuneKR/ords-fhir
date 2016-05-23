@@ -13,7 +13,7 @@ export class TypeRoute {
      * Binding the routes their function
      */
     constructor(route: Router, dbm: DBManager) {
-
+        
         // bind reference
         this.dbm = dbm;
 

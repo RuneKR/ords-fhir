@@ -1,7 +1,6 @@
 import {Router}                             from './Router';
-import {IConformance}                       from '../models/internal/Conformance';
 import {DI}                                 from './DependencyInjector';
-import {HookManager}                        from './HookManager';
+import {HookManager, Conformance}           from './HookManager';
 import {ConformanceManager}                 from './ConformanceManager';
 
 // auto load routes
@@ -39,7 +38,7 @@ export class ChildWorker {
         this.conformanceManager.addAutoConformance(conformance);
 
         // build conformance
-        this.hookManager.doHooks('conformance.configure', conformance).then((conf: IConformance): void => {
+        this.hookManager.doHooks('conformance.configure', conformance).then((conf: Conformance.Configure): void => {
 
             // build conformance
             this.conformanceManager.buildConformance(conf);

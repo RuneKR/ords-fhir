@@ -1,8 +1,11 @@
+import {IConformance}                       from '../models/internal/Conformance';
+
 export namespace Conformance {
 
     'use strict';
 
-    export interface Configure {
+    // conformance is maintained within the internal model
+    export interface Configure extends IConformance {
 
     }
 }

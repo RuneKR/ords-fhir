@@ -24,7 +24,7 @@ export class DependencyInjector {
         // return the function specified by ts documentation
         return (target: any) => {
 
-            let args: Array<Function>;
+            let args: Array<Function> = [];
 
             // loop all the dependencies if a singleton allready exsists
             for (let entry of dependencies) {
@@ -37,9 +37,13 @@ export class DependencyInjector {
                 // set the value of target to the required singleton      
                 args.push(this.singleTons[entry.name]);
             }
+            
+            // preapre this argument
+            let instance: any = Object.create(target.prototype);
 
             // call target and save reference as singleton
-            this.singleTons[target.name] = target.apply(undefined, args);
+            this.singleTons[target.name] = target.apply(instance, args);
+            
         };
     }
     /**
