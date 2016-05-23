@@ -1,19 +1,6 @@
-import * as express from 'express';
-
-// get functionname based on a function
-let functionName: Function = function (fun: Function): string {
-
-    // monkey patching NOT good but this is unfortunetly how express works
-    if (fun === express || fun === express.Router) {
-        return 'Router';
-    }
-
-    let ret: string = fun.toString();
-    ret = ret.substr('function '.length);
-    ret = ret.substr(0, ret.indexOf('('));
-    return ret;
-};
-
+/**
+ * list of all singletons used in the DependencyInjector
+ */
 export interface Singletons {
     [key: string]: any;             // hate this notation any better ideas?
 }
@@ -26,37 +13,33 @@ export class DependencyInjector {
     /**
      * Contains all initiated singletons
      */
-    public singleTons: Singletons = {};
+    private singleTons: Singletons = {};
     /**
-     * Get injectors from the listed dependencies
-     * @param   {...any}  dependencies  list of dependencies needed to resolve
-     * @returns {Function}       declaration for propertie function
+     * Create an instance of target and inject from the listed dependencies
+     * @param   {...any}  dependencies  list of dependencies needed to resolved
+     * @returns {void}    
      */
-    public inject(...dependencies: Array<any>): Function {
+    public createWith(...dependencies: Array<any>): Function {
 
         // return the function specified by ts documentation
         return (target: any) => {
 
-            let name: string;
-            let propName: string;
+            let args: Array<Function>;
 
             // loop all the dependencies if a singleton allready exsists
             for (let entry of dependencies) {
 
-                // grap funciton name
-                name = functionName(entry);
-
                 // generate a new singleton
-                if (this.singleTons[name] === undefined) {
-                    this.singleTons[name] = new entry();
+                if (this.singleTons[entry.name] === undefined) {
+                    this.singleTons[entry.name] = new entry();
                 }
 
-                // get name that are to be set in the target prototype
-                propName = name.charAt(0).toLowerCase() + name.slice(1);
-
                 // set the value of target to the required singleton      
-                target.prototype[propName] = this.singleTons[name];
+                args.push(this.singleTons[entry.name]);
             }
+
+            // call target and save reference as singleton
+            this.singleTons[target.name] = target.apply(undefined, args);
         };
     }
     /**
@@ -64,23 +47,18 @@ export class DependencyInjector {
      * @param   {any}       dependency  list of dependencies needed to resolve
      * @returns {Function}  declaration for a property function
      */
-    public injectProperty(dependency: any): Function {
+    public inject(dependency: any): Function {
 
         // return the function specified by ts documentation
         return (target: any, propertyKey: string | symbol) => {
 
-            let name: string;
-
-            // grap funciton name
-            name = functionName(dependency);
-
             // if singleton do not exsists create a new one
-            if (this.singleTons[name] === undefined) {
-                this.singleTons[name] = new dependency();
+            if (this.singleTons[dependency] === undefined) {
+                this.singleTons[dependency] = new dependency();
             }
 
             // set the value of target to the required singleton      
-            target[propertyKey] = this.singleTons[name];
+            target[propertyKey] = this.singleTons[dependency];
         };
     }
 }

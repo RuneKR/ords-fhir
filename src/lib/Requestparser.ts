@@ -1,25 +1,34 @@
 import {Enforce}                         from 'ts-objectschema';
-import {Request, Response, NextFunction} from 'express';
+import {Request, Response, NextFunction} from '../lib/Router';
 import * as parser                       from 'body-parser';
 import {ResourceManager}                 from '../lib/ResourceManager';
 import {HookManager}                     from '../lib/HookManager';
 import {DI}                              from '../lib/DependencyInjector';
-import {OperationOutcome}                from '../resources/internal/OperationOutcome';
+import {OperationOutcome}                from '../models/internal/OperationOutcome';
 
 /**
  * Toolbox for handling incomming requests
  * @class Requestparser
  */
-@DI.inject(ResourceManager, HookManager)
+@DI.createWith(ResourceManager, HookManager)
 export class Requestparser {
     /**
-     * reference to database
+     * Reference to the resources
      */
-    private resourceManager: ResourceManager;
+    private rm: ResourceManager;
     /**
-     * reference to hooks
+     * Reference to hooks
      */
-    private hookManager: HookManager;
+    private hm: HookManager;
+    /**
+     * Create new instance of Requestparser
+     */
+    constructor(rm: ResourceManager, hm: HookManager) {
+
+        // binds references to class instance
+        this.rm = rm;
+        this.hm = hm;
+    }
     /**
      * Parse the body of an request into the req.body
      * @param   {Request}   req    the express request
@@ -65,7 +74,7 @@ export class Requestparser {
     public parseQuery(req: Request, res: Response, next: NextFunction): Response {
 
         // validate that the model do exsist
-        if (this.resourceManager.rest[req.params.model] === undefined) {
+        if (this.rm.rest[req.params.model] === undefined) {
 
             // OperationOutcome NEEEDS TO BE BUNDLED!
             let err: OperationOutcome = new OperationOutcome({
@@ -81,16 +90,7 @@ export class Requestparser {
         }
 
         // parse a container containing the new query and the old query
-        this.hookManager.doHooks('routes.parsequery', {} , req.query).then((newQuery: any) => {
-
-            // parameters for all resources
-            try {
-                this.parseFhirGenParameters(newQuery, req.query);
-            } catch (err) {
-
-                let code: any = err.httpcode;
-                return res.status(code).send(err);
-            }
+        this.hm.doHooks('routes.parsequery', {}, req.query).then((newQuery: any) => {
 
             // look at the rest of keys in query
             let keys: Array<string> = Object.keys(req.query);
@@ -108,12 +108,12 @@ export class Requestparser {
                 });
                 let code: any = err.httpcode;
                 return res.status(code).send(err);
-                
+
             }
 
             // to to set a new query format
             try {
-                req.query = new this.resourceManager.rest[req.params.model](newQuery, Enforce.exists);
+                req.query = new this.rm.rest[req.params.model](newQuery, Enforce.exists);
             } catch (context) {
 
                 // OperationOutcome NEEEDS TO BE BUNDLED!
@@ -129,72 +129,5 @@ export class Requestparser {
             }
             next();
         });
-    }
-    /**
-     * Parse some general FHIR paramenters as specificed in https://www.hl7.org/fhir/search.html
-     * @param   {Object}    newQuery    the new query to be passed to
-     * @param   {Object}    query       old query that should be used to pass
-     * @returns {void}      no feedback is provided back req.query is updated
-     */
-    private parseFhirGenParameters(newQuery: any, query: any): void {
-
-        // parameters for all resources
-        if (query._id) {
-            newQuery.id = query._id;
-            delete query._id;
-        }
-
-        // make sure not to override meta if it is actually provided
-        if (
-            newQuery.meta === undefined &&
-            (
-                query._tag !== undefined ||
-                query._lastUpdated !== undefined ||
-                query._profile !== undefined
-            )
-        ) {
-            newQuery.meta = {};
-        }
-
-        if (query._tag) {
-            let tmpTag: Array<string> = query._tag.split('|');
-            if (tmpTag.length === 1) {
-                newQuery.meta.tag = {
-                    code: tmpTag[0]
-                };
-            } else {
-                newQuery.meta.tag = {
-                    code: tmpTag[0],
-                    system: tmpTag[1]
-                };
-            }
-            delete query._tag;
-        }
-
-        if (query._lastUpdated) {
-            // last updated is allways greater than equal
-            newQuery.meta.lastUpdated = { $gte: query._lastUpdated };
-            delete query._lastUpdated;
-        }
-
-        if (query._profile) {
-            newQuery.meta.profile = query._profile;
-            delete query._profile;
-        }
-
-        if (query._security) {
-            let tmpTag: Array<string> = query._security.split('|');
-            if (tmpTag.length === 1) {
-                newQuery.meta.security = {
-                    code: tmpTag[0]
-                };
-            } else {
-                newQuery.meta.security = {
-                    code: tmpTag[0],
-                    system: tmpTag[1]
-                };
-            }
-            delete query._security;
-        }
     }
 }

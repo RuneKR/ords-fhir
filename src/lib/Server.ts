@@ -1,7 +1,7 @@
 import * as cluster                 from 'cluster';
 import * as os                      from 'os';
 import {ChildWorker}                from './ChildWorker';
-import {IConformanceConfig}         from '../resources/internal/Conformance';
+import {IConformanceConfig}         from '../models/internal/Conformance';
 
 /**
  * Configuration element of ords-fhir

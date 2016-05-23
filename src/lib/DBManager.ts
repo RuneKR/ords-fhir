@@ -3,7 +3,7 @@ import {HookManager}        from './HookManager';
 import {ResourceManager}    from './ResourceManager';
 import {Promise}            from 'es6-promise';
 import {DI}                 from './DependencyInjector';
-import {OperationOutcome}   from '../resources/internal/OperationOutcome';
+import {OperationOutcome}   from '../models/internal/OperationOutcome';
 
 /**
  * Base for the connection to any database
@@ -12,12 +12,12 @@ export class DBManager {
     /**
      * Reference to the resourcemanager
      */
-    @DI.injectProperty(ResourceManager)
+    @DI.inject(ResourceManager)
     private rs: ResourceManager;
     /**
      * Reference to the hookmanager
      */
-    @DI.injectProperty(HookManager)
+    @DI.inject(HookManager)
     private hm: HookManager;
     /**
      * Create a new instance of a resource with some given data and save it to a database
@@ -31,7 +31,7 @@ export class DBManager {
         return new Promise((resolve: Function, reject: Function) => {
 
             // validate model exsists
-            if (typeof this.rs.rest[model] === 'undefined') {
+            if (typeof this.rs.resources[model] === 'undefined') {
                 return reject(new OperationOutcome({
                     httpcode: 404, issue: {
                         code: 'processing.not-supported',
@@ -44,7 +44,7 @@ export class DBManager {
 
             // do multiple validation one to check if we are doing an update and one to check if we are doing an create
             try {
-                dbUpdate = new this.rs.rest[model](create, Enforce.required);
+                dbUpdate = new this.rs.resources[model](create, Enforce.required);
             } catch (err) {
 
                 return reject(new OperationOutcome({
@@ -60,7 +60,7 @@ export class DBManager {
             this.hm.doHooks('dbm.create', model, query, dbUpdate, function (err: OperationOutcome, doc: any): void {
 
                 if (err) {
-                    reject(OperationOutcome);
+                    reject(err);
                 } else {
                     resolve(doc);
                 }
@@ -79,7 +79,7 @@ export class DBManager {
         return new Promise((resolve: Function, reject: Function) => {
 
             // validate model exsists
-            if (typeof this.rs.rest[model] === 'undefined') {
+            if (typeof this.rs.resources[model] === 'undefined') {
                 return reject(new OperationOutcome({
                     httpcode: 404, issue: {
                         code: 'processing.not-supported',
@@ -92,7 +92,7 @@ export class DBManager {
             this.hm.doHooks('dbm.read', model, query, limit, function (err: OperationOutcome, docs: Array<any>): void {
 
                 if (err) {
-                    reject(OperationOutcome);
+                    reject(err);
                 } else if (docs.length === 0) {
                     reject(new OperationOutcome({
                         httpcode: 404, issue: {
@@ -118,7 +118,7 @@ export class DBManager {
         return new Promise((resolve: Function, reject: Function) => {
 
             // validate model exsists
-            if (typeof this.rs.rest[model] === 'undefined') {
+            if (typeof this.rs.resources[model] === 'undefined') {
                 return reject(new OperationOutcome({
                     httpcode: 404, issue: {
                         code: 'processing.not-supported',
@@ -131,7 +131,7 @@ export class DBManager {
 
             try {
                 // do multiple validation one to check if we are doing an update and one to check if we are doing an create
-                dbUpdate = new this.rs.rest[model](update, Enforce.exists);
+                dbUpdate = new this.rs.resources[model](update, Enforce.exists);
 
             } catch (err) {
 
@@ -148,7 +148,7 @@ export class DBManager {
 
             // try to see if required could be done
             try {
-                dbCreate = new this.rs.rest[model](update, Enforce.required);
+                dbCreate = new this.rs.resources[model](update, Enforce.required);
             } catch (e) {
                 dbCreate = undefined;
             }
@@ -157,7 +157,7 @@ export class DBManager {
             this.hm.doHooks('dbm.update', model, query, dbUpdate, dbCreate, function (err: OperationOutcome, doc: any): void {
 
                 if (err) {
-                    reject(OperationOutcome);
+                    reject(err);
                 } else if (doc === undefined) {
                     reject(new OperationOutcome({
                         httpcode: 404, issue: {
@@ -182,7 +182,7 @@ export class DBManager {
         return new Promise((resolve: Function, reject: Function) => {
 
             // validate model exsists
-            if (typeof this.rs.rest[model] === 'undefined') {
+            if (typeof this.rs.resources[model] === 'undefined') {
                 return reject(new OperationOutcome({
                     httpcode: 404, issue: {
                         code: 'processing.not-supported',
@@ -195,7 +195,7 @@ export class DBManager {
             this.hm.doHooks('dbm.delete', model, query, function (err: OperationOutcome, doc: any): void {
 
                 if (err) {
-                    reject(OperationOutcome);
+                    reject(err);
                 } else if (doc === undefined) {
                     reject(new OperationOutcome({
                         httpcode: 404, issue: {

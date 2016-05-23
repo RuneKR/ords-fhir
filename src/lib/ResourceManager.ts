@@ -3,37 +3,36 @@
 // datatypes
 import {datatypes}                from 'ts-objectschema';   // import all from this module
 
-import {Address}                  from '../resources/dataTypes/Address';
-import {CodeableConcept}          from '../resources/dataTypes/CodeableConcept';
-import {Coding}                   from '../resources/dataTypes/Coding';
-import {ContactPoint}             from '../resources/dataTypes/ContactPoint';
-import {HumanName}                from '../resources/dataTypes/HumanName';
-import {Identifier}               from '../resources/dataTypes/Identifier';
-import {Meta}                     from '../resources/dataTypes/Meta';
-import {Period}                   from '../resources/dataTypes/Period';
-import {Reference}                from '../resources/dataTypes/Reference';
+import {Address}                  from '../models/dataTypes/Address';
+import {CodeableConcept}          from '../models/dataTypes/CodeableConcept';
+import {Coding}                   from '../models/dataTypes/Coding';
+import {ContactPoint}             from '../models/dataTypes/ContactPoint';
+import {HumanName}                from '../models/dataTypes/HumanName';
+import {Identifier}               from '../models/dataTypes/Identifier';
+import {Meta}                     from '../models/dataTypes/Meta';
+import {Period}                   from '../models/dataTypes/Period';
+import {Reference}                from '../models/dataTypes/Reference';
 
 // rest models
-import {Observation}              from '../resources/rest/Observation';
-import {Patient}                  from '../resources/rest/Patient';
+import {Observation}              from '../models/resources/Observation';
+import {Patient}                  from '../models/resources/Patient';
 
 // valuesets
-import {AddressUse}                from '../resources/valueSets/AddressUse';
-import {ConformanceResourceStatus} from '../resources/valueSets/ConformanceResourceStatus';
-import {ConformanceStatementKind}  from '../resources/valueSets/ConformanceStatementKind';
-import {IdentifierUse}             from '../resources/valueSets/IdentifierUse';
-import {MimeType}                  from '../resources/valueSets/MimeType';
-import {NameUse}                   from '../resources/valueSets/NameUse';
-import {RestfulConformanceMode}    from '../resources/valueSets/RestfulConformanceMode';
-import {UnknownContentCode}        from '../resources/valueSets/UnknownContentCode';
+import {AddressUse}                from '../models/valueSets/AddressUse';
+import {ConformanceResourceStatus} from '../models/valueSets/ConformanceResourceStatus';
+import {ConformanceStatementKind}  from '../models/valueSets/ConformanceStatementKind';
+import {IdentifierUse}             from '../models/valueSets/IdentifierUse';
+import {MimeType}                  from '../models/valueSets/MimeType';
+import {NameUse}                   from '../models/valueSets/NameUse';
+import {RestfulConformanceMode}    from '../models/valueSets/RestfulConformanceMode';
+import {UnknownContentCode}        from '../models/valueSets/UnknownContentCode';
 
 // internal
-import {Boundle}                   from '../resources/internal/Boundle';
-import {Conformance}               from '../resources/internal/Conformance';
-import {DomainResource}            from '../resources/internal/DomainResource';
-import {OperationOutcome}          from '../resources/internal/OperationOutcome';
-import {StructureDefinition}       from '../resources/internal/StructureDefinition';
-
+import {Boundle}                   from '../models/internal/Boundle';
+import {Conformance}               from '../models/internal/Conformance';
+import {DomainResource}            from '../models/internal/DomainResource';
+import {OperationOutcome}          from '../models/internal/OperationOutcome';
+import {StructureDefinition}       from '../models/internal/StructureDefinition';
 
 /**
  * Manage every resource in the application
@@ -61,7 +60,7 @@ export class ResourceManager {
      * Container of all active models by their name
      * @type {{[key: string]: any}}
      */
-    public rest: {
+    public resources: {
         [key: string]: any
         Observation: any,
         Patient: any

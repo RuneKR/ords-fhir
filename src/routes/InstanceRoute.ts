@@ -1,17 +1,12 @@
 import {ObjectID}                  from 'mongodb';
-import {Router, Request, Response} from 'express';
+import {Request, Response, Router} from '../lib/Router';
 import {DBManager}                 from '../lib/DBManager';
 import {DI}                        from '../lib/DependencyInjector';
 import {Requestparser}             from '../lib/Requestparser';
 import {OperationOutcome}          from '../resources/internal/OperationOutcome';
 
-@DI.inject(Requestparser, DBManager)
+@DI.createWith(Router, Requestparser, DBManager)
 export class InstanceRoute {
-    /**
-     * Express routing elemeent
-     * @type {Router}
-     */
-    public route: Router = Router();
     /**
      * Express routing elemeent
      * @type {Router}
@@ -25,12 +20,16 @@ export class InstanceRoute {
     /**
      * Binding the routes their function
      */
-    constructor() {
+    constructor(router: Router, rp: Requestparser, dbm: DBManager) {
+        
+        // bind injected values
+        this.requestparser = rp;
+        this.dBManager = dbm;
 
         // bind model to router
-        this.route.get('/:model/:id([0-9a-f]{24})', this.read.bind(this));
-        this.route.put('/:model/:id([0-9a-f]{24})', this.requestparser.parseBody, this.update.bind(this));
-        this.route.delete('/:model/:id([0-9a-f]{24})', this.delete);
+        router.get('/:model/:id([0-9a-f]{24})', this.read.bind(this));
+        router.put('/:model/:id([0-9a-f]{24})', this.requestparser.parseBody, this.update.bind(this));
+        router.delete('/:model/:id([0-9a-f]{24})', this.delete);
     }
     /**
      * Read a specific instance of an model
@@ -80,7 +79,7 @@ export class InstanceRoute {
 
         // check if id is set for update and do not match with params.id
         if (req.body.id !== undefined && new ObjectID(req.params.id) !== req.body.id) {
-            
+
             let err: OperationOutcome = new OperationOutcome({
                 httpcode: 400, issue: {
                     code: 'invalid.invariant',
