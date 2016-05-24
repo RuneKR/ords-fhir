@@ -1,6 +1,6 @@
 import {Promise}                    from 'es6-promise';
 
-export *                            from './HookableFunctions'; 
+export *                            from './HookableFunctions';
 
 export interface Stack {
     [key: string]: {
@@ -42,13 +42,13 @@ export class HookManager {
      * @param   {...any}      args      arguments to be used in the hooks 
      * @returns {Promise}     Indication of weather or not command exsists
      */
-    public doHooks(command: string, args: Function): Promise<any> {
+    public doHooks(command: string, args: any): Promise<any> {
 
         // return the promise
-        return new Promise(function (resolve: Function, reject: Function): void {
+        return new Promise((resolve: Function, reject: Function) => {
 
             // validate it exsists
-            if (this.hooks[command] === undefined) {
+            if (this.stack[command] === undefined) {
 
                 // do nothing
                 resolve(args);
@@ -56,7 +56,7 @@ export class HookManager {
             } else {
 
                 // calculate functions to run and sort them by alpha
-                let funcsToRun: Array<string> = Object.keys(this.hooks[command]).sort();
+                let funcsToRun: Array<string> = Object.keys(this.stack[command]).sort();
 
                 // keep ref to self
                 let self: any = this;
@@ -72,7 +72,7 @@ export class HookManager {
                     let funcName: string = funcsToRun.shift();
 
                     try {
-                        self.hooks[command][funcName].apply(undefined, [args]);
+                        self.stack[command][funcName].apply(undefined, [args]);
                     } catch (err) {
                         reject(err);
                     }

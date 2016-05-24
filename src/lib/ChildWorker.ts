@@ -39,13 +39,21 @@ export class ChildWorker {
 
         // build conformance
         this.hookManager.doHooks('conformance.configure', conformance).then((conf: Conformance.Configure): void => {
-
+                      
             // build conformance
             this.conformanceManager.buildConformance(conf);
 
             // start http server when conformance is build
             this.router.listen(process.env.PORT);
 
+        }).catch((err: any) => {
+            
+            // read err loud
+            console.log(err);
+            
+            // kill worker
+            process.exit(1);
+            
         });
     }
 }

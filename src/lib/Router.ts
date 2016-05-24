@@ -1,7 +1,7 @@
 import * as express                          from 'express';
 import * as cors                             from 'cors';
 import {DI}                                  from './DependencyInjector';
-import {Requestparser}                           from '../lib/Requestparser';
+import {Requestparser}                       from '../lib/Requestparser';
 
 export {Request, Response, NextFunction}     from 'express';
 
