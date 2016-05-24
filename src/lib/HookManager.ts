@@ -4,7 +4,15 @@ export *                            from './HookableFunctions';
 
 export interface Stack {
     [key: string]: {
-        [key: string]: Function;
+        per: {
+            [key: string]: Function
+        };
+        post: {
+            [key: string]: Function
+        };
+        pre: {
+            [key: string]: Function
+        };
     };
 }
 
@@ -22,19 +30,36 @@ export class HookManager {
      * Add a named hook to a speicific command or create a new command and add the hook to that command
      * @param   {string}      command   command to be hooked into
      * @param   {string}      name      name of the hook being added
+     * @param   {string}      priority  priority of the hook as pre, post or per
      * @param   {Function}    hook      the hook function itself
      * @returns {void}        no feedback is provided  
      */
-    public addHook(cmd: any, name: string, hook: Function): void {
+    public addHook(cmd: any, name: string, hook: Function, priority: string): void {
 
         // add hooks
         if (this.stack[cmd] === undefined) {
 
-            this.stack[cmd] = {};
+            this.stack[cmd] = {
+                per: {},
+                post: {},
+                pre: {}
+            };
         }
 
-        // save hook
-        this.stack[cmd][name] = hook;
+        switch (priority) {
+            case 'pre':
+                this.stack[cmd].pre[name] = hook;
+                break;
+            case 'post':
+                this.stack[cmd].post[name] = hook;
+                break;
+            case 'per':
+                this.stack[cmd].per[name] = hook;
+                break;
+            default:
+            // OBSERVATION OUTCOME?
+        }
+
     }
     /**
      * Execute hooks for a specfic command and apply one or more arguments to the hooks
@@ -55,8 +80,10 @@ export class HookManager {
 
             } else {
 
-                // calculate functions to run and sort them by alpha
-                let funcsToRun: Array<string> = Object.keys(this.stack[command]).sort();
+                // calculate functions to run and sort them by alphanumeric
+                let funcsToRun: Array<string> = Object.keys(this.stack[command].pre).sort();               
+                Array.prototype.push.apply(funcsToRun, Object.keys(this.stack[command].post).sort());
+                Array.prototype.push.apply(funcsToRun, Object.keys(this.stack[command].per).sort());
 
                 // keep ref to self
                 let self: any = this;
@@ -78,7 +105,7 @@ export class HookManager {
                         reject(err);
                     }
                 };
-                
+
                 // start next
                 next();
             }
@@ -98,7 +125,9 @@ export class HookManager {
             throw new Error('Command does not exsists');
         }
 
-        // delete hook
-        delete this.stack[cmd][name];
+        // delete hook from wherever it is added
+        delete this.stack[cmd].pre[name];
+        delete this.stack[cmd].per[name];
+        delete this.stack[cmd].post[name];
     }
 }
