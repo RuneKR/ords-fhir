@@ -14,7 +14,7 @@ export class ConformanceManager {
      * @param   {IConformance}  conformance     conformance that needs the fields added
      * @returns {Void}
      */
-    public addAutoConformance(conformance: IConformance): void {
+    public addAutoConformance(conformance: IConformance, next: Function): void {
 
         conformance.name = 'Main conformance statement';
         conformance.status = 'active';
@@ -27,13 +27,15 @@ export class ConformanceManager {
             searchParam: [
             ]
         };
+        
+        next();
     }
     /**
      * Build the conformance
      * @param   {IConformance}  conformance     conformance to be builded
      * @returns {Void}
      */
-    public buildConformance(conformance: IConformance): void {
+    public buildConformance(conformance: IConformance, next: Function): void {
 
         // some more fields should be added to the conformance here
 

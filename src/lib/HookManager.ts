@@ -27,14 +27,13 @@ export class HookManager {
      */
     private stack: Stack = {};
     /**
-     * Add a named hook to a speicific command or create a new command and add the hook to that command
+     * Add a named hook prior to a speicific command or create a new command and add the hook to that command
      * @param   {string}      command   command to be hooked into
      * @param   {string}      name      name of the hook being added
-     * @param   {string}      priority  priority of the hook as pre, post or per
      * @param   {Function}    hook      the hook function itself
      * @returns {void}        no feedback is provided  
      */
-    public addHook(cmd: any, name: string, hook: Function, priority: string): void {
+    public addHookPre(cmd: any, name: string, hook: Function): void {
 
         // add hooks
         if (this.stack[cmd] === undefined) {
@@ -45,21 +44,53 @@ export class HookManager {
                 pre: {}
             };
         }
+        
+        // save hook
+        this.stack[cmd].pre[name] = hook;
+    }
+    /**
+     * Add a named hook post a speicific command or create a new command and add the hook to that command
+     * @param   {string}      command   command to be hooked into
+     * @param   {string}      name      name of the hook being added
+     * @param   {Function}    hook      the hook function itself
+     * @returns {void}        no feedback is provided  
+     */
+    public addHookPost(cmd: any, name: string, hook: Function): void {
 
-        switch (priority) {
-            case 'pre':
-                this.stack[cmd].pre[name] = hook;
-                break;
-            case 'post':
-                this.stack[cmd].post[name] = hook;
-                break;
-            case 'per':
-                this.stack[cmd].per[name] = hook;
-                break;
-            default:
-            // OBSERVATION OUTCOME?
+        // add hooks
+        if (this.stack[cmd] === undefined) {
+
+            this.stack[cmd] = {
+                per: {},
+                post: {},
+                pre: {}
+            };
         }
+        
+        // save hook
+        this.stack[cmd].post[name] = hook;
+    }
+    /**
+     * Add a named hook to a speicific command or create a new command and add the hook to that command
+     * @param   {string}      command   command to be hooked into
+     * @param   {string}      name      name of the hook being added
+     * @param   {Function}    hook      the hook function itself
+     * @returns {void}        no feedback is provided  
+     */
+    public addHookPer(cmd: any, name: string, hook: Function): void {
 
+        // add hooks
+        if (this.stack[cmd] === undefined) {
+
+            this.stack[cmd] = {
+                per: {},
+                post: {},
+                pre: {}
+            };
+        }
+        
+        // save hook
+        this.stack[cmd].per[name] = hook;
     }
     /**
      * Execute hooks for a specfic command and apply one or more arguments to the hooks
