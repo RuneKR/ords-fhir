@@ -61,7 +61,7 @@ export class HookManager {
                 // keep ref to self
                 let self: any = this;
 
-                // the next funciton
+                // the next function
                 let next: any = function (): void {
 
                     // check if any functions are left to run
@@ -69,16 +69,18 @@ export class HookManager {
                         resolve(args);
                     }
 
+                    // next function to run
                     let funcName: string = funcsToRun.shift();
 
                     try {
-                        self.stack[command][funcName].apply(undefined, [args]);
+                        self.stack[command][funcName](args, next);
                     } catch (err) {
                         reject(err);
                     }
                 };
-
-                next.apply(undefined, [args]);
+                
+                // start next
+                next();
             }
         });
     }
