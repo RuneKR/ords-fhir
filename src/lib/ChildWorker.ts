@@ -1,12 +1,13 @@
-import {Router}                from './Router';
-import {DI}                    from './DependencyInjector';
-import {HookManager}           from './HookManager';
+import {Router}                 from './Router';
+import {DI}                     from './DependencyInjector';
+import {HookManager, Hookables} from './HookManager';
 
-// auto internal components
+// bootstrap some components
 import '../routes/TypeRoute';
 import '../routes/SystemRoute';
 import '../routes/InstanceRoute';
 import './ConformanceManager';
+import './DBManager';
 
 /**
  * Working child of the cluster
@@ -29,8 +30,17 @@ export class ChildWorker {
      */
     constructor(conformance: any) {
         
+        // init options with the supplied
+        let options: Hookables.ConformanceManager.Build = {
+            params: conformance,
+            result: conformance
+        };
+        
         // build conformance and then start the server
-        this.hookManager.doHooks('conformance.configure', conformance).then((): void => {
+        this.hookManager.doHooks<Hookables.ConformanceManager.Build>('ConformanceManager.Build', options)
+        
+        // if build is an succes then start the routing up
+        .then((): void => {
 
             // start http server when conformance is build
             this.router.listen(process.env.PORT);

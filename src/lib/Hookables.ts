@@ -12,14 +12,14 @@ export namespace Hookables {
      * All hooks follow this general interface
      */
     export interface General {
-        action: any;
+        params: any;
         result: any;
     }
     
     export namespace ConformanceManager {
 
         export interface Build extends General {
-            action: IConformance;
+            params: IConformance;
             result: IConformance;
         }
     }
@@ -27,7 +27,7 @@ export namespace Hookables {
     export namespace Requestparser {
 
         export interface ParseQuery extends General {
-            action: {
+            params: {
                 query: any;
                 resource: string
             };
@@ -39,7 +39,7 @@ export namespace Hookables {
     export namespace DBManager {
 
         export interface Create extends General  {
-            action: {
+            params: {
                 data: any;
                 query: any;
                 resource: string
@@ -48,7 +48,7 @@ export namespace Hookables {
         }
 
         export interface Read extends General  {
-            action: {
+            params: {
                 limit: number;
                 query: any;
                 resource: string
@@ -57,7 +57,7 @@ export namespace Hookables {
         }
 
         export interface Update extends General  {
-            action: {
+            params: {
                 data: any;
                 query: any;
                 resource: string
@@ -66,7 +66,7 @@ export namespace Hookables {
         }
 
         export interface Delete extends General  {
-            action: {
+            params: {
                 query: any;
                 resource: string
             };

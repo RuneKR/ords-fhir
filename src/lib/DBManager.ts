@@ -1,7 +1,6 @@
 import {Enforce}                            from 'ts-objectschema';
 import {HookManager, Hookables}             from './HookManager';
 import {ResourceManager}                    from './ResourceManager';
-import {Promise}                            from 'es6-promise';
 import {DI}                                 from './DependencyInjector';
 import {OperationOutcome}                   from '../models/internal/OperationOutcome';
 
@@ -23,15 +22,33 @@ export class DBManager {
         // keep injected references
         this.rs = rs;
         this.hm = hm;
+
+        // validate that model exists for all
+        this.hm.addHookPre<Hookables.DBManager.Create>('DBManager.Create', 'a-ords-main-db', this.validateExists);
+        this.hm.addHookPre<Hookables.DBManager.Read>('DBManager.Update', 'a-ords-main-db', this.validateExists);
+        this.hm.addHookPre<Hookables.DBManager.Update>('DBManager.Update', 'a-ords-main-db', this.validateExists);
+        this.hm.addHookPre<Hookables.DBManager.Delete>('DBManager.Delete', 'a-ords-main-db', this.validateExists);
+           
+        // add the actual functions
+        this.hm.addHookPer<Hookables.DBManager.Create>('DBManager.Create', 'a-ords-main-db', this.create);
+        this.hm.addHookPer<Hookables.DBManager.Read>('DBManager.Update', 'a-ords-main-db',   this.read);
+        this.hm.addHookPer<Hookables.DBManager.Update>('DBManager.Update', 'a-ords-main-db', this.update);
+        this.hm.addHookPer<Hookables.DBManager.Delete>('DBManager.Delete', 'a-ords-main-db', this.delete);
+    }
+    /**
+     * Validate that a given model exists
+     */
+    public validateExists() {
+
     }
     /**
      * Create a new instance of a resource with some given data and save it to a database
      * @param   {string}              model   name of the resource that is to be created a new instance of
      * @param   {Object}              query   MongoDB query that conditions if a created should be done
      * @param   {*}                   create  the data that is to be used in the creation of a resource
-     * @returns {Promise}
+     * @returns {Void}
      */
-    public create(model: string, query: Object, create: any): Promise<Array<any>> {
+    public create(model: string, query: Object, create: any): void {
 
         return new Promise((resolve: Function, reject: Function) => {
 
@@ -85,12 +102,12 @@ export class DBManager {
     }
     /**
      * Read from a specific resource by a specific query and limit the number of rows in the output
-     * @param {string}              model   name of the resource that is to be read from
-     * @param {Object}              query   MongoDB query that conditions the query of the read
-     * @param {number}              limit   limit the amount of data returned
-     * @returns {Promise}
+     * @param   {string}              model   name of the resource that is to be read from
+     * @param   {Object}              query   MongoDB query that conditions the query of the read
+     * @param   {number}              limit   limit the amount of data returned
+     * @returns {Void}
      */
-    public read(model: string, query: Object, limit: number): Promise<Array<any>> {
+    public read(model: string, query: Object, limit: number): void {
 
         return new Promise((resolve: Function, reject: Function) => {
 
@@ -126,8 +143,8 @@ export class DBManager {
                 } else {
                     resolve(out.result);
                 }
-                
-            // operation outcome catch
+
+                // operation outcome catch
             }).catch((err: any) => {
                 reject(err);
             });
@@ -138,9 +155,9 @@ export class DBManager {
      * @param   {string}              model   name of the resource that a instance is to be updated from
      * @param   {Object}              query   MongoDB query that conditions the update
      * @param   {*}                   update  the actual data to be used in the update
-     * @returns {Promise}
+     * @returns {Void}
      */
-    public update(model: string, query: Object, update: any): Promise<any> {
+    public update(model: string, query: Object, update: any): void {
 
         return new Promise((resolve: Function, reject: Function) => {
 
@@ -182,10 +199,10 @@ export class DBManager {
 
             // return action
             this.hm.doHooks('DBManager.Update', arg).then((out: Hookables.DBManager.Update) => {
-    
-               resolve(out.result);
-                
-            // operation outcome catch
+
+                resolve(out.result);
+
+                // operation outcome catch
             }).catch((err: any) => {
                 reject(err);
             });
@@ -193,11 +210,11 @@ export class DBManager {
     }
     /**
      * Delete some resource given som conditions
-     * @param {string}              model   name of the resource that something should be deleted from
-     * @param {Object}              query   the conditions for the removal of an item
-     * @returns {Promise}
+     * @param   {string}              model   name of the resource that something should be deleted from
+     * @param   {Object}              query   the conditions for the removal of an item
+     * @returns {void}
      */
-    public delete(model: string, query: Object): Promise<any> {
+    public delete(model: string, query: Object): void {
 
         return new Promise((resolve: Function, reject: Function) => {
 
@@ -221,10 +238,10 @@ export class DBManager {
 
             // return action
             this.hm.doHooks('DBManager.Delete', arg).then((out: Hookables.DBManager.Delete) => {
-    
-               resolve(out.result);
-                
-            // operation outcome catch
+
+                resolve(out.result);
+
+                // operation outcome catch
             }).catch((err: any) => {
                 reject(err);
             });

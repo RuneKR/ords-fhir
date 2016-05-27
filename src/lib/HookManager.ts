@@ -1,6 +1,5 @@
 import {Promise}                    from 'es6-promise';
-
-export *                            from './HookableFunctions';
+export *                            from './Hookables';
 
 export interface Stack {
     [key: string]: {
@@ -14,6 +13,10 @@ export interface Stack {
             [key: string]: Function
         };
     };
+}
+
+export interface GenericIdentityFn<T> {
+    (arg: T, next: Function): any;
 }
 
 /**
@@ -33,7 +36,7 @@ export class HookManager {
      * @param   {Function}    hook      the hook function itself
      * @returns {void}        no feedback is provided  
      */
-    public addHookPre(cmd: any, name: string, hook: Function): void {
+    public addHookPre<T>(cmd: any, name: string, hook: GenericIdentityFn<T>): void {
 
         // add hooks
         if (this.stack[cmd] === undefined) {
@@ -55,7 +58,7 @@ export class HookManager {
      * @param   {Function}    hook      the hook function itself
      * @returns {void}        no feedback is provided  
      */
-    public addHookPost(cmd: any, name: string, hook: Function): void {
+    public addHookPost<T>(cmd: any, name: string, hook: GenericIdentityFn<T>): void {
 
         // add hooks
         if (this.stack[cmd] === undefined) {
@@ -77,7 +80,7 @@ export class HookManager {
      * @param   {Function}    hook      the hook function itself
      * @returns {void}        no feedback is provided  
      */
-    public addHookPer(cmd: any, name: string, hook: Function): void {
+    public addHookPer<T>(cmd: any, name: string, hook: GenericIdentityFn<T>): void {
 
         // add hooks
         if (this.stack[cmd] === undefined) {
@@ -98,7 +101,7 @@ export class HookManager {
      * @param   {...any}      args      arguments to be used in the hooks 
      * @returns {Promise}     Indication of weather or not command exsists
      */
-    public doHooks(command: string, args: any): Promise<any> {
+    public doHooks<T>(command: string, args: T): Promise<any> {
 
         // return the promise
         return new Promise((resolve: Function, reject: Function) => {
