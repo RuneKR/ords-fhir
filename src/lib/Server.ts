@@ -70,6 +70,15 @@ export class Server {
                 // start worker
                 let worker: any = cluster.fork();
 
+                // terminate everything if needed by one worker
+                worker.on('message', (msg: any) => {
+                    
+                    if (msg.cmd === 'terminate') {
+                        process.exit(1);
+                    }
+
+                });
+
                 // save reference to worker
                 this.activeWorkers[worker.process.pid] = worker;
 

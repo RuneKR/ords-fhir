@@ -1,5 +1,5 @@
 import {Enforce}                            from 'ts-objectschema';
-import {HookManager, DBManager as dbm}      from './HookManager';
+import {HookManager, Hookables}             from './HookManager';
 import {ResourceManager}                    from './ResourceManager';
 import {Promise}                            from 'es6-promise';
 import {DI}                                 from './DependencyInjector';
@@ -71,7 +71,7 @@ export class DBManager {
             };
 
             // do action
-            this.hm.doHooks('DBManager.Create', arg).then((args: dbm.Create) => {
+            this.hm.doHooks('DBManager.Create', arg).then((args: Hookables.DBManager.Create) => {
 
                 // retrun result
                 resolve(args.result);
@@ -114,7 +114,7 @@ export class DBManager {
             };
 
             // return action
-            this.hm.doHooks('DBManager.Read', arg).then((out: dbm.Read) => {
+            this.hm.doHooks('DBManager.Read', arg).then((out: Hookables.DBManager.Read) => {
 
                 if (out.result.length === 0) {
                     reject(new OperationOutcome({
@@ -181,7 +181,7 @@ export class DBManager {
             };
 
             // return action
-            this.hm.doHooks('DBManager.Update', arg).then((out: dbm.Update) => {
+            this.hm.doHooks('DBManager.Update', arg).then((out: Hookables.DBManager.Update) => {
     
                resolve(out.result);
                 
@@ -220,7 +220,7 @@ export class DBManager {
             };
 
             // return action
-            this.hm.doHooks('DBManager.Delete', arg).then((out: dbm.Delete) => {
+            this.hm.doHooks('DBManager.Delete', arg).then((out: Hookables.DBManager.Delete) => {
     
                resolve(out.result);
                 

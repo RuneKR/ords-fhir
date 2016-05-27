@@ -1,12 +1,12 @@
-import {Router}                             from './Router';
-import {DI}                                 from './DependencyInjector';
-import {HookManager, Conformance}           from './HookManager';
-import {ConformanceManager}                 from './ConformanceManager';
+import {Router}                from './Router';
+import {DI}                    from './DependencyInjector';
+import {HookManager}           from './HookManager';
 
-// auto load routes
+// auto internal components
 import '../routes/TypeRoute';
 import '../routes/SystemRoute';
 import '../routes/InstanceRoute';
+import './ConformanceManager';
 
 /**
  * Working child of the cluster
@@ -14,17 +14,12 @@ import '../routes/InstanceRoute';
  */
 export class ChildWorker {
     /**
-     * Reference to resourcemanager
+     * Reference to router
      */
     @DI.inject(Router)
     private router: Router;
     /**
-     * Reference to conformance manager
-     */
-    @DI.inject(ConformanceManager)
-    private conformanceManager: ConformanceManager;
-    /**
-     * Reference to router
+     * Reference to the hookmanager
      */
     @DI.inject(HookManager)
     private hookManager: HookManager;
@@ -33,35 +28,21 @@ export class ChildWorker {
      * @param   {IConformance}          conformance   conformance from the server
      */
     constructor(conformance: any) {
-
-        // add hook
-        this.hookManager.addHookPre(
-            'conformance.configure',
-            'auto-core-conformance',
-            this.conformanceManager.addAutoConformance
-        );
         
-        // add hook
-        this.hookManager.addHookPer(
-            'conformance.configure',
-            'auto-core-conformance-build',
-            this.conformanceManager.buildConformance
-        );
-        
-        // build conformance
-        this.hookManager.doHooks('conformance.configure', conformance).then((conf: Conformance.Configure): void => {
+        // build conformance and then start the server
+        this.hookManager.doHooks('conformance.configure', conformance).then((): void => {
 
             // start http server when conformance is build
             this.router.listen(process.env.PORT);
 
+        // stop the server from starting
         }).catch((err: any) => {
 
             // read err loud
             console.log(err);
-
-            // kill worker
-            process.exit(1);
-
+            
+            // kill the marster and all sub procces
+            process.send({cmd: 'terminate'});
         });
     }
 }
