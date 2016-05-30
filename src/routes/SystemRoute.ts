@@ -35,7 +35,7 @@ export class SystemRoute {
             { },
             this.displayStructureDef.bind(this)
         );
-        router.get('/metadata', this.displayConStatement.bind(this));
+        router.get('/metadata', {}, this.displayConStatement.bind(this));
 
     }
     /**

@@ -46,12 +46,6 @@ export class Server {
      */
     constructor(config: Configuration) {
 
-        // number of CPU on the system
-        let numCPUs: number = os.cpus().length;
-
-        // iterator key
-        let i: number = 0;
-
         // set process variables from configuration
         process.env.LIMIT_UPLOAD_MB = config.config.limit_upload_mb;
         process.env.PORT = config.config.port;
@@ -64,6 +58,12 @@ export class Server {
             // init a list of active workers
             this.activeWorkers = {};
 
+            // number of CPU on the system
+            let numCPUs: number = os.cpus().length;
+
+            // iterator key
+            let i: number = 0;
+
             // begin to boot workers
             while (i < numCPUs) {
 
@@ -72,7 +72,7 @@ export class Server {
 
                 // terminate everything if needed by one worker
                 worker.on('message', (msg: any) => {
-                    
+
                     if (msg.cmd === 'terminate') {
                         process.exit(1);
                     }

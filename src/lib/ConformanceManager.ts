@@ -22,16 +22,16 @@ export class ConformanceManager {
 
         // add hook
         this.hookManager.addHookPer<Hookables.ConformanceManager.Build>(
-            'conformance.configure',
+            'ConformanceManager.Build',
             'auto-core-conformance-build',
-            this.build
+            this.build.bind(this)
         );
 
         // ad hook
         this.hookManager.addHookPre<Hookables.ConformanceManager.Build>(
             'ConformanceManager.Build',
             'auto-core-conformance-build',
-            this.addAutoConformance
+            this.addAutoConformance.bind(this)
         );
     }
     /**
@@ -69,7 +69,8 @@ export class ConformanceManager {
 
         // generate profile etc     profile?: Array<IReference>;
         // build the conformance
-       // this.conformance = conformance;
+        this.conformance = options.params;
+        options.result = this.conformance;
 
         next();
 

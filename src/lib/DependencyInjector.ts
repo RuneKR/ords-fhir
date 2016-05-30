@@ -57,12 +57,12 @@ export class DependencyInjector {
         return (target: any, propertyKey: string | symbol) => {
 
             // if singleton do not exsists create a new one
-            if (this.singleTons[dependency] === undefined) {
-                this.singleTons[dependency] = new dependency();
+            if (this.singleTons[dependency.name] === undefined) {
+                this.singleTons[dependency.name] = new dependency();
             }
 
             // set the value of target to the required singleton      
-            target[propertyKey] = this.singleTons[dependency];
+            target[propertyKey] = this.singleTons[dependency.name];
         };
     }
 }

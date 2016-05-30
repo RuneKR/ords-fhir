@@ -16,6 +16,9 @@ export interface Options {
     forceResource?: string;
 }
 
+// route prefix
+let routePrefix: string = '/api';
+
 @DI.createWith(Requestparser)
 export class Router {
     /**
@@ -31,7 +34,7 @@ export class Router {
      * Create new express router and adds cors based on the whitelist
      */
     constructor(rp: Requestparser) {
-        
+
         // save injected reference
         this.rp = rp;
 
@@ -46,90 +49,89 @@ export class Router {
 
     }
     public get(path: string, options: Options, ...handlers: Array<express.RequestHandler>): void {
-        
+
         let args: Array<any> = handlers;
-        
         // DO SOMETHING WITH forceResource
         // DO SOMETHING WITH BOUNDLE FLAG
-               
+
         // if query is enabled
         if (options.parseQuery) {
-            args.unshift(this.rp.parseQuery);
+            args.unshift(this.rp.parseQuery.bind(this.rp));
         }
 
         // add paths
-        args.unshift(path);
+        args.unshift(routePrefix + path);
 
         this.app.get.apply(this.app, args);
     }
     public post(path: string, options: Options, ...handlers: Array<express.RequestHandler>): void {
 
         let args: Array<any> = handlers;
-        
+
         // DO SOMETHING WITH forceResource
         // DO SOMETHING WITH BOUNDLE FLAG
-        
+
         // if body should be parsed
         if (options.parseBody) {
-            args.unshift(this.rp.parseBody);
+            args.unshift(this.rp.parseBody.bind(this.rp));
         }
-        
+
         // if body should be merged to query
         if (options.merge) {
-            args.unshift(this.rp.merge);
+            args.unshift(this.rp.merge.bind(this.rp));
         }
-        
+
         // if query is enabled
         if (options.parseQuery) {
-            args.unshift(this.rp.parseQuery);
+            args.unshift(this.rp.parseQuery.bind(this.rp));
         }
 
         // add paths
-        args.unshift(path);
+        args.unshift(routePrefix + path);
 
         this.app.post.apply(this.app, args);
     }
     public put(path: string, options: Options, ...handlers: Array<express.RequestHandler>): void {
 
         let args: Array<any> = handlers;
-        
+
         // DO SOMETHING WITH forceResource
         // DO SOMETHING WITH BOUNDLE FLAG
-        
+
         // if body should be parsed
         if (options.parseBody) {
-            args.unshift(this.rp.parseBody);
+            args.unshift(this.rp.parseBody.bind(this.rp));
         }
-        
+
         // if body should be merged to query
         if (options.merge) {
-            args.unshift(this.rp.merge);
+            args.unshift(this.rp.merge.bind(this.rp));
         }
-        
+
         // if query is enabled
         if (options.parseQuery) {
-            args.unshift(this.rp.parseQuery);
+            args.unshift(this.rp.parseQuery.bind(this.rp));
         }
 
         // add paths
-        args.unshift(path);
+        args.unshift(routePrefix + path);
 
         this.app.put.apply(this.app, args);
     }
     public delete(path: string, options: Options, ...handlers: Array<express.RequestHandler>): void {
 
         let args: Array<any> = handlers;
-        
+
         // DO SOMETHING WITH forceResource
         // DO SOMETHING WITH BOUNDLE FLAG
-        
-         // if query is enabled
+
+        // if query is enabled
         if (options.parseQuery) {
-            args.unshift(this.rp.parseQuery);
+            args.unshift(this.rp.parseQuery.bind(this.rp));
         }
 
         // add paths
-        args.unshift(path);
+        args.unshift(routePrefix + path);
 
         this.app.delete.apply(this.app, args);
     }

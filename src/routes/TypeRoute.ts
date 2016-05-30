@@ -12,29 +12,28 @@ export class TypeRoute {
     /**
      * Binding the routes their function
      */
-    constructor(route: Router, hm: HookManager) {
+    constructor(router: Router, hm: HookManager) {
 
         // bind reference
         this.hm = hm;
 
         // bind model to router
-        route.get(
+        router.get(
             '/:resource/',
             { merge: true, parseBody: true, parseQuery: true },
             this.search.bind(this)
         );
-        route.post(
+        router.post(
             '/:resource/_search',
             { merge: true, parseBody: true, parseQuery: true },
             this.search.bind(this)
         );
-        route.post(
+        router.post(
             '/:resource/',
             { parseBody: true },
             this.create.bind(this)
         );
     }
-
     /**
      * Search a given model
      * @param   {Request}     req     requrest from the client
