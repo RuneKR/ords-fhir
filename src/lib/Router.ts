@@ -87,7 +87,7 @@ export class Router {
         // add paths
         args.unshift(path);
 
-        this.app.get.apply(this.app, args);
+        this.app.post.apply(this.app, args);
     }
     public put(path: string, options: Options, ...handlers: Array<express.RequestHandler>): void {
 
@@ -114,7 +114,7 @@ export class Router {
         // add paths
         args.unshift(path);
 
-        this.app.get.apply(this.app, args);
+        this.app.put.apply(this.app, args);
     }
     public delete(path: string, options: Options, ...handlers: Array<express.RequestHandler>): void {
 
@@ -131,7 +131,7 @@ export class Router {
         // add paths
         args.unshift(path);
 
-        this.app.get.apply(this.app, args);
+        this.app.delete.apply(this.app, args);
     }
     public listen(port: number): void {
 
