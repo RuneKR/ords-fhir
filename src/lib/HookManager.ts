@@ -47,7 +47,7 @@ export class HookManager {
                 pre: {}
             };
         }
-        
+
         // save hook
         this.stack[cmd].pre[name] = hook;
     }
@@ -69,7 +69,7 @@ export class HookManager {
                 pre: {}
             };
         }
-        
+
         // save hook
         this.stack[cmd].post[name] = hook;
     }
@@ -91,17 +91,17 @@ export class HookManager {
                 pre: {}
             };
         }
-        
+
         // save hook
         this.stack[cmd].per[name] = hook;
     }
     /**
      * Execute hooks for a specfic command and apply one or more arguments to the hooks
      * @param   {string}      command   command for which hooks is executed
-     * @param   {...any}      args      arguments to be used in the hooks 
+     * @param   {any}         options   arguments to be used in the hooks 
      * @returns {Promise}     Indication of weather or not command exsists
      */
-    public doHooks<T>(command: string, args: T): Promise<any> {
+    public doHooks<T>(command: string, options: T): Promise<T> {
 
         // return the promise
         return new Promise((resolve: Function, reject: Function) => {
@@ -110,31 +110,36 @@ export class HookManager {
             if (this.stack[command] === undefined) {
 
                 // do nothing
-                resolve(args);
+                resolve(options);
 
             } else {
 
-                // calculate functions to run and sort them by alphanumeric
-                let funcsToRun: Array<string> = Object.keys(this.stack[command].pre).sort();               
-                Array.prototype.push.apply(funcsToRun, Object.keys(this.stack[command].post).sort());
-                Array.prototype.push.apply(funcsToRun, Object.keys(this.stack[command].per).sort());
+                // generate stack of functions to run and sort them by alphanumeric
+                let stack: Array<Function> = [];
 
-                // keep ref to self
-                let self: any = this;
+                Object.keys(this.stack[command].pre).sort().forEach((funcName: string) => {   
+                    stack.push(this.stack[command].pre[funcName]);   
+                });
+                Object.keys(this.stack[command].post).sort().forEach((funcName: string) => {   
+                    stack.push(this.stack[command].post[funcName]);   
+                });
+                Object.keys(this.stack[command].per).sort().forEach((funcName: string) => {   
+                    stack.push(this.stack[command].per[funcName]);   
+                });
 
                 // the next function
                 let next: any = function (): void {
 
                     // check if any functions are left to run
-                    if (funcsToRun.length === 0) {
-                        resolve(args);
+                    if (stack.length === 0) {
+                        resolve(options);
                     }
 
                     // next function to run
-                    let funcName: string = funcsToRun.shift();
+                    let func: Function = stack.shift();
 
                     try {
-                        self.stack[command][funcName](args, next);
+                        func(options, next);
                     } catch (err) {
                         reject(err);
                     }

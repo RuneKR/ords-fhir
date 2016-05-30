@@ -1,22 +1,22 @@
 import {Request, Response, Router}               from '../lib/Router';
-import {DBManager}                               from '../lib/DBManager';
+import {HookManager, Hookables}                  from '../lib/HookManager';
 import {DI}                                      from '../lib/DependencyInjector';
 import {OperationOutcome}                        from '../models/internal/OperationOutcome';
 
-@DI.createWith(Router, DBManager)
+@DI.createWith(Router, HookManager)
 export class InstanceRoute {
     /**
      * Database connection
      * @type {DBManager}
      */
-    private dbm: DBManager;
+    private hm: HookManager;
     /**
      * Binding the routes their function
      */
-    constructor(router: Router, dbm: DBManager) {
+    constructor(router: Router, hm: HookManager) {
 
         // bind injected values
-        this.dbm = dbm;
+        this.hm = hm;
 
         // bind model to router
         router.get('/:resource/:id', { parseQuery: true }, this.read.bind(this));
@@ -31,35 +31,47 @@ export class InstanceRoute {
      */
     public read(req: Request, res: Response): void {
 
-        // read from connection
-        this.dbm.read(req.params.resource, req.query, 1).then((docs: Array<any>) => {
+        // prepare options
+        let opt: Hookables.DBManager.Read = {
+            params: {
+                limit: 1,
+                query: req.query,
+                resource: req.params.resource
+            },
+            result: []
+        };
 
-            // if meta data is specified then use that in return
-            if (docs[0].meta) {
+        // start the hook
+        this.hm.doHooks<Hookables.DBManager.Read>('DBManager.Read', opt)
+            .then((options: Hookables.DBManager.Read) => {
 
-                // set response headers of version
-                if (docs[0].meta.versionId) {
-                    res.set({
-                        'ETag': 'W/"' + docs[0].meta.versionId + '"'
-                    });
+                // if meta data is specified then use that in return
+                if (options.result[0].meta) {
+
+                    // set response headers of version
+                    if (options.result[0].meta.versionId) {
+                        res.set({
+                            'ETag': 'W/"' + options.result[0].meta.versionId + '"'
+                        });
+                    }
+
+                    // set response headers of last updated
+                    if (options.result[0].meta.lastUpdated) {
+                        res.set({
+                            'Last-Modified': options.result[0].meta.lastUpdated
+                        });
+                    }
                 }
 
-                // set response headers of last updated
-                if (docs[0].meta.lastUpdated) {
-                    res.set({
-                        'Last-Modified': docs[0].meta.lastUpdated
-                    });
-                }
-            }
+                // send resulting doc back
+                return res.send(options.result[0]);
 
-            // send resulting doc back
-            return res.send(docs[0]);
+                // catch the operation outcome and sendt it bac
+            }).catch((err: OperationOutcome) => {
 
-        }).catch((err: OperationOutcome) => {
-
-            let code: any = err.httpcode;
-            return res.status(code).send(err);
-        });
+                let code: any = err.httpcode;
+                return res.status(code).send(err);
+            });
     }
     /**
      * Update a specific instance of a resource
@@ -69,7 +81,8 @@ export class InstanceRoute {
      */
     public update(req: Request, res: Response): Response {
 
-        // check if id is set for update and do not match with params.id
+        // check if id is set for update and do not match with params.id 
+        // perhaps move this to somewhere else?
         if (req.body.id !== undefined && req.params.id !== req.body.id) {
 
             let err: OperationOutcome = new OperationOutcome({
@@ -84,45 +97,60 @@ export class InstanceRoute {
             return res.status(code).send(err);
         }
 
+        // prepare options
+        let opt: Hookables.DBManager.Update = {
+            params: {
+                data: req.body,
+                query: req.query,
+                resource: req.params.resource
+            },
+            result: {}
+        };
+
         // do update
-        this.dbm.update(req.params.resource, req.query, req.body).then((doc: any) => {
+        // start the hook
+        this.hm.doHooks<Hookables.DBManager.Update>('DBManager.Update', opt)
+            .then((options: Hookables.DBManager.Update) => {
 
-            // if meta data is specified then use that in return
-            if (doc.meta) {
+                // ref to updated doc
+                let doc: any = options.result;
 
-                // set response headers
-                if (doc.meta.versionId) {
+                // if meta data is specified then use that in return
+                if (doc.meta) {
 
-                    // set response headers of last updated
-                    res.set({
-                        'ETag': 'W/"' + doc.meta.versionId + '"'
-                    });
+                    // set response headers
+                    if (doc.meta.versionId) {
 
-                    // an insert has occurred report if so
-                    if (doc.meta.versionId === 0) {
+                        // set response headers of last updated
                         res.set({
-                            'Location': '/' + req.params.resource + '/' + req.params.id
+                            'ETag': 'W/"' + doc.meta.versionId + '"'
                         });
-                        res.status(201);
+
+                        // an insert has occurred report if so
+                        if (doc.meta.versionId === 0) {
+                            res.set({
+                                'Location': '/' + req.params.resource + '/' + req.params.id
+                            });
+                            res.status(201);
+                        }
+                    }
+
+                    // set header for last modified
+                    if (doc.meta.lastUpdated) {
+                        res.set({
+                            'Last-Modified': doc.meta.lastUpdated
+                        });
                     }
                 }
 
-                // set header for last modified
-                if (doc.meta.lastUpdated) {
-                    res.set({
-                        'Last-Modified': doc.meta.lastUpdated
-                    });
-                }
-            }
+                // return result to user
+                return res.send(doc);
 
-            // return result to user
-            return res.send(doc);
+            }).catch((err: OperationOutcome) => {
 
-        }).catch((err: OperationOutcome) => {
-
-            let code: any = err.httpcode;
-            return res.status(code).send(err);
-        });
+                let code: any = err.httpcode;
+                return res.status(code).send(err);
+            });
     }
     /**
      * Delete a specific instance of an model
@@ -132,15 +160,27 @@ export class InstanceRoute {
      */
     public delete(req: Request, res: Response): void {
 
+
+        // prepare options
+        let opt: Hookables.DBManager.Delete = {
+            params: {
+                query: req.query,
+                resource: req.params.resource
+            },
+            result: {}
+        };
+
         // do delete
-        this.dbm.delete(req.params.resource, req.query).then((doc: any) => {
+        // start the hook
+        this.hm.doHooks<Hookables.DBManager.Delete>('DBManager.Delete', opt)
+            .then((options: Hookables.DBManager.Delete) => {
 
-            return res.status(204).send({});
+                return res.status(204).send({});
 
-        }).catch((err: OperationOutcome) => {
+            }).catch((err: OperationOutcome) => {
 
-            let code: any = err.httpcode;
-            return res.status(code).send(err);
-        });
+                let code: any = err.httpcode;
+                return res.status(code).send(err);
+            });
     }
 }

@@ -1,21 +1,21 @@
 import {Router, Request, Response}               from '../lib/Router';
-import {DBManager}                               from '../lib/DBManager';
+import {HookManager, Hookables}                  from '../lib/HookManager';
 import {DI}                                      from '../lib/DependencyInjector';
 import {OperationOutcome}                        from '../models/internal/OperationOutcome';
 
-@DI.createWith(Router, DBManager)
+@DI.createWith(Router, HookManager)
 export class TypeRoute {
     /**
      * Database connection management singleton
      */
-    private dbm: DBManager;
+    private hm: HookManager;
     /**
      * Binding the routes their function
      */
-    constructor(route: Router, dbm: DBManager) {
-        
+    constructor(route: Router, hm: HookManager) {
+
         // bind reference
-        this.dbm = dbm;
+        this.hm = hm;
 
         // bind model to router
         route.get(
@@ -26,11 +26,11 @@ export class TypeRoute {
         route.post(
             '/:resource/_search',
             { merge: true, parseBody: true, parseQuery: true },
-            this.search_body.bind(this)
+            this.search.bind(this)
         );
         route.post(
             '/:resource/',
-            { parseBody: true},
+            { parseBody: true },
             this.create.bind(this)
         );
     }
@@ -43,69 +43,45 @@ export class TypeRoute {
      */
     public search(req: Request, res: Response): void {
 
-        // read from connection
-        this.dbm.read(req.params.model, req.query, 1).then((docs: any) => {
+        // prepare options
+        let opt: Hookables.DBManager.Read = {
+            params: {
+                limit: 1,
+                query: req.query,
+                resource: req.params.resource
+            },
+            result: []
+        };
 
-            // if meta data is specified then use that in return
-            if (docs[0].meta) {
+        // do update
+        // start the hook
+        this.hm.doHooks<Hookables.DBManager.Read>('DBManager.Read', opt)
+            .then((options: Hookables.DBManager.Read) => {
 
-                // set response headers
-                if (docs[0].meta.versionId) {
-                    res.set({
-                        'ETag': 'W/"' + docs[0].meta.versionId + '"'
-                    });
+                // if meta data is specified then use that in return
+                if (options.result[0].meta) {
+
+                    // set response headers
+                    if (options.result[0].meta.versionId) {
+                        res.set({
+                            'ETag': 'W/"' + options.result[0].meta.versionId + '"'
+                        });
+                    }
+
+                    if (options.result[0].meta.lastUpdated) {
+                        res.set({
+                            'Last-Modified': options.result[0].meta.lastUpdated
+                        });
+                    }
                 }
 
-                if (docs[0].meta.lastUpdated) {
-                    res.set({
-                        'Last-Modified': docs[0].meta.lastUpdated
-                    });
-                }
-            }
+                res.send(options.result[0]);
 
-            res.send(docs[0]);
+            }).catch((err: OperationOutcome) => {
 
-        }).catch((err: OperationOutcome) => {
-
-            let code: any = err.httpcode;
-            return res.status(code).send(err);
-        });
-    }
-    /**
-     * Search a given model by body of the request
-     * @param   {Request}     req     requrest from the client
-     * @param   {Response}    res     responsehandler for the client
-     * @returns {Void}
-     */
-    public search_body(req: Request, res: Response): void {
-
-        // read from connection
-        this.dbm.read(req.params.model, req.body, 1).then((docs: any) => {
-
-            // if meta data is specified then use that in return
-            if (docs[0].meta) {
-
-                // set response headers
-                if (docs[0].meta.versionId) {
-                    res.set({
-                        'ETag': 'W/"' + docs[0].meta.versionId + '"'
-                    });
-                }
-
-                if (docs[0].meta.lastUpdated) {
-                    res.set({
-                        'Last-Modified': docs[0].meta.lastUpdated
-                    });
-                }
-            }
-
-            res.send(docs[0]);
-
-        }).catch((err: OperationOutcome) => {
-
-            let code: any = err.httpcode;
-            return res.status(code).send(err);
-        });
+                let code: any = err.httpcode;
+                return res.status(code).send(err);
+            });
     }
     /**
      * Create an instance of an model
@@ -115,40 +91,55 @@ export class TypeRoute {
      */
     public create(req: Request, res: Response): void {
 
+        // prepare options
+        let opt: Hookables.DBManager.Create = {
+            params: {
+                data: req.body,
+                query: {},
+                resource: req.params.resource
+            },
+            result: []
+        };
+
         // do update
-        this.dbm.create(req.params.model, {}, req.body).then((doc: any) => {
+        // start the hook
+        this.hm.doHooks<Hookables.DBManager.Create>('DBManager.Create', opt)
+            .then((options: Hookables.DBManager.Create) => {
 
-            // if meta data is specified then use that in return
-            if (doc.meta) {
+                // ref to updated doc
+                let doc: any = options.result;
 
-                // set response headers
-                if (doc.meta.versionId) {
-                    res.set({
-                        'ETag': 'W/"' + doc.meta.versionId + '"'
-                    });
+                // if meta data is specified then use that in return
+                if (doc.meta) {
 
-                    // an insert has occured
-                    if (doc.meta.versionId === 0) {
+                    // set response headers
+                    if (doc.meta.versionId) {
                         res.set({
-                            'Location': '/' + req.params.model + '/' + req.params.id
+                            'ETag': 'W/"' + doc.meta.versionId + '"'
                         });
-                        res.status(201);
+
+                        // an insert has occured
+                        if (doc.meta.versionId === 0) {
+                            res.set({
+                                'Location': '/' + req.params.model + '/' + req.params.id
+                            });
+                            res.status(201);
+                        }
+                    }
+
+                    if (doc.meta.lastUpdated) {
+                        res.set({
+                            'Last-Modified': doc.meta.lastUpdated
+                        });
                     }
                 }
 
-                if (doc.meta.lastUpdated) {
-                    res.set({
-                        'Last-Modified': doc.meta.lastUpdated
-                    });
-                }
-            }
+                return res.send(doc);
 
-            return res.send(doc);
+            }).catch((err: OperationOutcome) => {
 
-        }).catch((err: OperationOutcome) => {
-
-            let code: any = err.httpcode;
-            return res.status(code).send(err);
-        });
+                let code: any = err.httpcode;
+                return res.status(code).send(err);
+            });
     }
 }

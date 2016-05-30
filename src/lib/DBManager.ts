@@ -24,227 +24,109 @@ export class DBManager {
         this.hm = hm;
 
         // validate that model exists for all
-        this.hm.addHookPre<Hookables.DBManager.Create>('DBManager.Create', 'a-ords-main-db', this.validateExists);
-        this.hm.addHookPre<Hookables.DBManager.Read>('DBManager.Update', 'a-ords-main-db', this.validateExists);
-        this.hm.addHookPre<Hookables.DBManager.Update>('DBManager.Update', 'a-ords-main-db', this.validateExists);
-        this.hm.addHookPre<Hookables.DBManager.Delete>('DBManager.Delete', 'a-ords-main-db', this.validateExists);
-           
+        this.hm.addHookPre<Hookables.DBManager.Create>('DBManager.Create', '1-ords', this.validateExists);
+        this.hm.addHookPre<Hookables.DBManager.Read>('DBManager.Read', '1-ords', this.validateExists);
+        this.hm.addHookPre<Hookables.DBManager.Update>('DBManager.Update', '1-ords', this.validateExists);
+        this.hm.addHookPre<Hookables.DBManager.Delete>('DBManager.Delete', '1-ords', this.validateExists);
+
         // add the actual functions
-        this.hm.addHookPer<Hookables.DBManager.Create>('DBManager.Create', 'a-ords-main-db', this.create);
-        this.hm.addHookPer<Hookables.DBManager.Read>('DBManager.Update', 'a-ords-main-db',   this.read);
-        this.hm.addHookPer<Hookables.DBManager.Update>('DBManager.Update', 'a-ords-main-db', this.update);
-        this.hm.addHookPer<Hookables.DBManager.Delete>('DBManager.Delete', 'a-ords-main-db', this.delete);
+        this.hm.addHookPre<Hookables.DBManager.Create>('DBManager.Create', '2-ords', this.create);
+        this.hm.addHookPre<Hookables.DBManager.Update>('DBManager.Update', '2-ords', this.update);
+        this.hm.addHookPre<Hookables.DBManager.Read>('DBManager.Read', '2-ords', this.read);
     }
     /**
-     * Validate that a given model exists
-     */
-    public validateExists() {
-
-    }
-    /**
-     * Create a new instance of a resource with some given data and save it to a database
-     * @param   {string}              model   name of the resource that is to be created a new instance of
-     * @param   {Object}              query   MongoDB query that conditions if a created should be done
-     * @param   {*}                   create  the data that is to be used in the creation of a resource
+     * Validate that a given model exists and then go next
+     * @param   {Hookables.DBManager.*}   options     options specificed for the hookmanager
+     * @param   {Function}                next        next function to be called
      * @returns {Void}
      */
-    public create(model: string, query: Object, create: any): void {
+    public validateExists(options: any, next: Function): void {
 
-        return new Promise((resolve: Function, reject: Function) => {
-
-            // validate model exsists
-            if (typeof this.rs.resources[model] === 'undefined') {
-                return reject(new OperationOutcome({
-                    httpcode: 404, issue: {
-                        code: 'processing.not-supported',
-                        severity: 'fatal'
-                    }
-                }));
-            }
-
-            let dbUpdate: any;
-
-            // do multiple validation one to check if we are doing an update and one to check if we are doing an create
-            try {
-                dbUpdate = new this.rs.resources[model](create, Enforce.required);
-            } catch (err) {
-
-                return reject(new OperationOutcome({
-                    httpcode: 400, issue: {
-                        code: 'invalid.invariant',
-                        diagnostics: err.message,
-                        severity: 'fatal'
-                    }
-                }));
-            }
-
-            let arg: any = {
-                action: {
-                    data: dbUpdate,
-                    query: query,
-                    resource: model
-                },
-                result: {}
-            };
-
-            // do action
-            this.hm.doHooks('DBManager.Create', arg).then((args: Hookables.DBManager.Create) => {
-
-                // retrun result
-                resolve(args.result);
-
-                // send back operation outcome
-            }).catch((err: any) => {
-
-                reject(err);
-            });
-        });
-    }
-    /**
-     * Read from a specific resource by a specific query and limit the number of rows in the output
-     * @param   {string}              model   name of the resource that is to be read from
-     * @param   {Object}              query   MongoDB query that conditions the query of the read
-     * @param   {number}              limit   limit the amount of data returned
-     * @returns {Void}
-     */
-    public read(model: string, query: Object, limit: number): void {
-
-        return new Promise((resolve: Function, reject: Function) => {
-
-            // validate model exsists
-            if (typeof this.rs.resources[model] === 'undefined') {
-                return reject(new OperationOutcome({
-                    httpcode: 404, issue: {
-                        code: 'processing.not-supported',
-                        severity: 'fatal'
-                    }
-                }));
-            }
-
-            let arg: any = {
-                action: {
-                    limit: limit,
-                    query: query,
-                    resource: model
-                },
-                result: []
-            };
-
-            // return action
-            this.hm.doHooks('DBManager.Read', arg).then((out: Hookables.DBManager.Read) => {
-
-                if (out.result.length === 0) {
-                    reject(new OperationOutcome({
-                        httpcode: 404, issue: {
-                            code: 'processing.not-found',
-                            severity: 'warning'
-                        }
-                    }));
-                } else {
-                    resolve(out.result);
+        // validate model exsists
+        if (typeof this.rs.resources[options.params.resource] === 'undefined') {
+            throw new OperationOutcome({
+                httpcode: 404, issue: {
+                    code: 'processing.not-supported',
+                    severity: 'fatal'
                 }
-
-                // operation outcome catch
-            }).catch((err: any) => {
-                reject(err);
             });
-        });
+        }
+
+        // go next function
+        next();
     }
     /**
-     * Update a resource based on some data and if a query is true
-     * @param   {string}              model   name of the resource that a instance is to be updated from
-     * @param   {Object}              query   MongoDB query that conditions the update
-     * @param   {*}                   update  the actual data to be used in the update
+     * Validate the content of the data as if matches the schema 
+     * @param {Hookables.DBManager.Create}   options     options specificed for the hookmanager
+     * @param {Function}                next        next function to be called
      * @returns {Void}
      */
-    public update(model: string, query: Object, update: any): void {
+    public create(options: Hookables.DBManager.Create, next: Function): void {
 
-        return new Promise((resolve: Function, reject: Function) => {
+        // check if data follows the syntax
+        try {
+            options.params.data = new this.rs.resources[options.params.resource](options.params.data, Enforce.required);
+        } catch (err) {
 
-            // validate model exsists
-            if (typeof this.rs.resources[model] === 'undefined') {
-                return reject(new OperationOutcome({
-                    httpcode: 404, issue: {
-                        code: 'processing.not-supported',
-                        severity: 'fatal'
-                    }
-                }));
-            }
-
-            let dbUpdate: any;
-
-            try {
-                // do multiple validation one to check if we are doing an update and one to check if we are doing an create
-                dbUpdate = new this.rs.resources[model](update, Enforce.required);
-
-            } catch (err) {
-
-                return reject(new OperationOutcome({
-                    httpcode: 400, issue: {
-                        code: 'invalid.invariant',
-                        diagnostics: err.message,
-                        severity: 'fatal'
-                    }
-                }));
-            }
-
-            let arg: any = {
-                action: {
-                    data: dbUpdate,
-                    query: query,
-                    resource: model
-                },
-                result: {}
-            };
-
-            // return action
-            this.hm.doHooks('DBManager.Update', arg).then((out: Hookables.DBManager.Update) => {
-
-                resolve(out.result);
-
-                // operation outcome catch
-            }).catch((err: any) => {
-                reject(err);
+            // notify about the error
+            throw new OperationOutcome({
+                httpcode: 400, issue: {
+                    code: 'invalid.invariant',
+                    diagnostics: err.message,
+                    severity: 'fatal'
+                }
             });
-        });
+        }
+
+        // go next
+        next();
     }
     /**
-     * Delete some resource given som conditions
-     * @param   {string}              model   name of the resource that something should be deleted from
-     * @param   {Object}              query   the conditions for the removal of an item
-     * @returns {void}
+     * Validate that some content is actually found
+     * @param   {Hookables.DBManager.Read}   options     options specificed for the hookmanager
+     * @param   {Function}                next        next function to be called
+     * @returns {Void}
      */
-    public delete(model: string, query: Object): void {
+    public read(options: Hookables.DBManager.Read, next: Function): void {
 
-        return new Promise((resolve: Function, reject: Function) => {
-
-            // validate model exsists
-            if (typeof this.rs.resources[model] === 'undefined') {
-                return reject(new OperationOutcome({
-                    httpcode: 404, issue: {
-                        code: 'processing.not-supported',
-                        severity: 'fatal'
-                    }
-                }));
-            }
-
-            let arg: any = {
-                action: {
-                    query: query,
-                    resource: model
-                },
-                result: {}
-            };
-
-            // return action
-            this.hm.doHooks('DBManager.Delete', arg).then((out: Hookables.DBManager.Delete) => {
-
-                resolve(out.result);
-
-                // operation outcome catch
-            }).catch((err: any) => {
-                reject(err);
+        // validate the length of outcome
+        if (options.result.length === 0) {
+            throw new OperationOutcome({
+                httpcode: 404, issue: {
+                    code: 'processing.not-found',
+                    severity: 'warning'
+                }
             });
-        });
+        }
+        
+        // go next
+        next();
     }
+    /**
+     * Validate the content of the data as if matches the schema 
+     * @param   {Hookables.DBManager.Update}   options     options specificed for the hookmanager
+     * @param   {Function}                     next        next function to be called
+     * @returns {Void}
+     */
+    public update(options: Hookables.DBManager.Update, next: Function): void {
+
+        // check if data follows the syntax
+        try {
+            options.params.data = new this.rs.resources[options.params.resource](options.params.data, Enforce.required);
+        } catch (err) {
+
+            // notify about the error
+            throw new OperationOutcome({
+                httpcode: 400, issue: {
+                    code: 'invalid.invariant',
+                    diagnostics: err.message,
+                    severity: 'fatal'
+                }
+            });
+        }
+
+        // go next
+        next();
+    }
+
 }
