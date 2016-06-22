@@ -5,6 +5,8 @@ export interface OneValue {
     _OneValue: any;
 }
 
+// include all the these simple hl7 fhir
+
 export class Boolean implements OneValue {
     public _OneValue: any;
     constructor(data: any) {
