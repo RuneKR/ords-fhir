@@ -2,28 +2,28 @@ import {Identifier} from '../datatypes/identifier';
 import {HumanName} from '../datatypes/human-name';
 import {Address} from '../dataTypes/address';
 import {DomainResource} from './domain-resource';
-import {ElementDefinition, Enforce} from 'ts-objectschema';
+import {SchemaModels}       from '../../components/schema';
 
 export class Patient extends DomainResource {
 
-    public identifier: ElementDefinition = {
+    public identifier: SchemaModels.ElementDefinition = {
         required: false,
         type: Identifier
     };
 
-    public active: ElementDefinition = {
+    public active: SchemaModels.ElementDefinition = {
         required: false,
         type: Boolean
     };
-    public name: ElementDefinition = {
+    public name: SchemaModels.ElementDefinition = {
         required: true,
         type: HumanName
     };
-    public address: ElementDefinition = {
+    public address: SchemaModels.ElementDefinition = {
         required: true,
         type: Address
     };
-    public constructor(data: { [key: string]: any }, validate: Enforce) {
+    public constructor(data: SchemaModels.Valueset, validate: SchemaModels.Enforce) {
 
         // do validation command
         super();
