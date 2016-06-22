@@ -1,1 +1,0 @@
-export { RequestHandler } from 'express';
