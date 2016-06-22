@@ -1,4 +1,4 @@
-import {IValueset}          from    './i-valueset';
+import {Valueset}           from    './valueset';
 import {BindingStrength}    from    './binding-strength';
 /**
  * Binding of a value
@@ -18,7 +18,7 @@ export class Binding {
      * Reference to a given valueset
      * @type {Valueset}
      */
-    public valueSet: IValueset;
+    public valueSet: Valueset;
     /**
      * Constructs a new binding based on the input
      */
