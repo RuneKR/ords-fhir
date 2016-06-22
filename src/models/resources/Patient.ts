@@ -1,7 +1,7 @@
 import {Identifier} from '../dataTypes/Identifier';
 import {HumanName} from '../dataTypes/HumanName';
 import {Address} from '../dataTypes/Address';
-import {DomainResource} from '../internal/DomainResource';
+import {DomainResource} from './domain-resource';
 import {ElementDefinition, Enforce} from 'ts-objectschema';
 
 export class Patient extends DomainResource {

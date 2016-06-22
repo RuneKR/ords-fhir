@@ -1,8 +1,7 @@
-export {Server}                     from './lib/server';
-export {DI, DependencyInjector}     from './lib/DependencyInjector';
-
-export {HookManager}                from './lib/HookManager';
-export {DBManager}                  from './lib/DBManager';
-export {ResourceManager}            from './lib/ResourceManager';
-
-export {Router}                     from './lib/Router';
+export *  from './components/database';
+export *  from './components/dependency-injector';
+export *  from './components/routing';
+export *  from './components/conformance'; 
+export *  from './components/schema';
+// import * as Model    from './models'; export {Model};
+export {Application} from './application';

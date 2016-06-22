@@ -1,4 +1,4 @@
-import {DomainResource} from '../internal/DomainResource';
+import {DomainResource} from './domain-resource';
 import {CodeableConcept} from '../dataTypes/CodeableConcept';
 import {ElementDefinition, Enforce} from 'ts-objectschema';
 import {Identifier} from '../dataTypes/Identifier';

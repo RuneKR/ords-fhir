@@ -1,0 +1,1 @@
+export { NextFunction } from 'express';

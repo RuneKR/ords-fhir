@@ -3,17 +3,17 @@
     "compilerOptions": {
         "module": "commonjs",
         "noImplicitAny": true,
-        "removeComments": true,
+        "removeComments": false,
         "preserveConstEnums": true,
         "declaration": true,
-        "outDir": "dist",
+        "outDir": "build",
         "target": "es5",
         "experimentalDecorators": true
     },
     "exclude": [
         "node_modules",
-        "typings/browser.d.ts",
-        "typings/browser",
-        "dist"
+        "typings/modules",
+        "typings/globals",
+        "build"
     ]
 }

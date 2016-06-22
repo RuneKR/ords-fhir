@@ -1,0 +1,33 @@
+import {Helper}     from    './services/helper';
+
+/**
+ * Decorator for auto validation of input upon new construction of a resource class
+ */
+export function SchemaComponent(target: any): any {
+
+    'use strict';
+
+    // save a reference to the original constructor
+    let original: Function = target;
+
+    // the new constructor behaviour
+    let f: Function = function (...args: Array<any>): any {
+
+        // apply original constructor
+        original.apply(this, args);
+
+        // do validation
+        this.popAndValidate(args[0], args[1]);
+    };
+
+    // copy prototype so intanceof operator still works
+    f.prototype = original.prototype;
+
+    // add functions from the validator
+    f.prototype.popAndValidate = Helper.prototype.popAndValidate;
+    f.prototype.getValueFromType = Helper.prototype.getValueFromType;
+    f.prototype.setValue = Helper.prototype.setValue;
+
+    // return new constructor (will override original)
+    return f;
+}
