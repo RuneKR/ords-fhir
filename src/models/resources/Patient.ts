@@ -1,5 +1,5 @@
-import {Identifier} from '../dataTypes/Identifier';
-import {HumanName} from '../dataTypes/HumanName';
+import {Identifier} from '../datatypes/identifier';
+import {HumanName} from '../datatypes/human-name';
 import {Address} from '../dataTypes/Address';
 import {DomainResource} from './domain-resource';
 import {ElementDefinition, Enforce} from 'ts-objectschema';

@@ -1,8 +1,8 @@
-import {identifierUse} from '../valueSets/IdentifierUse';
+import {identifierUse} from '../valuesets/identifier-use';
 import {Period} from './Period';
 import {Reference} from './Reference';
 import {ElementDefinition, decorators, datatypes, Enforce, BindingStrength, Binding} from 'ts-objectschema';
-import {CodeableConcept} from './CodeableConcept';
+import {CodeableConcept} from './codeable-concept';
 
 @decorators.validate
 export class Identifier {

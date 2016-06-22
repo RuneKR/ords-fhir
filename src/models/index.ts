@@ -1,3 +1,3 @@
 import * as Datatypes   from './datatypes'; export {Datatypes};
-import * as Resource    from './resources'; export {Resource};
-import * as Valuesets   from './valuesets'; export {Valueset};
+import * as Resources   from './resources'; export {Resources};
+import * as Valuesets   from './valuesets'; export {Valuesets};

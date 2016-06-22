@@ -1,4 +1,4 @@
-import {nameUse} from '../valueSets/NameUse';
+import {nameUse} from '../valuesets/name-use';
 import {Period} from './Period';
 import {decorators, datatypes, ElementDefinition, Enforce, BindingStrength, Binding} from 'ts-objectschema';
 

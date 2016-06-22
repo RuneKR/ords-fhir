@@ -28,7 +28,7 @@ export class Implementation {
         });
 
         // start application
-        this.app = new Application({ port: 8000, prefix: '/api', whitelist: [] });
+        this.app = new Application({ port: 8000, prefix: '/api' });
 
         console.log('Pleas go to your browser');
         console.log('Visit /exit');

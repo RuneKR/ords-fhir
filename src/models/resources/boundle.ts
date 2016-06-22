@@ -1,5 +1,5 @@
 import * as tso        from 'ts-objectschema';
-import {boundleType}   from '../valueSets/BoundleType';
+import {boundleType}   from '../valuesets/boundle-type';
 
 export interface IBoundle {
     type: string;

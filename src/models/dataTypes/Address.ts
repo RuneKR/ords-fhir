@@ -1,4 +1,4 @@
-import {addressUse} from '../valueSets/AddressUse';
+import {addressUse} from '../valuesets/address-use';
 import {datatypes, decorators, ElementDefinition, Binding, BindingStrength, Enforce} from 'ts-objectschema';
 
 @decorators.validate

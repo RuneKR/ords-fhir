@@ -1,7 +1,7 @@
 import {DomainResource} from './domain-resource';
-import {CodeableConcept} from '../dataTypes/CodeableConcept';
+import {CodeableConcept} from '../datatypes/codeable-concept';
 import {ElementDefinition, Enforce} from 'ts-objectschema';
-import {Identifier} from '../dataTypes/Identifier';
+import {Identifier} from '../datatypes/identifier';
 
 export class Observation extends DomainResource {
 

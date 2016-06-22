@@ -1,4 +1,5 @@
-import {Resource, Valueset}     from '../schema/schema.models';
+import {Resource}               from './models/Resource';
+import {Valueset}               from './models/valueset';
 import {Structuredefenition}    from './models/structuredefenition';
 import {Conformance}            from './models/conformance';
 
