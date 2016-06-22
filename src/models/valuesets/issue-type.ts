@@ -1,4 +1,4 @@
-import {Valueset} from 'ts-objectschema';
+import {ConformanceModels} from '../../components/Conformance';
 
 export class IssueType {
     public codeSystem: Object = {
@@ -162,4 +162,4 @@ export class IssueType {
     };
 }
 
-export const issueType: IssueType = new Valueset(new IssueType());
+export const issueType: IssueType = new ConformanceModels.Valueset(new IssueType());

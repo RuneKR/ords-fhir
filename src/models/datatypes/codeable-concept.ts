@@ -1,17 +1,17 @@
-import {datatypes, decorators, ElementDefinition, Enforce} from 'ts-objectschema';
 import {Coding} from './Coding';
+import {SchemaModels, SchemaComponent} from '../../components/schema';
 
-@decorators.validate
+@SchemaComponent
 export class CodeableConcept {
-    public coding: ElementDefinition = {
+    public coding: SchemaModels.ElementDefinition = {
         required: false,
         type: [Coding]
     };
-    public text: ElementDefinition = {
+    public text: SchemaModels.ElementDefinition = {
         required: false,
-        type: datatypes.String
+        type: SchemaModels.DataTypes.String
     };
-    public constructor(data: {[key: string]: any}, validate: Enforce) {
+    public constructor(data: SchemaModels.Valueset, validate: SchemaModels.Enforce) {
 
         // do nothing
 

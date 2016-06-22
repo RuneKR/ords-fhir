@@ -1,4 +1,4 @@
-import {Valueset} from 'ts-objectschema';
+import {ConformanceModels} from '../../components/Conformance';
 
 export class UnknownContentCode {
 
@@ -31,4 +31,4 @@ export class UnknownContentCode {
 
 }
 
-export const unknownContentCode: Valueset = new Valueset(new UnknownContentCode());
+export const unknownContentCode: ConformanceModels.Valueset = new ConformanceModels.Valueset(new UnknownContentCode());

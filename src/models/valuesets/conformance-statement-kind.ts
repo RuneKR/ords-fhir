@@ -1,4 +1,4 @@
-import {Valueset} from 'ts-objectschema';
+import {ConformanceModels} from '../../components/Conformance';
 
 export class ConformanceStatementKind {
 
@@ -26,4 +26,4 @@ export class ConformanceStatementKind {
 
 }
 
-export const conformanceStatementKind: Valueset = new Valueset(new ConformanceStatementKind());
+export const conformanceStatementKind: ConformanceStatementKind = new ConformanceModels.Valueset(new ConformanceStatementKind());

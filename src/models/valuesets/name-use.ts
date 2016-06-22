@@ -1,4 +1,4 @@
-import {Valueset} from 'ts-objectschema';
+import {ConformanceModels} from '../../components/Conformance';
 
 export class NameUse {
 
@@ -41,4 +41,4 @@ export class NameUse {
 
 }
 
-export const nameUse: NameUse = new Valueset(new NameUse());
+export const nameUse: NameUse = new ConformanceModels.Valueset(new NameUse());

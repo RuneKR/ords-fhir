@@ -1,4 +1,4 @@
-import {Valueset} from 'ts-objectschema';
+import {ConformanceModels} from '../../components/Conformance';
 
 export class ConformanceResourceStatus {
 
@@ -20,10 +20,10 @@ export class ConformanceResourceStatus {
                 display: 'string'
             }
         ],
-        system: process.env.DOMAIN + '/ValueSet/ConformanceResourceStatus',
+        system: process.env.DOMAIN + '/Valueset/ConformanceResourceStatus',
         version: '1.0.0'
     };
 
 }
 
-export const conformanceResourceStatus: Valueset = new Valueset(new ConformanceResourceStatus());
+export const conformanceResourceStatus: ConformanceResourceStatus = new ConformanceModels.Valueset(new ConformanceResourceStatus());

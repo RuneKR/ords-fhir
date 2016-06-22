@@ -1,4 +1,4 @@
-import {Valueset} from 'ts-objectschema';
+import {ConformanceModels} from '../../components/Conformance';
 
 export class RestfulConformanceMode {
 
@@ -21,4 +21,4 @@ export class RestfulConformanceMode {
 
 }
 
-export const restfulConformanceMode: Valueset = new Valueset(new RestfulConformanceMode());
+export const restfulConformanceMode: ConformanceModels.Valueset = new ConformanceModels.Valueset(new RestfulConformanceMode());

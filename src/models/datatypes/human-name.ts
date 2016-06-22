@@ -1,37 +1,37 @@
 import {nameUse} from '../valuesets/name-use';
 import {Period} from './Period';
-import {decorators, datatypes, ElementDefinition, Enforce, BindingStrength, Binding} from 'ts-objectschema';
+import {SchemaModels, SchemaComponent} from '../../components/schema';
 
-@decorators.validate
+@SchemaComponent
 export class HumanName {
-    public use: ElementDefinition = {
-        binding: new Binding(BindingStrength.required, 'Description of valueset', nameUse),
+    public use: SchemaModels.ElementDefinition = {
+        binding: new SchemaModels.Binding(SchemaModels.BindingStrength.required, 'Description of valueset', nameUse),
         required: false,
-        type: datatypes.String
+        type: SchemaModels.DataTypes.String
     };
-    public text: ElementDefinition = {
+    public text: SchemaModels.ElementDefinition = {
         required: false,
-        type: datatypes.String
+        type: SchemaModels.DataTypes.String
     };
-    public family: ElementDefinition = {
+    public family: SchemaModels.ElementDefinition = {
         required: false,
-        type: [datatypes.String]
+        type: [SchemaModels.DataTypes.String]
     };
-    public given: ElementDefinition = {
+    public given: SchemaModels.ElementDefinition = {
         required: false,
-        type: [datatypes.String]
+        type: [SchemaModels.DataTypes.String]
     };
-    public prefix: ElementDefinition = {
+    public prefix: SchemaModels.ElementDefinition = {
         required: false,
-        type: [datatypes.String]
+        type: [SchemaModels.DataTypes.String]
     };
-    public period: ElementDefinition = {
+    public period: SchemaModels.ElementDefinition = {
         required: false,
         type: Period
     };
-    public constructor(data: {[key: string]: any}, validate: Enforce) {
+    public constructor(data: SchemaModels.Valueset, validate: SchemaModels.Enforce) {
 
         // do nothing
-        
+
     }
 }

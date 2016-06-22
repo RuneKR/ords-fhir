@@ -1,4 +1,4 @@
-import {Valueset} from 'ts-objectschema';
+import {ConformanceModels} from '../../components/Conformance';
 
 export class ResourceType {
 
@@ -491,4 +491,4 @@ export class ResourceType {
 
 }
 
-export const resourceType: Valueset = new Valueset(new ResourceType());
+export const resourceType: ConformanceModels.Valueset = new ConformanceModels.Valueset(new ResourceType());

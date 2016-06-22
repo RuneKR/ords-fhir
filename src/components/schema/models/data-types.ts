@@ -7,6 +7,14 @@ export interface OneValue {
 
 // include all the these simple hl7 fhir
 
+export class Any implements OneValue {
+    public _OneValue: any;
+    constructor(data: any) {
+        
+        this._OneValue = data;
+    }
+}
+
 export class Boolean implements OneValue {
     public _OneValue: any;
     constructor(data: any) {

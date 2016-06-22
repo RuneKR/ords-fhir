@@ -1,4 +1,4 @@
-import * as tso        from 'ts-objectschema';
+import {SchemaModels, SchemaComponent} from '../../components/schema';
 import {boundleType}   from '../valuesets/boundle-type';
 
 export interface IBoundle {
@@ -10,51 +10,51 @@ export interface IBoundle {
     }>;
 }
 
-@tso.decorators.validate
+@SchemaComponent
 export class Link {
-    public relation: tso.ElementDefinition = {
+    public relation: SchemaModels.ElementDefinition = {
         required: true,
-        type: tso.datatypes.String
+        type: SchemaModels.DataTypes.String
     };
-    public url: tso.ElementDefinition = {
+    public url: SchemaModels.ElementDefinition = {
         required: true,
-        type: tso.datatypes.Uri
+        type: SchemaModels.DataTypes.Uri
     };
 }
 
-@tso.decorators.validate
+@SchemaComponent
 export class Entry {
-    public link: tso.ElementDefinition = {
+    public link: SchemaModels.ElementDefinition = {
         required: false,
         type: Link
     };
-    public fulluri: tso.ElementDefinition = {
+    public fulluri: SchemaModels.ElementDefinition = {
         required: true,
-        type: tso.datatypes.Uri
+        type: SchemaModels.DataTypes.Uri
     };
-    public resource: tso.ElementDefinition = {
+    public resource: SchemaModels.ElementDefinition = {
         definition: 'The contained resource',
         required: true,
-        type: tso.datatypes.Any
+        type: SchemaModels.DataTypes.Any
     };
 }
 
-@tso.decorators.autoValidate(tso.Enforce.required)
+@SchemaComponent
 export class Boundle {
-    public type: tso.ElementDefinition = {
-        binding: new tso.Binding(tso.BindingStrength.required, 'Boundle type', boundleType),
+    public type: SchemaModels.ElementDefinition = {
+        binding: new SchemaModels.Binding(SchemaModels.BindingStrength.required, 'Boundle type', boundleType),
         required: true,
-        type: tso.datatypes.String
+        type: SchemaModels.DataTypes.String
     };
-    public total: tso.ElementDefinition = {
+    public total: SchemaModels.ElementDefinition = {
         required: false,
-        type: tso.datatypes.Number
+        type: SchemaModels.DataTypes.Number
     };
-    public link: tso.ElementDefinition = {
+    public link: SchemaModels.ElementDefinition = {
         required: false,
         type: Link
     };
-    public entry: tso.ElementDefinition = {
+    public entry: SchemaModels.ElementDefinition = {
         required: false,
         type: Entry
     };

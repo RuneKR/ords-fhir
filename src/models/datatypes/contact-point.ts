@@ -1,26 +1,22 @@
 import {addressUse} from '../valuesets/address-use';
-import {datatypes, decorators, ElementDefinition, Binding, BindingStrength, Enforce} from 'ts-objectschema';
+import {SchemaModels, SchemaComponent} from '../../components/schema';
 
-@decorators.validate
+@SchemaComponent
 export class ContactPoint {
-    public use: ElementDefinition = {
-        binding: new Binding(BindingStrength.required, 'Description of valueset', addressUse),
+    public use: SchemaModels.ElementDefinition = {
+        binding: new SchemaModels.Binding(SchemaModels.BindingStrength.required, 'Description of valueset', addressUse),
         required: false,
-        type: datatypes.String
+        type: SchemaModels.DataTypes.String
     };
     // fortsæt herfra!!!
-    public text: ElementDefinition = {
+    public text: SchemaModels.ElementDefinition = {
         required: false,
-        type: datatypes.String
+        type: SchemaModels.DataTypes.String
     };
 
-    public constructor(data: {[key: string]: any}, validate: Enforce) {
+    public constructor(data: SchemaModels.Valueset, validate: SchemaModels.Enforce) {
 
         // do nothing
 
     }
-}
-
-export interface IContactPoint {
-    
 }

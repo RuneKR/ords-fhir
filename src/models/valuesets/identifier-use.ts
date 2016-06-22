@@ -1,4 +1,4 @@
-import {Valueset} from 'ts-objectschema';
+import {ConformanceModels} from '../../components/Conformance';
 
 export class IdentifierUse {
 
@@ -30,4 +30,4 @@ export class IdentifierUse {
     };
 }
 
-export const identifierUse: IdentifierUse = new Valueset(new IdentifierUse());
+export const identifierUse: IdentifierUse = new ConformanceModels.Valueset(new IdentifierUse());
