@@ -1,4 +1,5 @@
 import {Helper}     from    './services/helper';
+import {Enforce}    from    './models/enforce';
 
 /**
  * Decorator for auto validation of input upon new construction of a resource class
@@ -12,6 +13,11 @@ export function SchemaComponent(target: any): any {
 
     // the new constructor behaviour
     let f: Function = function (...args: Array<any>): any {
+
+        // auto do required if nothing is included
+        if (args.length === 1) {
+            args.push(Enforce.required);
+        }
 
         // apply original constructor
         original.apply(this, args);
