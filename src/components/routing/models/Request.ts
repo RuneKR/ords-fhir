@@ -1,5 +1,5 @@
 import * as express                             from 'express';
-import {Resource}                               from '../../schema/schema.models';
+import {Resource}                               from '../../conformance/conformance.models';
 import {UserComponent}                          from '../../user';
 
 /**
