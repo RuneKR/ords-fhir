@@ -17,7 +17,9 @@ export class Implementation {
             { isResource: false, middleware: { parsers: {} }, protected: false }, 
             (req: RoutingModels.Request, res: RoutingModels.Response, next: RoutingModels.NextFunction) => {
             res.send('bye');
-            process.exit(0);
+
+            // terminate all of the cluster
+            process.send({ cmd: 'terminate' });
         });
 
         // add a feedback
