@@ -13,7 +13,8 @@ A client communicates with ORDS by sending a HTTP request. ORDS utilise the [Exp
 There are two layers:
 * Route based
 * Database based
-A [wiki page](https://github.com/MedSolve/ords-fhir/wiki/Creating-middleware) is created where these layers is described thoroughly. The point about these layers is that middleware can be added to run at a specific order when a request is made.
+
+A [wiki page](https://github.com/MedSolve/ords-fhir/wiki/Creating-middleware) is created where these layers is described thoroughly. The point about these layers is that middleware can be added to run at a specific order when a request is made and thereby change or add functionality to ORDS.
 
 ## Configuration
 Minor configuration such as what port ORDS should run at and how much data a client can upload to the server can also be configured. These can be set either when ORDS is instantiated or via process variables. More can be read at the [wiki page](https://github.com/MedSolve/ords-fhir/wiki/Configuration) 
