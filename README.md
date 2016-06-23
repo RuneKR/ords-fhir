@@ -17,15 +17,15 @@ There are two layers:
 A [wiki page](https://github.com/MedSolve/ords-fhir/wiki/Creating-middleware) is created where these layers is described thoroughly. The point about these layers is that middleware can be added to run at a specific order when a request is made and thereby change or add functionality to ORDS.
 
 ## Configuration
-Minor configuration such as what port ORDS should run at and how much data a client can upload to the server can also be configured. These can be set either when ORDS is instantiated or via process variables. More can be read at the [wiki page](https://github.com/MedSolve/ords-fhir/wiki/Configuration) 
+Minor configuration such as what port ORDS should run at and how much data a client can upload to the server can also be configured. These can be set either when ORDS is instantiated or via process variables. More can be read at the [wiki page](https://github.com/MedSolve/ords-fhir/wiki/Configuration).
 
 # Install
 This exists as an npm module. To install in your project:
 `npm install ords-fhir`
 
 # Usage
-An example repository has been created _Link to usage coming_
+An example repository has been created [here](https://github.com/MedSolve/ords-demo).
 
-# Some to do
+# Some to-do
 * More functionalities
 * Documentation
