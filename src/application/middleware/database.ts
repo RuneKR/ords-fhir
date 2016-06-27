@@ -1,12 +1,12 @@
-import {Request, Response, NextFunction}    from '../../routing/routing.models';
-import {DatabaseMiddleware}                 from '../database.middleware';
-import {DependencyInjectorComponent}        from '../../dependency-injector';
+import {Request, Response, NextFunction}    from '../../components/routing/routing.models';
+import {DatabaseMiddleware}                 from '../../components/database';
+import {DependencyInjectorComponent}        from '../../components/dependency-injector';
 
 /**
  * Validation routes
  */
 @DependencyInjectorComponent.createWith(DatabaseMiddleware)
-export class Helper {
+export class Database {
     /**
      * add the correct methods to middlewares
      */

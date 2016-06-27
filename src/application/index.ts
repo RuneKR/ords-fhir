@@ -9,6 +9,9 @@ import {Instance}      from './routes/Instance';
 import {Type}          from './routes/Type';
 import {System}        from './routes/System';
 
+// bootstrapped
+import './middleware/database';
+
 /**
  * Specification on how to run the application
  */
