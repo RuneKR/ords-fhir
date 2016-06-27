@@ -1,1 +1,1 @@
-export {UserComponent}       from './user.component';
+export {AuthComponent}       from './auth.component';
