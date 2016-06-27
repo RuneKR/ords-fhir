@@ -1,6 +1,6 @@
 import * as express                             from 'express';
 import {Resource}                               from '../../conformance/conformance.models';
-import {UserComponent}                          from '../../user';
+import {AuthComponent}                          from '../../auth';
 
 /**
  * Extended express request object to match ORDS syntax
@@ -13,7 +13,7 @@ export interface Request extends express.Request {
     /**
      * The user doing the interaction
      */
-    user: UserComponent;
+    auth: AuthComponent;
     /**
      * Query can contain anything and these specific fields
      */
