@@ -5,11 +5,6 @@ export interface RuleEntry {
     sourcekey: string;
 }
 
-export interface Rule {
-    field: Array<string>;
-    rules: Array<RuleEntry>;
-}
-
 export class Resource {
     /**
      * Parameters that can be queried / pre indexed variables
@@ -22,7 +17,7 @@ export class Resource {
     /**
      * Rules for the usages of this resource
      */
-    public rules: Rule;
+    public rules: Array<RuleEntry>;
     /**
      * Name for the resource
      */
