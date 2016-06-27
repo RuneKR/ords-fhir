@@ -16,6 +16,7 @@ export interface Request extends express.Request {
     auth: AuthComponent;
     /**
      * Query can contain anything and these specific fields
+     * TODO: Search parameters should all be added to general search param for conformance
      */
     query: {
         [key: string]: any;
