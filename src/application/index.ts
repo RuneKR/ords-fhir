@@ -11,6 +11,7 @@ import {System}        from './routes/System';
 
 // bootstrapped
 import './middleware/database';
+import './middleware/routing';
 
 /**
  * Specification on how to run the application

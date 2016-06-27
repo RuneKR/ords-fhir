@@ -2,7 +2,6 @@ import {ConformanceComponent}                                           from '..
 import {RoutingMiddleware}                                              from '../routing.middleware';
 import {DependencyInjectorComponent}                                    from '../../dependency-injector';
 import {RouteOptions, RequestHandler, Request, Response, NextFunction}  from '../../routing/routing.models';
-import * as parser                                                      from 'body-parser';
 
 /**
  * ORDS middleware for routes
@@ -18,24 +17,14 @@ export class Helper {
      */
     private rm: RoutingMiddleware;
     /**
-     * Create a new instance of routes middleware handler and adds default middleware
+     * Create a new instance of routes middleware handler
      */
     constructor(rc: ConformanceComponent, rm: RoutingMiddleware) {
 
         // bind the two injected
         this.rc = rc;
         this.rm = rm;
-
-        // parse body application/x-www-form-urlencoded
-        this.rm.parsers.body.push(parser.urlencoded({
-            extended: false,
-            limit: process.env.LIMIT_UPLOAD_MB ? process.env.LIMIT_UPLOAD_MB + 'mb' : 0.1 + 'mb'
-        }));
-
-        // parse application/json
-        this.rm.parsers.body.push(parser.json({
-            limit: process.env.LIMIT_UPLOAD_MB ? process.env.LIMIT_UPLOAD_MB + 'mb' : 0.1 + 'mb'
-        }));
+        
     }
     /**
      * Adds middlware based to a handler for all resource 
