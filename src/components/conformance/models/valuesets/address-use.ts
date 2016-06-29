@@ -1,4 +1,4 @@
-import {ConformanceModels} from '../../components/Conformance';
+import {Valueset} from '../resources/Valueset';
 
 export class AddressUse {
     public codeSystem: Object = {
@@ -29,4 +29,4 @@ export class AddressUse {
     };
 }
 
-export const addressUse: AddressUse = new ConformanceModels.Valueset(new AddressUse());
+export const addressUse: AddressUse = new Valueset(new AddressUse());

@@ -1,4 +1,4 @@
-import {ConformanceModels} from '../../components/Conformance';
+import {Valueset} from '../resources/Valueset';
 
 export class NameUse {
 
@@ -41,4 +41,4 @@ export class NameUse {
 
 }
 
-export const nameUse: NameUse = new ConformanceModels.Valueset(new NameUse());
+export const nameUse: NameUse = new Valueset(new NameUse());

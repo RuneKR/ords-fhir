@@ -1,4 +1,4 @@
-import {ConformanceModels} from '../../components/Conformance';
+import {Valueset} from '../resources/Valueset';
 
 export class IdentifierUse {
 
@@ -30,4 +30,4 @@ export class IdentifierUse {
     };
 }
 
-export const identifierUse: IdentifierUse = new ConformanceModels.Valueset(new IdentifierUse());
+export const identifierUse: IdentifierUse = new Valueset(new IdentifierUse());

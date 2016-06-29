@@ -1,4 +1,4 @@
-import {ConformanceModels} from '../../components/Conformance';
+import {Valueset} from '../resources/Valueset';
 
 export class BoundleType {
     public codeSystem: Object = {
@@ -29,4 +29,4 @@ export class BoundleType {
     };
 }
 
-export const boundleType: BoundleType = new ConformanceModels.Valueset(new BoundleType());
+export const boundleType: BoundleType = new Valueset(new BoundleType());

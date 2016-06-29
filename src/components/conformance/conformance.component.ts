@@ -1,7 +1,7 @@
 import {Resource}               from './models/Resource';
-import {Valueset}               from './models/valueset';
-import {Structuredefenition}    from './models/structuredefenition';
-import {IConformance}           from './models/conformance';
+import {Valueset}               from './models/resources/valueset';
+import {Structuredefenition}    from './models/resources/structuredefenition';
+import {IConformance}           from './models/resources/conformance';
 
 /**
  * String index of resources

@@ -1,19 +1,20 @@
 import {addressUse} from '../valuesets/address-use';
-import {SchemaModels, SchemaComponent} from '../../components/schema';
+import {SchemaModels, SchemaComponent} from '../../../schema';
+import * as DataTypes   from    './primitives';
 
 @SchemaComponent
 export class Address {
     public use: SchemaModels.ElementDefinition = {
         binding: new SchemaModels.Binding(SchemaModels.BindingStrength.required, 'Description of valueset', addressUse),
         required: false,
-        type: SchemaModels.DataTypes.String
+        type: DataTypes.String
     };
     // fortsæt herfra!!!
     public text: SchemaModels.ElementDefinition = {
         required: false,
-        type: SchemaModels.DataTypes.String
+        type: DataTypes.String
     };
-    public constructor(data: SchemaModels.Valueset, validate: SchemaModels.Enforce) {
+    public constructor(data: any, validate: SchemaModels.Enforce) {
 
         // do nothing
     }

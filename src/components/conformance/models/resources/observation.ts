@@ -1,7 +1,8 @@
 import {DomainResource}     from './domain-resource';
 import {CodeableConcept}    from '../datatypes/codeable-concept';
-import {SchemaModels}       from '../../components/schema';
+import {SchemaModels}       from '../../../schema';
 import {Identifier}         from '../datatypes/identifier';
+import * as DataTypes       from '../datatypes/primitives'; 
 
 export class Observation extends DomainResource {
 
@@ -12,7 +13,7 @@ export class Observation extends DomainResource {
 
     public status: SchemaModels.ElementDefinition = {
         required: true,
-        type: String
+        type: DataTypes.String
     };
 
     public category: SchemaModels.ElementDefinition = {

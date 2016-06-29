@@ -1,16 +1,17 @@
-import {SchemaModels, SchemaComponent} from '../../components/schema';
+import {SchemaModels, SchemaComponent} from '../../../schema';
+import * as DataTypes   from    './primitives';
 
 @SchemaComponent
 export class Reference {
     public reference: SchemaModels.ElementDefinition = {
         required: false,
-        type: SchemaModels.DataTypes.String
+        type: DataTypes.String
     };
     public display: SchemaModels.ElementDefinition = {
         required: false,
-        type: SchemaModels.DataTypes.String
+        type: DataTypes.String
     };
-    public constructor(data: SchemaModels.Valueset, validate: SchemaModels.Enforce) {
+    public constructor(data: any, validate: SchemaModels.Enforce) {
 
         // do nothing
 

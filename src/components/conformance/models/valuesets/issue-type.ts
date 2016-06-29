@@ -1,4 +1,4 @@
-import {ConformanceModels} from '../../components/Conformance';
+import {Valueset} from '../resources/Valueset';
 
 export class IssueType {
     public codeSystem: Object = {
@@ -162,4 +162,4 @@ export class IssueType {
     };
 }
 
-export const issueType: IssueType = new ConformanceModels.Valueset(new IssueType());
+export const issueType: IssueType = new Valueset(new IssueType());

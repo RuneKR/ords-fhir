@@ -1,16 +1,17 @@
-import {SchemaModels, SchemaComponent} from '../../components/schema';
+import {SchemaModels, SchemaComponent} from '../../../schema';
+import * as DataTypes   from    './primitives';
 
 @SchemaComponent
 export class Period {
     public start: SchemaModels.ElementDefinition = {
         required: false,
-        type: SchemaModels.DataTypes.DateTime
+        type: DataTypes.DateTime
     };
     public end: SchemaModels.ElementDefinition = {
         required: false,
-        type: SchemaModels.DataTypes.DateTime
+        type: DataTypes.DateTime
     };
-        public constructor(data: SchemaModels.Valueset, validate: SchemaModels.Enforce) {
+        public constructor(data: any, validate: SchemaModels.Enforce) {
 
         // do nothing
 

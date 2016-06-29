@@ -1,4 +1,4 @@
-import {ConformanceModels} from '../../components/Conformance';
+import {Valueset} from '../resources/Valueset';
 
 export class IssueSeverity {
     public codeSystem: Object = {
@@ -34,4 +34,4 @@ export class IssueSeverity {
     };
 }
 
-export const issueSeverity: IssueSeverity = new ConformanceModels.Valueset(new IssueSeverity());
+export const issueSeverity: IssueSeverity = new Valueset(new IssueSeverity());

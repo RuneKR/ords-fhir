@@ -1,8 +1,9 @@
-import {Identifier} from '../datatypes/identifier';
-import {HumanName} from '../datatypes/human-name';
-import {Address} from '../dataTypes/address';
+import {Identifier}     from '../datatypes/identifier';
+import {HumanName}      from '../datatypes/human-name';
+import {Address}        from '../dataTypes/address';
 import {DomainResource} from './domain-resource';
-import {SchemaModels}       from '../../components/schema';
+import {SchemaModels}   from '../../../schema';
+import * as DataTypes   from '../datatypes/primitives'; 
 
 export class Patient extends DomainResource {
 
@@ -13,7 +14,7 @@ export class Patient extends DomainResource {
 
     public active: SchemaModels.ElementDefinition = {
         required: false,
-        type: Boolean
+        type: DataTypes.Boolean
     };
     public name: SchemaModels.ElementDefinition = {
         required: true,
@@ -23,7 +24,7 @@ export class Patient extends DomainResource {
         required: true,
         type: Address
     };
-    public constructor(data: SchemaModels.Valueset, validate: SchemaModels.Enforce) {
+    public constructor(data: any, validate: SchemaModels.Enforce) {
 
         // do validation command
         super();

@@ -1,4 +1,4 @@
-import {SearchParameter}        from './search-parameter';
+import {SearchParameter}        from './resources/search-parameter';
 
 export interface RuleEntry {
     datakey: string;

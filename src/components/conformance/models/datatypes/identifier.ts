@@ -2,14 +2,15 @@ import {identifierUse} from '../valuesets/identifier-use';
 import {Period} from './Period';
 import {Reference} from './Reference';
 import {CodeableConcept} from './codeable-concept';
-import {SchemaModels, SchemaComponent} from '../../components/schema';
+import {SchemaModels, SchemaComponent} from '../../../schema';
+import * as DataTypes   from    './primitives';
 
 @SchemaComponent
 export class Identifier {
     public use: SchemaModels.ElementDefinition = {
         binding: new SchemaModels.Binding(SchemaModels.BindingStrength.required, 'Description of valueset', identifierUse),
         required: false,
-        type: SchemaModels.DataTypes.String
+        type: DataTypes.String
     };
     public type: SchemaModels.ElementDefinition = {
         binding: new SchemaModels.Binding(SchemaModels.BindingStrength.extensible, 'Description of valueset', identifierUse),
@@ -18,11 +19,11 @@ export class Identifier {
     };
     public system: SchemaModels.ElementDefinition = {
         required: false,
-        type: SchemaModels.DataTypes.Uri
+        type: DataTypes.Uri
     };
     public value: SchemaModels.ElementDefinition = {
         required: false,
-        type: [SchemaModels.DataTypes.String]
+        type: [DataTypes.String]
     };
     public period: SchemaModels.ElementDefinition = {
         required: false,
@@ -32,7 +33,7 @@ export class Identifier {
         required: false,
         type: Reference
     };
-    public constructor(data: SchemaModels.Valueset, validate: SchemaModels.Enforce) {
+    public constructor(data: any, validate: SchemaModels.Enforce) {
 
         // do nothing
 

@@ -1,28 +1,29 @@
-import {SchemaModels, SchemaComponent} from '../../components/schema';
+import {SchemaModels, SchemaComponent} from '../../../schema';
+import * as DataTypes   from    './primitives';
 
 @SchemaComponent
 export class Coding {
     public system: SchemaModels.ElementDefinition = {
         required: false,
-        type: SchemaModels.DataTypes.Uri
+        type: DataTypes.Uri
     };
     public version: SchemaModels.ElementDefinition = {
         required: false,
-        type: SchemaModels.DataTypes.String
+        type: DataTypes.String
     };
     public display: SchemaModels.ElementDefinition = {
         required: false,
-        type: SchemaModels.DataTypes.String
+        type: DataTypes.String
     };
     public userSelected: SchemaModels.ElementDefinition = {
         required: false,
-        type: SchemaModels.DataTypes.Boolean
+        type: DataTypes.Boolean
     };
     public code: SchemaModels.ElementDefinition = {
         required: false,
-        type: SchemaModels.DataTypes.Code
+        type: DataTypes.Code
     };
-    public constructor(data: SchemaModels.Valueset, validate: SchemaModels.Enforce) {
+    public constructor(data: any, validate: SchemaModels.Enforce) {
 
         // do nothing
 

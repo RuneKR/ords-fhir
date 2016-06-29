@@ -1,4 +1,4 @@
-import {ConformanceModels} from '../../components/Conformance';
+import {Valueset} from '../resources/Valueset';
 
 export class ConformanceStatementKind {
 
@@ -26,4 +26,4 @@ export class ConformanceStatementKind {
 
 }
 
-export const conformanceStatementKind: ConformanceStatementKind = new ConformanceModels.Valueset(new ConformanceStatementKind());
+export const conformanceStatementKind: ConformanceStatementKind = new Valueset(new ConformanceStatementKind());

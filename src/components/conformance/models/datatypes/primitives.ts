@@ -1,6 +1,8 @@
+import {SchemaModels}        from    '../../../schema';
+
 // include all the these simple hl7 fhir
 
-export class Any implements Element {
+export class Any implements SchemaModels.Element {
     public value: any;
     constructor(data: any) {
         
@@ -8,7 +10,7 @@ export class Any implements Element {
     }
 }
 
-export class Boolean implements Element {
+export class Boolean implements SchemaModels.Element {
     public value: any;
     constructor(data: any) {
 
@@ -26,7 +28,7 @@ export class Boolean implements Element {
     }
 }
 
-export class DateTime implements Element {
+export class DateTime implements SchemaModels.Element {
     public value: any;
     constructor(data: string) {
         if (!!new Date(data).getTime()) {
@@ -36,7 +38,7 @@ export class DateTime implements Element {
     }
 }
 
-export class Instant implements Element {
+export class Instant implements SchemaModels.Element {
     public value: any;
     constructor(data: string) {
         if (!!new Date(data).getTime()) {
@@ -46,7 +48,7 @@ export class Instant implements Element {
     }
 }
 
-export class String implements Element {
+export class String implements SchemaModels.Element {
     public value: any;
     constructor(data: string) {
         if (data.toString() !== data) {
@@ -56,7 +58,7 @@ export class String implements Element {
     }
 }
 
-export class Id implements Element {
+export class Id implements SchemaModels.Element {
     public value: any;
     constructor(data: string) {
         if (data.toString() !== data) {
@@ -66,7 +68,7 @@ export class Id implements Element {
     }
 }
 
-export class Code implements Element {
+export class Code implements SchemaModels.Element {
     public value: any;
     constructor(data: string) {
         if (data.toString() !== data) {
@@ -76,7 +78,7 @@ export class Code implements Element {
     }
 }
 
-export class Uri implements Element {
+export class Uri implements SchemaModels.Element {
     public value: any;
     constructor(data: string) {
         if (data.toString() !== data) {
@@ -86,7 +88,7 @@ export class Uri implements Element {
     }
 }
 
-export class Number implements Element {
+export class Number implements SchemaModels.Element {
     public value: any;
     constructor(data: string) {
         if (data.toString() !== data) {

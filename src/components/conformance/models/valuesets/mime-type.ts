@@ -1,4 +1,4 @@
-import {ConformanceModels} from '../../components/Conformance';
+import {Valueset} from '../resources/Valueset';
 
 export class MimeType {
 
@@ -26,4 +26,4 @@ export class MimeType {
 
 }
 
-export const mimeType: MimeType = new ConformanceModels.Valueset(new MimeType());
+export const mimeType: MimeType = new Valueset(new MimeType());
