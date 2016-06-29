@@ -1,6 +1,4 @@
-export {Valueset}           from './models/valueset';
-export {Binding}            from './models/binding';
-export {BindingStrength}    from './models/binding-strength';
+export {Values}             from './models/values';
 export {ElementDefinition}  from './models/element-definition';
 export {Enforce}            from './models/enforce';
 export {Element}            from './models/element';

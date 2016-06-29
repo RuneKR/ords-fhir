@@ -1,4 +1,4 @@
-import {Values}        from    './values';
+import {Binding}        from    './binding';
 
 /**
  * Description of FHIR elements 
@@ -9,17 +9,13 @@ export interface ElementDefinition {
      * Indication of binding to a specific valueset
      * @type {Binding}
      */
-    values?: Values;
+    binding?: Binding;
     /**
      * Minimum of instances
      */
     required: boolean;
     /**
-     * Types that are allowed for the value
+     * Maximum of instances either number or a *
      */
-    type: Array<any>;
-    /**
-     * The value is an array
-     */
-    array: boolean;
+    type: Array<any> | any;
 }

@@ -15,7 +15,7 @@ export interface IBoundle {
 export class Link {
     public relation: SchemaModels.ElementDefinition = {
         required: true,
-        type: DataTypes.String
+        type: [DataTypes.String]
     };
     public url: SchemaModels.ElementDefinition = {
         required: true,
