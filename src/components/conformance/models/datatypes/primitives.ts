@@ -1,22 +1,15 @@
-/**
- * Every datatype that only supply one _OneValue
- */
-export interface OneValue {
-    _OneValue: any;
-}
-
 // include all the these simple hl7 fhir
 
-export class Any implements OneValue {
-    public _OneValue: any;
+export class Any implements Element {
+    public value: any;
     constructor(data: any) {
         
-        this._OneValue = data;
+        this.value = data;
     }
 }
 
-export class Boolean implements OneValue {
-    public _OneValue: any;
+export class Boolean implements Element {
+    public value: any;
     constructor(data: any) {
 
         // convert to correct form
@@ -29,76 +22,76 @@ export class Boolean implements OneValue {
         if (data !== false && data !== true) {
             throw new Error('not a boolean');
         }
-        this._OneValue = data;
+        this.value = data;
     }
 }
 
-export class DateTime implements OneValue {
-    public _OneValue: any;
+export class DateTime implements Element {
+    public value: any;
     constructor(data: string) {
         if (!!new Date(data).getTime()) {
             throw new Error('not a dateTime');
         }
-        this._OneValue = data;
+        this.value = data;
     }
 }
 
-export class Instant implements OneValue {
-    public _OneValue: any;
+export class Instant implements Element {
+    public value: any;
     constructor(data: string) {
         if (!!new Date(data).getTime()) {
             throw new Error('not a dateTime');
         }
-        this._OneValue = data;
+        this.value = data;
     }
 }
 
-export class String implements OneValue {
-    public _OneValue: any;
+export class String implements Element {
+    public value: any;
     constructor(data: string) {
         if (data.toString() !== data) {
             throw new Error('not a string');
         }
-        this._OneValue = data;
+        this.value = data;
     }
 }
 
-export class Id implements OneValue {
-    public _OneValue: any;
+export class Id implements Element {
+    public value: any;
     constructor(data: string) {
         if (data.toString() !== data) {
             throw new Error('not a string');
         }
-        this._OneValue = data;
+        this.value = data;
     }
 }
 
-export class Code implements OneValue {
-    public _OneValue: any;
+export class Code implements Element {
+    public value: any;
     constructor(data: string) {
         if (data.toString() !== data) {
             throw new Error('not a string');
         }
-        this._OneValue = data;
+        this.value = data;
     }
 }
 
-export class Uri implements OneValue {
-    public _OneValue: any;
+export class Uri implements Element {
+    public value: any;
     constructor(data: string) {
         if (data.toString() !== data) {
             throw new Error('not a string');
         }
-        this._OneValue = data;
+        this.value = data;
     }
 }
 
-export class Number implements OneValue {
-    public _OneValue: any;
+export class Number implements Element {
+    public value: any;
     constructor(data: string) {
         if (data.toString() !== data) {
             throw new Error('not a string');
         }
-        this._OneValue = data;
+        this.value = data;
     }
 }

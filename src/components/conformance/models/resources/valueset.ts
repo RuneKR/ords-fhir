@@ -1,6 +1,8 @@
 import * as Models          from '../../schema/schema.models';
 import {SchemaComponent}    from '../../schema';
 
+// backbone elements shuold always be here
+
 class ConceptValue {
     /**
      * Name of the system

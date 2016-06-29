@@ -1,3 +1,6 @@
+// export IConformance
+// export ConformanceStructure
+
 /**
  * Content of a conformance
  */
