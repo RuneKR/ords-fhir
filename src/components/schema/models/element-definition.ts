@@ -9,24 +9,20 @@ export interface ElementDefinition {
      * Indication of binding to a specific valueset
      * @type {Binding}
      */
-    binding?: Binding;
+    //binding?: Binding;
     /**
-     * Defitiontion of the property
-     * @type {string}
+     * Minimum of instances
      */
-    definition?: string;
+    min: number;
     /**
-     * Flag to indicate if property is required
+     * Maximum of instances either number or a *
      */
-    required: boolean;
-    /**
-     * Short description of the property
-     * @type {string}
-     */
-    short?: string;
+    max: number | string;
     /**
      * Type of the property
      * @type {any}
      */
-    type: any;
+    type: Array<{
+        code: any;
+    }>;
 }
