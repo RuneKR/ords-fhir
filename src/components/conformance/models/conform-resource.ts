@@ -1,5 +1,5 @@
 import {SearchParameter}        from './resources/search-parameter';
-import {StructureDefenition}    from './resources/structuredefenition';
+import {StructureDefenition}    from './resources/structure-defenition';
 
 export interface RuleEntry {
     datakey: string;

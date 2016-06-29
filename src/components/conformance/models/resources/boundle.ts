@@ -34,7 +34,6 @@ export class Entry {
         type: DataTypes.Uri
     };
     public resource: SchemaModels.ElementDefinition = {
-        definition: 'The contained resource',
         required: true,
         type: DataTypes.Any
     };

@@ -1,6 +1,6 @@
 import {ConformResource}        from './models/conform-resource';
 import {Valueset}               from './models/resources/valueset';
-import {StructureDefenition}    from './models/resources/structuredefenition';
+import {StructureDefenition}    from './models/resources/structure-defenition';
 import {IConformance}           from './models/resources/conformance';
 
 /**
