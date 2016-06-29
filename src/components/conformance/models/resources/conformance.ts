@@ -4,7 +4,7 @@
 /**
  * Content of a conformance
  */
-export class Conformance {
+export class IConformance {
     public meta: any;
     public version: string;
     public experimental: boolean;

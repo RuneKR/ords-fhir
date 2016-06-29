@@ -1,5 +1,4 @@
-export {Conformance}            from './models/Conformance';
-export {Structuredefenition}    from './models/structuredefenition';
-export {Valueset}               from './models/valueset';
+import * as Datatypes   from './datatypes'; export {Datatypes};
+import * as Resources   from './resources'; export {Resources};
+import * as Valuesets   from './valuesets'; export {Valuesets};
 export {Resource}               from './models/resource';
-export {SearchParameter}        from './models/search-parameter';

@@ -1,7 +1,7 @@
 import {Resource}               from './models/Resource';
 import {Valueset}               from './models/valueset';
 import {Structuredefenition}    from './models/structuredefenition';
-import {Conformance}            from './models/conformance';
+import {IConformance}           from './models/conformance';
 
 /**
  * String index of resources
@@ -24,7 +24,7 @@ export class ConformanceComponent {
     /**
      * All resources avalable in the implementation
      */
-    public conformance: Conformance;
+    public conformance: IConformance;
     /**
      * All resources avalable in the implementation
      */
@@ -36,7 +36,7 @@ export class ConformanceComponent {
     /**
      * Populate standard conformance fields
      */
-    constructor(conf: Conformance) {
+    constructor(conf: IConformance) {
 
         // bind reference to conformance
         this.conformance = conf;
