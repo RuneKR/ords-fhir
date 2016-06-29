@@ -1,5 +1,4 @@
-// export IConformance
-// export ConformanceStructure
+// export IConformance and the Conformance itself
 
 /**
  * Content of a conformance

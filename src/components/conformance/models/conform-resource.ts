@@ -1,4 +1,5 @@
 import {SearchParameter}        from './resources/search-parameter';
+import {StructureDefenition}    from './resources/structuredefenition';
 
 export interface RuleEntry {
     datakey: string;
@@ -7,7 +8,13 @@ export interface RuleEntry {
     sourcekey: string;
 }
 
-export class Resource {
+export interface IConformResource {
+    structure: StructureDefenition;
+    queryables: Array<SearchParameter>;
+    rules: Array<RuleEntry>;
+}
+
+export class ConformResource {
     /**
      * Parameters that can be queried / pre indexed variables
      */
@@ -24,4 +31,14 @@ export class Resource {
      * Name for the resource
      */
     public name: string;
+    /**
+     * Create a new resource conform to ORDS
+     */
+    constructor(data: IConformResource) {
+
+        this.queryables = data.queryables;
+        this.rules = data.rules;
+
+        this.name = data.structure.id;
+    }
 }

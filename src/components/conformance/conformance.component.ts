@@ -1,13 +1,13 @@
-import {Resource}               from './models/Resource';
+import {ConformResource}        from './models/conform-resource';
 import {Valueset}               from './models/resources/valueset';
-import {Structuredefenition}    from './models/resources/structuredefenition';
+import {StructureDefenition}    from './models/resources/structuredefenition';
 import {IConformance}           from './models/resources/conformance';
 
 /**
  * String index of resources
  */
 export interface IResources {
-    [key: string]: Resource;
+    [key: string]: ConformResource;
 }
 
 /**
@@ -45,26 +45,11 @@ export class ConformanceComponent {
 
     }
     /**
-     * Adds a valueset to the stack of valuesets in this implementation
-     * @param   {string}       Resource             the resource itself being added
-     * @returns {void}
-     */
-    public addValueset(valueset: Valueset): void {
-
-        // to acces .name that is speficied in all classes
-        let get: any = valueset;
-
-        //add to conformance
-
-        // init new holder but get.name whould not work here
-        this.valuesets[get.name] = valueset;
-    }
-    /**
      * Adds a resource to the stack of resources in this implementation and create a structuredefenition of it
      * @param   {string}       Resource             the resource itself being added
      * @returns {void}
      */
-    public addResource(resource: Resource): void {
+    public addResource(resource: ConformResource): void {
 
         // to acces .name that is speficied in all classes
         let get: any = resource;
@@ -80,7 +65,7 @@ export class ConformanceComponent {
      * @param   {boolean}      structdef            flag if structdef should be returned of that resource
      * @returns {Resource | Structuredefenition}    all information about the resource
      */
-    public getResource(resource: string, structdef?: boolean): Resource | Structuredefenition {
+    public getResource(resource: string, structdef?: boolean): ConformResource | StructureDefenition {
 
         // return content
         return this.resources[resource];
@@ -89,9 +74,9 @@ export class ConformanceComponent {
      * Grap all known information about a valueset
      * @param   {string}       valueset                 name of the valueset
      * @param   {boolean}      structdef                flag if structdef should be returned of that resource
-     * @returns {Valueset | Structuredefenition}        all information about the valueset
+     * @returns {Valueset}     all information about the valueset
      */
-    public getValueset(valueset: string, structdef?: boolean): Valueset | Structuredefenition {
+    public getValueset(valueset: string, structdef?: boolean): Valueset {
 
         // return content
         return this.valuesets[valueset];

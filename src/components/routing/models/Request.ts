@@ -1,5 +1,5 @@
 import * as express                             from 'express';
-import {Resource}                               from '../../conformance/conformance.models';
+import {ConformResource}                        from '../../conformance/conformance.models';
 import {AuthComponent}                          from '../../auth';
 
 /**
@@ -9,7 +9,7 @@ export interface Request extends express.Request {
     /**
      * Resource that are being interacted with
      */
-    resource: Resource;
+    resource: ConformResource;
     /**
      * The user doing the interaction
      */

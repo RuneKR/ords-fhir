@@ -1,8 +1,7 @@
 import {SchemaComponent, SchemaModels}    from '../../../schema';
-import * as DataTypes  from '../datatypes/primitives'; 
+import * as DataTypes  from '../datatypes/primitives';
 
 // backbone elements shuold always be here
-
 class ConceptValue {
     /**
      * Name of the system
@@ -115,54 +114,6 @@ export class Valueset {
      */
     public constructor(data: { [key: string]: any }) {
 
-        // nothing
-    }
-    /**
-     * Validates if value is within the valueset
-     * @param   {any}     value       value to be looked for in dataset
-     * @returns {bolean}  the indication of the presence of that value in the dataset
-     */
-    public isInValueSet(value: string, strength: SchemaModels.BindingStrength): boolean {
-
-        // obs: Only works for codeSystem right now
-
-        let searchPaths: Array<string> = value.split('.');
-
-        // check every entry in the code system (THIS IS SLOW) do something better
-        function recrusive(path: any): boolean {
-
-            let needle: any = searchPaths.shift();
-            let feedback: boolean = false;
-            let concept: any;
-
-            path.concept.every((data: any) => {
-
-                // if code match and is not abstract
-                if (data.code === needle && data.abstract === false) {
-                    feedback = true;
-                    concept = data.concept;
-                    return false;
-                    // else keep searching
-                } else {
-                    return true;
-                }
-            });
-
-            // continue sub search if needed
-            if (feedback === true && searchPaths.length !== 0) {
-
-                // no more searches are possible
-                if (concept === undefined) {
-                    return false;
-                }
-
-                return recrusive(concept);
-            }
-
-            return feedback;
-        }
-
-        return recrusive(this.codeSystem);
-
+        // do nothing
     }
 }
