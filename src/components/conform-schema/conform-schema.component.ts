@@ -14,24 +14,19 @@ export class ConformSchemaComponent {
     /**
      * Create resource schema based on a structure defenition
      */
-    public createResurceSchema(target: JSON): any {
-
-        'use strict';
-
-        // save a reference to the original constructor
-        let instance: { [key: string]: SchemaModels.ElementDefinition } = new target();
+    public createResurceSchema(target: JSON): SchemaModels.Schema {
 
         // the new constructor behaviour
-        let f: Function = function (...args: Array<any>): any {
+        let schema: any = (data: any, enforce?: SchemaModels.Enforce) => {
 
             // do nothing
         };
 
         // loop through all object keys
-        Object.keys(instance).forEach((value: any, key: any) => {
+        Object.keys(target).forEach((value: any, key: any) => {
 
             // set types
-            f.prototype[key] = {
+            schema.prototype[key] = {
                 array: false,
                 required: true,
                 types: value.type.map((iv: any) => {
@@ -44,25 +39,22 @@ export class ConformSchemaComponent {
             if (value.binding.valueset && (value.binding.strength === 'required' || value.binding.strength === 'extensible')) {
 
                 // create schema values
-                f.prototype[key].values = this.createSchemaValues(value.binding.valueset);
+                schema.prototype[key].values = this.createSchemaValues(value.binding.valueset);
             }
 
             // set required
             if (value.min === 0 || value.min === undefined) {
-                f.prototype[key].required = false;
+                schema.prototype[key].required = false;
             }
 
             // set array specificas
             if (value.max !== 0) {
-                f.prototype[key].array = true;
+                schema.prototype[key].array = true;
             }
         });
-
-        // create schema version of it
-        let schema: any = SchemaComponent(f);
-
-        // return new constructor (will override original)
-        return schema;
+        
+        // return the builded schema
+        return SchemaComponent(schema);
     }
     /**
      * Create schema values based upon a valueset
@@ -75,8 +67,6 @@ export class ConformSchemaComponent {
         // recrusive search through valueset code syststem with inline coding
         // compile values of valueset OBS: Only works for codeSystem right now
         function recrusive(holder: any, coding: any, path: string): void {
-
-            'use strict';
 
             // read the concept
             Object.keys(coding.concept).forEach((value: any, index: number) => {
