@@ -9,7 +9,7 @@ export class Implementation {
     constructor(rm: ConformanceComponent, dbm: DatabaseMiddleware, routem: RoutingComponent) {
 
         // do something with adding resources
-        rm.addResource(new Patient());
+        //rm.addResource(new Patient());
 
         // add exit route
         routem.get(
