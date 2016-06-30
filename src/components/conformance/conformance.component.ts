@@ -1,20 +1,12 @@
 import {ConformResource}        from './models/conform-resource';
-import {Valueset}               from './models/resources/valueset';
-import {StructureDefenition}    from './models/resources/structure-defenition';
-import {IConformance}           from './models/resources/conformance';
+import {ConformSchemaModels}    from '../conform-schema';
+import {IConformance}           from './models/structure-defenitions/conformance';
 
 /**
  * String index of resources
  */
 export interface IResources {
     [key: string]: ConformResource;
-}
-
-/**
- * String index of valuesets
- */
-export interface IValuesets {
-    [key: string]: Valueset;
 }
 
 /**
@@ -29,10 +21,6 @@ export class ConformanceComponent {
      * All resources avalable in the implementation
      */
     private resources: IResources = {};
-    /**
-     * All Valuesets avalable in the implementation
-     */
-    private valuesets: IValuesets = {};
     /**
      * Populate standard conformance fields
      */
@@ -65,7 +53,7 @@ export class ConformanceComponent {
      * @param   {boolean}      structdef            flag if structdef should be returned of that resource
      * @returns {Resource | Structuredefenition}    all information about the resource
      */
-    public getResource(resource: string, structdef?: boolean): ConformResource | StructureDefenition {
+    public getResource(resource: string, structdef?: boolean): ConformResource | ConformSchemaModels.IStructureDefenition {
 
         // return content
         return this.resources[resource];
@@ -76,9 +64,9 @@ export class ConformanceComponent {
      * @param   {boolean}      structdef                flag if structdef should be returned of that resource
      * @returns {Valueset}     all information about the valueset
      */
-    public getValueset(valueset: string, structdef?: boolean): Valueset {
+    public getValuesetURL(valueset: string, structdef?: boolean): any {
 
-        // return content
-        return this.valuesets[valueset];
+        //return content
+       
     }
 }
