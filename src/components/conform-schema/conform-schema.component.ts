@@ -65,6 +65,14 @@ export class ConformSchemaComponent {
         return SchemaComponent(schema);
     }
     /**
+     * Create new instance and bind local valuesets and datatypes
+     */
+    constructor() {
+
+        // load local valuesets and datatypes in
+        // start with primary types
+    }
+    /**
      * Create schema values based upon a valueset
      */
     private createSchemaValues(valueset: any): SchemaModels.Values {
