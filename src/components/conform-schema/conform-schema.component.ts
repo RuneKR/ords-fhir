@@ -1,4 +1,5 @@
 import {SchemaModels, SchemaComponent}  from  '../schema';
+import {StructureDefenition}            from  './models/structure-defenition';
 
 /**
  * Read a JSON with the form of a structuredefenition and create corresponding schema
@@ -7,11 +8,11 @@ export class ConformSchemaComponent {
     /**
      * Builded schema values by their uri
      */
-    private values: { [key: string]: SchemaModels.Element } = {};
+    private values: { [key: string]: SchemaModels.Values } = {};
     /**
      * Data types that can can activly exists
      */
-    private datatypes: { [key: string]: SchemaModels.Element } = {};
+    private datatypes: { [key: string]: SchemaModels.Values } = {};
     /**
      * Create datatype schema based on a structure defenition
      */
@@ -21,7 +22,7 @@ export class ConformSchemaComponent {
     /**
      * Create resource schema based on a structure defenition
      */
-    public createResurceSchema(target: JSON): SchemaModels.Schema {
+    public createResurceSchema(target: StructureDefenition): SchemaModels.Schema {
 
         // the new constructor behaviour
         let schema: any = (data: any, enforce?: SchemaModels.Enforce) => {
@@ -32,7 +33,7 @@ export class ConformSchemaComponent {
         // loop through all object keys
         Object.keys(target).forEach((value: any, key: any) => {
 
-            // set types
+            // set types (protype model duer IKKE!)
             schema.prototype[key] = {
                 array: false,
                 required: true,

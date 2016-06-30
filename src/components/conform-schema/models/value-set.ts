@@ -1,6 +1,6 @@
-import {IDomainResource}    from    './domain-resource';
+import {DomainResource}    from    './domain-resource';
 
-export interface IValueSet extends IDomainResource {
+export interface ValueSet extends DomainResource {
     /**
      * Values: ConformanceResourceStatus 
      * Type: code

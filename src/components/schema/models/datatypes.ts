@@ -1,17 +1,17 @@
-import {SchemaModels}        from    '../../../schema';
+import {Element}        from    './Element';
 
 // include all the these simple hl7 fhir
 
-export class Any implements SchemaModels.Element {
-    public value: any;
+export class Any implements Element {
+    public _value: any;
     constructor(data: any) {
         
-        this.value = data;
+        this._value = data;
     }
 }
 
-export class Boolean implements SchemaModels.Element {
-    public value: any;
+export class Boolean implements Element {
+    public _value: any;
     constructor(data: any) {
 
         // convert to correct form
@@ -24,76 +24,76 @@ export class Boolean implements SchemaModels.Element {
         if (data !== false && data !== true) {
             throw new Error('not a boolean');
         }
-        this.value = data;
+        this._value = data;
     }
 }
 
-export class DateTime implements SchemaModels.Element {
-    public value: any;
+export class DateTime implements Element {
+    public _value: any;
     constructor(data: string) {
         if (!!new Date(data).getTime()) {
             throw new Error('not a dateTime');
         }
-        this.value = data;
+        this._value = data;
     }
 }
 
-export class Instant implements SchemaModels.Element {
-    public value: any;
+export class Instant implements Element {
+    public _value: any;
     constructor(data: string) {
         if (!!new Date(data).getTime()) {
             throw new Error('not a dateTime');
         }
-        this.value = data;
+        this._value = data;
     }
 }
 
-export class String implements SchemaModels.Element {
-    public value: any;
+export class String implements Element {
+    public _value: any;
     constructor(data: string) {
         if (data.toString() !== data) {
             throw new Error('not a string');
         }
-        this.value = data;
+        this._value = data;
     }
 }
 
-export class Id implements SchemaModels.Element {
-    public value: any;
+export class Id implements Element {
+    public _value: any;
     constructor(data: string) {
         if (data.toString() !== data) {
             throw new Error('not a string');
         }
-        this.value = data;
+        this._value = data;
     }
 }
 
-export class Code implements SchemaModels.Element {
-    public value: any;
+export class Code implements Element {
+    public _value: any;
     constructor(data: string) {
         if (data.toString() !== data) {
             throw new Error('not a string');
         }
-        this.value = data;
+        this._value = data;
     }
 }
 
-export class Uri implements SchemaModels.Element {
-    public value: any;
+export class Uri implements Element {
+    public _value: any;
     constructor(data: string) {
         if (data.toString() !== data) {
             throw new Error('not a string');
         }
-        this.value = data;
+        this._value = data;
     }
 }
 
-export class Number implements SchemaModels.Element {
-    public value: any;
+export class Number implements Element {
+    public _value: any;
     constructor(data: string) {
         if (data.toString() !== data) {
             throw new Error('not a string');
         }
-        this.value = data;
+        this._value = data;
     }
 }

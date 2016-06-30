@@ -53,7 +53,7 @@ export class ConformanceComponent {
      * @param   {boolean}      structdef            flag if structdef should be returned of that resource
      * @returns {Resource | Structuredefenition}    all information about the resource
      */
-    public getResource(resource: string, structdef?: boolean): ConformResource | ConformSchemaModels.IStructureDefenition {
+    public getResource(resource: string, structdef?: boolean): ConformResource | ConformSchemaModels.StructureDefenition {
 
         // return content
         return this.resources[resource];

@@ -40,56 +40,6 @@ export class System {
         this.rm.get('metadata', options, this.displayConStatement.bind(this));
         this.rm.options('', options, this.displayConStatement.bind(this));
         this.rm.post('StructureDefinition/:resource', options, this.displayStructureDef.bind(this));
-        this.rm.post('Valueset/:resource', options, this.displayValueset.bind(this));
-    }
-    /**
-     * Display a valueset
-     * @param   {Request}       req     requrest from the client
-     * @param   {Response}      res     responsehandler for the client
-     * @param   {NextFunction}  next    next handler after this
-     * @returns {Void}
-     */
-    public displayValueset(req: Request, res: Response, next: NextFunction): void {
-
-        if (this.rsc.getValueset(req.params.resource) === undefined) {
-            
-            let err: OperationOutcomeComponent = {
-                httpcode: 404, 
-                issue: {
-                    code: 'processing.not-found',
-                    severity: 'warning'
-                }
-            };
-
-            let code: any = err.httpcode;
-            res.status(code).send(err);
-
-        } else {
-
-            let structuredef: any = this.rsc.getValueset(req.params.resource);
-
-            // set meta if needed
-            if (structuredef.meta) {
-
-                // set response headers of version
-                if (structuredef.meta.versionId) {
-                    res.set({
-                        'ETag': 'W/"' + structuredef.meta.versionId + '"'
-                    });
-                }
-
-                // set response headers of last updated
-                if (structuredef.meta.lastUpdated) {
-                    res.set({
-                        'Last-Modified': structuredef.meta.lastUpdated
-                    });
-                }
-            }
-
-            // send it back
-            res.result(structuredef);
-            next();
-        }
     }
     /**
      * Display a specific structure def

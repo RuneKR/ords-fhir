@@ -1,3 +1,3 @@
-export interface IDomainResource {
-
+export interface DomainResource {
+    id: string;
 }

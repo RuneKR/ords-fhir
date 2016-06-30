@@ -1,7 +1,7 @@
 import {ElementDefinition}  from    './element-definition';
-import {IDomainResource}    from    './domain-resource';
+import {DomainResource}    from    './domain-resource';
 
-export interface IStructureDefenition extends IDomainResource {
+export interface StructureDefenition extends DomainResource {
     snapshot: {
         element: Array<ElementDefinition>
     };
