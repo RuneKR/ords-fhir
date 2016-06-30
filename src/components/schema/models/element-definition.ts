@@ -21,5 +21,5 @@ export interface ElementDefinition {
     /**
      * The value is an array
      */
-    array: boolean;
+    array?: boolean;
 }

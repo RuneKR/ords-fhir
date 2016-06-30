@@ -1,16 +1,16 @@
 import {Coding} from './Coding';
-import {SchemaModels, SchemaComponent} from '../../../schema';
-import * as DataTypes   from    './primitives';
+import {SchemaModels, SchemaComponent} from '../../schema';
 
 @SchemaComponent
 export class CodeableConcept {
     public coding: SchemaModels.ElementDefinition = {
         required: false,
-        type: [Coding]
+        type: [Coding],
+        array: true
     };
     public text: SchemaModels.ElementDefinition = {
         required: false,
-        type: DataTypes.String
+        type: [SchemaModels.Datatypes.String]
     };
     public constructor(data: any, validate: SchemaModels.Enforce) {
 

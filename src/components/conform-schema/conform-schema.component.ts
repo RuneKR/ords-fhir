@@ -4,6 +4,13 @@ import {SchemaModels, SchemaComponent}  from  '../schema';
  * Read a JSON with the form of a structuredefenition and create corresponding schema
  */
 export class ConformSchemaComponent {
+    /**
+     * Builded schema values by their uri
+     */
+    private values: { [key: string]: SchemaModels.Element } = {};
+    /**
+     * Data types that can can activly exists
+     */
     private datatypes: { [key: string]: SchemaModels.Element } = {};
     /**
      * Create datatype schema based on a structure defenition
@@ -52,7 +59,7 @@ export class ConformSchemaComponent {
                 schema.prototype[key].array = true;
             }
         });
-        
+
         // return the builded schema
         return SchemaComponent(schema);
     }
@@ -66,6 +73,8 @@ export class ConformSchemaComponent {
 
         // recrusive search through valueset code syststem with inline coding
         // compile values of valueset OBS: Only works for codeSystem right now
+        // NOTE (not implemented):
+        // Respekct case sensitivity field
         function recrusive(holder: any, coding: any, path: string): void {
 
             // read the concept
@@ -92,6 +101,9 @@ export class ConformSchemaComponent {
                 recrusive(values, value, value.code);
             }
         });
+
+        // save reference to values if they are later to be used
+        this.values[valueset.url] = values;
 
         return values;
     }
