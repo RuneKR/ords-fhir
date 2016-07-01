@@ -1,5 +1,5 @@
 import {SearchParameter}        from './structure-defenitions/search-parameter';
-import {StructureDefenition}    from './structure-defenition';
+import {SchemaModels}           from '../../schema';
 
 export interface RuleEntry {
     datakey: string;
@@ -9,7 +9,7 @@ export interface RuleEntry {
 }
 
 export interface IConformResource {
-    structure: StructureDefenition;
+    structure: SchemaModels.StructureDefinition;
     queryables: Array<SearchParameter>;
     rules: Array<RuleEntry>;
 }

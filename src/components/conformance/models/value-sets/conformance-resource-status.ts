@@ -1,6 +1,6 @@
-import {ValueSet}      from    '../value-set';
+import {SchemaModels}           from '../../../schema';
 
-export let conformanceResourceStatus: ValueSet = {
+export let conformanceResourceStatus: SchemaModels.ValueSet = {
     id: 'conformance-resource-status',
     meta: {
         lastUpdated: '2015-10-24T07:41:03.495+11:00',

@@ -1,7 +1,7 @@
 import {DomainResource}    from './domain-resource';
 import {ElementDefinition} from './element-definition';
 
-export interface StructureDefenition extends DomainResource {
+export interface StructureDefinition extends DomainResource {
     snapshot: {
         element: Array<ElementDefinition>
     };

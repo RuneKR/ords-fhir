@@ -1,10 +1,9 @@
 import {Values}        from    './values';
 
 /**
- * Description of FHIR elements 
- * @interface ElementDefinition
+ * Clean version of ElementDefinition from HL7 FHIR
  */
-export interface ElementDefinition {
+export interface PropertyDefinition {
     /**
      * Values it can have
      */

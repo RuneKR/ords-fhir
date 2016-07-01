@@ -1,6 +1,6 @@
 import {ConformResource}        from './models/conform-resource';
 import {IConformance}           from './models/structure-defenitions/conformance';
-import {StructureDefenition}    from './models/structure-defenition';
+import {SchemaModels}           from '../schema';
 
 /**
  * String index of resources
@@ -95,7 +95,7 @@ export class ConformanceComponent {
      * @param   {boolean}      structdef            flag if structdef should be returned of that resource
      * @returns {Resource | Structuredefenition}    all information about the resource
      */
-    public getResource(resource: string, structdef?: boolean): ConformResource | StructureDefenition {
+    public getResource(resource: string, structdef?: boolean): ConformResource | SchemaModels.StructureDefinition {
 
         // return content
         return this.resources[resource];
