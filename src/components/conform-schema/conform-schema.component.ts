@@ -40,8 +40,8 @@ export class ConformSchemaComponent {
             // calculate values to valueset OBS with only work for codeSystem and for cirtain binding strengths
             if (value.binding.valueset && (value.binding.strength === 'required' || value.binding.strength === 'extensible')) {
 
-                // create schema values
-                schema.prototype[key].values = this.createSchemaValues(value.binding.valueset);
+                // get schema values based upon the valueSetUri
+                schema.prototype[key].values = this.getSchemaValues(value.binding.valueSetUri);
             }
 
             // set required
@@ -75,47 +75,11 @@ export class ConformSchemaComponent {
 
     }
     /**
-     * Create schema values based upon a valueset
+     * Gets schema values based on its uri
      */
-    private createSchemaValues(valueset: any): SchemaModels.Values {
+    private getSchemaValues(uri: string): SchemaModels.Values {
 
-        // reference for values to be found
-        let values: SchemaModels.Values = {};
-
-        // recrusive search through valueset code syststem with inline coding
-        // compile values of valueset OBS: Only works for codeSystem right now
-        // NOTE (not implemented):
-        // Respekct case sensitivity field
-        function recrusive(holder: any, coding: any, path: string): void {
-
-            // read the concept
-            Object.keys(coding.concept).forEach((value: any, index: number) => {
-
-                // keep reference
-                holder[path + '.' + value.code] = value;
-
-                // deep search for other concepts
-                if (value.concept !== undefined) {
-                    recrusive(holder, value, path + '.' + value.code);
-                }
-            });
-        }
-
-        // loop the codesystem concept
-        Object.keys(valueset.codeSystem.concept).forEach((value: any, index: number) => {
-
-            // keep reference
-            values[value.code] = value;
-
-            // deep search for other concepts
-            if (value.concept !== undefined) {
-                recrusive(values, value, value.code);
-            }
-        });
-
-        // save reference to values if they are later to be used
-        this.values[valueset.url] = values;
-
-        return values;
+        //Throw error if valueset do not exists
+        return this.values[uri];
     }
 }
