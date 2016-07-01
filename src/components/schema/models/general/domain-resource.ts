@@ -1,10 +1,12 @@
 import {IMeta}       from    '../datatypes/meta'; 
+import {INarrative}  from    '../datatypes/narrative'; 
+
 
 export interface DomainResource {
-    id: string;
-    uri: string;
-    code: string;
-    meta: IMeta;
-    implicitRules: string;
-    language: string;
+    id?: string;
+    meta?: IMeta;
+    implicitRules?: string;
+    language?: string;
+    text?: INarrative;
+    resource?: Array<DomainResource>;
 }

@@ -36,6 +36,7 @@ export class Meta {
     public security: PropertyDefinition = {
         min: 0,
         types: [Coding]
+        // there are some binding to remember here
     };
     constructor(data: any, enforce: Enforce) {
 
