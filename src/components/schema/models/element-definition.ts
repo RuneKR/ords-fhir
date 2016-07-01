@@ -6,20 +6,19 @@ import {Values}        from    './values';
  */
 export interface ElementDefinition {
     /**
-     * Indication of binding to a specific valueset
-     * @type {Binding}
+     * Values it can have
      */
     values?: Values;
     /**
      * Minimum of instances
      */
-    required: boolean;
+    min: number;
     /**
-     * Types that are allowed for the value
+     * maximum number of instances
      */
-    type: Array<any>;
+    max?: number;
     /**
-     * The value is an array
+     * Types it can have
      */
-    array?: boolean;
+    types: Array<any>;
 }

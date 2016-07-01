@@ -1,6 +1,6 @@
-import {ConformSchemaModels}    from '../../conform-schema';
+import {DomainResource}    from './domain-resource';
 
-export interface ValueSet extends ConformSchemaModels.DomainResource {
+export interface ValueSet extends DomainResource {
     /**
      * Values: ConformanceResourceStatus 
      * Type: code

@@ -1,8 +1,9 @@
-import {ConformSchemaModels}    from '../../conform-schema';
+import {DomainResource}    from './domain-resource';
+import {ElementDefinition} from './element-definition';
 
-export interface StructureDefenition extends ConformSchemaModels.DomainResource {
+export interface StructureDefenition extends DomainResource {
     snapshot: {
-        element: Array<ConformSchemaModels.ElementDefinition>
+        element: Array<ElementDefinition>
     };
     /**
      * Actually type is URL

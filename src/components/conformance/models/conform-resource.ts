@@ -1,5 +1,4 @@
 import {SearchParameter}        from './structure-defenitions/search-parameter';
-import {ConformSchemaModels}    from '../../conform-schema';
 import {StructureDefenition}    from './structure-defenition';
 
 export interface RuleEntry {
