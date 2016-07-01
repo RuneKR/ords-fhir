@@ -28,7 +28,28 @@ export class Boolean implements Element {
     }
 }
 
+//SOMETHHING
+export class Date implements Element {
+    public _value: any;
+    constructor(data: string) {
+        if (!!new Date(data).getTime()) {
+            throw new Error('not a dateTime');
+        }
+        this._value = data;
+    }
+}
+
 export class DateTime implements Element {
+    public _value: any;
+    constructor(data: string) {
+        if (!!new Date(data).getTime()) {
+            throw new Error('not a dateTime');
+        }
+        this._value = data;
+    }
+}
+
+export class Time implements Element {
     public _value: any;
     constructor(data: string) {
         if (!!new Date(data).getTime()) {
@@ -68,7 +89,17 @@ export class Id implements Element {
     }
 }
 
-export class Code implements Element {
+export class Markdown implements Element {
+    public _value: any;
+    constructor(data: string) {
+        if (data.toString() !== data) {
+            throw new Error('not a string');
+        }
+        this._value = data;
+    }
+}
+
+export class Oid implements Element {
     public _value: any;
     constructor(data: string) {
         if (data.toString() !== data) {
@@ -88,7 +119,57 @@ export class Uri implements Element {
     }
 }
 
-export class Number implements Element {
+export class Decimal implements Element {
+    public _value: any;
+    constructor(data: string) {
+        if (data.toString() !== data) {
+            throw new Error('not a string');
+        }
+        this._value = data;
+    }
+}
+
+export class Integer implements Element {
+    public _value: any;
+    constructor(data: string) {
+        if (data.toString() !== data) {
+            throw new Error('not a string');
+        }
+        this._value = data;
+    }
+}
+
+export class Base64Binary implements Element {
+    public _value: any;
+    constructor(data: string) {
+        if (data.toString() !== data) {
+            throw new Error('not a string');
+        }
+        this._value = data;
+    }
+}
+
+export class Code implements Element {
+    public _value: any;
+    constructor(data: string) {
+        if (data.toString() !== data) {
+            throw new Error('not a string');
+        }
+        this._value = data;
+    }
+}
+
+export class PositiveInt implements Element {
+    public _value: any;
+    constructor(data: string) {
+        if (data.toString() !== data) {
+            throw new Error('not a string');
+        }
+        this._value = data;
+    }
+}
+
+export class UnsignedInt implements Element {
     public _value: any;
     constructor(data: string) {
         if (data.toString() !== data) {
