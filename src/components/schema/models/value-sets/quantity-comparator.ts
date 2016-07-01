@@ -1,5 +1,7 @@
-export const quantityComparator: any = {
-    resourceType: 'ValueSet',
+import {Values}     from    '../values';
+import {ValueSet}   from    '../general/value-set';
+
+export const quantityComparator: ValueSet = {
     id: 'quantity-comparator',
     meta: {
         lastUpdated: '2015-10-24T07:41:03.495+11:00',
@@ -72,4 +74,4 @@ export const quantityComparator: any = {
             }
         ]
     }
-}
+};

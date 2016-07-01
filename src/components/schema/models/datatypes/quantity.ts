@@ -1,7 +1,8 @@
-import {PropertyDefinition}     from    '../property-definition';
-import * as Datatypes           from    './primeitive';
-import {SchemaComponent}        from    '../../schema.component';
-import {Enforce}                from    '../enforce';
+import {PropertyDefinition}         from    '../property-definition';
+import * as Datatypes               from    './primeitive';
+import {SchemaComponent}            from    '../../schema.component';
+import {Enforce}                    from    '../enforce';
+import {quantityComparator}         from    '../values/quantity-comparator';
 
 export interface IQuantity {
     value: number;
@@ -21,7 +22,8 @@ export class Quantity {
     public comparator: PropertyDefinition = {
         max: 1,
         min: 0,
-        types: [Datatypes.Code]
+        types: [Datatypes.Code],
+        values: [quantityComparator]
     };
     public unit: PropertyDefinition = {
         max: 1,

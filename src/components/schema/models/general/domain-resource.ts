@@ -1,4 +1,10 @@
+import {IMeta}       from    '../datatypes/meta'; 
+
 export interface DomainResource {
     id: string;
-    meta: any;
+    uri: string;
+    code: string;
+    meta: IMeta;
+    implicitRules: string;
+    language: string;
 }

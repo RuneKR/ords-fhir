@@ -1,5 +1,6 @@
-export const quantity: any = {
-    resourceType: 'StructureDefinition',
+import {StructureDefinition}        from    '../general/structure-definition';
+
+export const quantity: StructureDefinition = {
     id: 'Quantity',
     meta: {
         lastUpdated: '2015-10-24T07:41:03.495+11:00'
