@@ -1,5 +1,5 @@
 import {SchemaModels, SchemaComponent}  from  '../schema';
-import {StructureDefenition}            from  './models/structure-defenition';
+import {ElementDefinition}              from  './models/element-definition';
 
 /**
  * Read a JSON with the form of a structuredefenition and create corresponding schema
@@ -14,15 +14,9 @@ export class ConformSchemaComponent {
      */
     private datatypes: { [key: string]: SchemaModels.Values } = {};
     /**
-     * Create datatype schema based on a structure defenition
+     * Create resource schema based on a structure defenition snapshot
      */
-    public createDatatypeSchema(target: JSON): any {
-
-    }
-    /**
-     * Create resource schema based on a structure defenition
-     */
-    public createResurceSchema(target: StructureDefenition): SchemaModels.Schema {
+    public createResurceSchema(target: Array<ElementDefinition>): SchemaModels.Schema {
 
         // the new constructor behaviour
         let schema: any = (data: any, enforce?: SchemaModels.Enforce) => {
@@ -69,8 +63,16 @@ export class ConformSchemaComponent {
      */
     constructor() {
 
-        // load local valuesets and datatypes in
-        // start with primary types
+        // load primeary data from schema
+        Object.keys(SchemaModels.Datatypes).forEach((value: any, type: any) => {
+            
+            // convert first to lower case sice all primeary types are supposed to be so
+            this.datatypes[type.charAt(0).toLowerCase() + type.slice(1)] = value;
+        });
+
+        // then load the advanced
+        
+
     }
     /**
      * Create schema values based upon a valueset

@@ -1,4 +1,4 @@
-import {ValueSet}      from    '../models/value-set';
+import {ValueSet}      from    '../value-set';
 
 export let conformanceResourceStatus: ValueSet = {
     id: 'conformance-resource-status',
