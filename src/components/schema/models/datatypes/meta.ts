@@ -36,7 +36,7 @@ export class Meta {
     public security: PropertyDefinition = {
         min: 0,
         types: [Coding]
-        // there are some binding to remember here
+        // there are some binding to remember here https://www.hl7.org/fhir/valueset-security-labels.html
     };
     constructor(data: any, enforce: Enforce) {
 
