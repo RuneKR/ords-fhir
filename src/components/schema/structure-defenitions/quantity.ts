@@ -1,5 +1,5 @@
-import {StructureDefinition}        from    '../general/structure-definition';
-
+import {StructureDefinition}        from    '../models/general/structure-definition';
+ /*
 export const quantity: StructureDefinition = {
     id: 'Quantity',
     meta: {
@@ -429,3 +429,4 @@ export const quantity: StructureDefinition = {
         ]
     }
 };
+*/

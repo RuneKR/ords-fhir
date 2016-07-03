@@ -1,6 +1,6 @@
-import {Values}     from    '../values';
-import {ValueSet}   from    '../general/value-set';
-
+// import {Values}     from    'models/values';
+// import {ValueSet}   from    '../general/value-set';
+/*
 export const quantityComparator: ValueSet = {
     id: 'quantity-comparator',
     meta: {
@@ -74,4 +74,4 @@ export const quantityComparator: ValueSet = {
             }
         ]
     }
-};
+}; */

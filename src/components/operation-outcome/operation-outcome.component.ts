@@ -1,3 +1,9 @@
+export interface IOperationOutcomeComponent {
+    code: string;
+    diagnostics?: string;
+    severity: string;
+}
+
 export class OperationOutcomeComponent {
     public httpcode: number;
     public issue: {
@@ -5,4 +11,8 @@ export class OperationOutcomeComponent {
         diagnostics?: string,
         severity: string
     };
+    constructor(code: number, issue: IOperationOutcomeComponent) {
+
+        // check if codes are okay
+    }
 }

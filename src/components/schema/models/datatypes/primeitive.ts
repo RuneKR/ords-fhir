@@ -28,8 +28,10 @@ export class Boolean implements Element {
     }
 }
 
-//SOMETHHING
-export class Date implements Element {
+/**
+ * Date is reserved so DateFHIR is to be used instead
+ */
+export class DateFHIR implements Element {
     public _value: any;
     constructor(data: string) {
         if (!!new Date(data).getTime()) {

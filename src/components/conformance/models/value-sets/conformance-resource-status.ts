@@ -1,5 +1,5 @@
 import {SchemaModels}           from '../../../schema';
-
+/*
 export let conformanceResourceStatus: SchemaModels.ValueSet = {
     id: 'conformance-resource-status',
     meta: {
@@ -98,4 +98,4 @@ export let conformanceResourceStatus: SchemaModels.ValueSet = {
             }
         ]
     }
-}
+} */
