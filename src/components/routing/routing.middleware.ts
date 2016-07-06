@@ -1,4 +1,5 @@
 import {RequestHandler}     from '../routing/models/RequestHandler';
+import * as parser          from 'body-parser';
 
 /**
  * Middlware for parsers of data from request
@@ -34,4 +35,19 @@ export class RoutingMiddleware {
         input: [],
         output: []
     };
+
+    constructor() {
+
+        // parse body application/x-www-form-urlencoded
+        this.parsers.body.push(parser.urlencoded({
+            extended: false,
+            limit: process.env.LIMIT_UPLOAD_MB ? process.env.LIMIT_UPLOAD_MB + 'mb' : 0.1 + 'mb'
+        }));
+
+        // parse application/json
+        this.parsers.body.push(parser.json({
+            limit: process.env.LIMIT_UPLOAD_MB ? process.env.LIMIT_UPLOAD_MB + 'mb' : 0.1 + 'mb'
+        }));
+
+    }
 }

@@ -56,7 +56,10 @@ export class Instance {
         req.query._count = 1;
 
         // do database stuff
-        this.dc.read(req, res).then(() => {
+        this.dc.read(req).then((result: Array<any>) => {
+
+            // bind found result to res object
+            res.result = result;
 
             // if meta data is specified then use that in return
             if (res.result[0].meta) {
@@ -113,7 +116,10 @@ export class Instance {
         }
 
         // do update
-        this.dc.update(req, res).then(() => {
+        this.dc.update(req).then((result: any) => {
+
+            // bind found result to res object
+            res.result = result;
 
             // if meta data is specified then use that in return
             if (res.result.meta) {
@@ -162,7 +168,7 @@ export class Instance {
     public delete(req: Request, res: Response, next: NextFunction): void {
 
         // do delete and then go next
-        this.dc.delete(req, res).then(() => {
+        this.dc.delete(req).then(() => {
 
             next();
 

@@ -56,7 +56,10 @@ export class Type {
         }
 
         // do database stuff
-        this.dc.read(req, res).then(() => {
+        this.dc.read(req).then((result: Array<any>) => {
+
+            // bind found result
+            res.result = result;
 
             // send resulting doc back
             next();
@@ -90,7 +93,10 @@ export class Type {
         }
 
         // do database stuff
-        this.dc.read(req, res).then(() => {
+        this.dc.read(req).then((result: Array<any>) => {
+
+            // bind found result
+            res.result = result;
 
             // send resulting doc back
             next();
@@ -111,7 +117,10 @@ export class Type {
     public create(req: Request, res: Response, next: NextFunction): void {
 
         // do database stuff
-        this.dc.create(req, res).then(() => {
+        this.dc.create(req).then((result: any) => {
+
+            // bind found result
+            res.result = result;
 
             // if meta data is specified then use that in return
             if (res.result.meta) {
