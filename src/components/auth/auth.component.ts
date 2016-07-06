@@ -1,4 +1,4 @@
-import {RoutingModels}                      from '../routing';
+import {Request}                            from 'express';
 import {HookableComponent, HookableModels}  from '../hookable';
 import {DependencyInjectorComponent}        from '../dependency-injector';
 import {User}                               from './models/user';
@@ -11,29 +11,29 @@ export class AuthComponent {
     /**
      * Get the user performing a request
      */
-    public getUser: HookableModels.All<RoutingModels.Request, User>;
+    public getUser: HookableModels.All<Request, User>;
     /**
      * Create a new user based upon the information in the request
      */
-    public createUser: HookableModels.All<RoutingModels.Request, User>;
+    public createUser: HookableModels.All<Request, User>;
     /**
      * Update information about the user
      */
-    public updateUser: HookableModels.All<RoutingModels.Request, User>;
+    public updateUser: HookableModels.All<Request, User>;
     /**
      * Delete the user performing the request
      */
-    public deleteUser: HookableModels.All<RoutingModels.Request, User>;
+    public deleteUser: HookableModels.All<Request, User>;
     /**
      * Create new instance of DBManager and bind middleware to it
      */
     constructor(hc: HookableComponent) {
 
         // init hookable
-        this.getUser     = hc.threeLayer<RoutingModels.Request, User>();
-        this.createUser  = hc.threeLayer<RoutingModels.Request, User>();
-        this.updateUser  = hc.threeLayer<RoutingModels.Request, User>();
-        this.deleteUser  = hc.threeLayer<RoutingModels.Request, User>();
+        this.getUser     = hc.threeLayer();
+        this.createUser  = hc.threeLayer();
+        this.updateUser  = hc.threeLayer();
+        this.deleteUser  = hc.threeLayer();
 
     }
 }

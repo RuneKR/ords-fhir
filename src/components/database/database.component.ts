@@ -37,12 +37,12 @@ export class DatabaseComponent {
     constructor(hc: HookableComponent) {
 
         // init hookable
-        this.create     = hc.threeLayer<RoutingModels.Request, any>();
-        this.read       = hc.threeLayer<RoutingModels.Request, Array<any>>();
-        this.update     = hc.threeLayer<RoutingModels.Request, any>();
-        this.delete     = hc.threeLayer<RoutingModels.Request, any>();
-        this.history    = hc.threeLayer<RoutingModels.Request, Array<any>>();
-        this.patch      = hc.threeLayer<RoutingModels.Request, any>();
+        this.create     = hc.threeLayer();
+        this.read       = hc.threeLayer();
+        this.update     = hc.threeLayer();
+        this.delete     = hc.threeLayer();
+        this.history    = hc.threeLayer();
+        this.patch      = hc.threeLayer();
 
     }
 }

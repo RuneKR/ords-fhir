@@ -5,24 +5,25 @@ import {Router}                             from './models/Router';
 import {RequestHandler}                     from './models/RequestHandler';
 import {DependencyInjectorComponent}        from '../dependency-injector';
 import {HookableComponent}                  from '../hookable';
+import {AuthComponent}                      from '../auth';
 
 /**
  * Main ORDS application
  */
-@DependencyInjectorComponent.createWith(HookableComponent)
+@DependencyInjectorComponent.createWith(HookableComponent, AuthComponent)
 export class RoutingComponent extends Helper {
     /**
-     * Main express application
+     * Reference to express application instance
      */
     public router: Router = Router();
     /**
      * Start the controller and add routes
      * @returns {void}
      */
-    constructor(hc: HookableComponent) {
+    constructor(hc: HookableComponent, ac: AuthComponent) {
 
         // do super call
-        super(hc);
+        super(hc, ac);
 
         // calculate whitelist array and set as empty is not specified
         if (process.env.WHITELIST === undefined) {
@@ -38,7 +39,6 @@ export class RoutingComponent extends Helper {
                 callback(undefined, whitelist.indexOf(origin) !== -1);
             }
         }));
-
     }
     /**
      * Adding an handler for a GET HTTP method for all resources

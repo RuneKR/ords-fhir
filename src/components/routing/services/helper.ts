@@ -1,6 +1,6 @@
-import {ConformanceComponent}                                           from '../../conformance';
 import {RouteOptions, RequestHandler, Request, Response, NextFunction}  from '../routing.models';
 import {HookableComponent, HookableModels}                              from '../../hookable';
+import {AuthComponent}                                                  from '../../auth';
 import * as parser                                                      from 'body-parser';
 
 /**
@@ -8,26 +8,33 @@ import * as parser                                                      from 'bo
  */
 export class Helper {
     /**
-     * Reference to conformance
+     * Parse the body content of a request
      */
-    private rc: ConformanceComponent;
+    public parseBody: HookableModels.Actor<Request, Response>;
     /**
-     * Reference to route middleware
+     * Reference to auth component
      */
-    public parseBody: HookableModels.Actor<any, any>;
+    private ac: AuthComponent;
+    /**
+     * Do tha actual route
+     */
+    public doRoute: HookableModels.Actor<Request, Response>;
     /**
      * Create a new instance of routes middleware handler
      */
-    constructor(hc: HookableComponent) {
+    constructor(hc: HookableComponent, ac: AuthComponent) {
+
+        // prepare body parsing layer
+        this.parseBody = hc.oneLayer();
 
         // parse body application/x-www-form-urlencoded
-        this.parseBody.push(parser.urlencoded({
+        this.parseBody.actor.push(parser.urlencoded({
             extended: false,
             limit: process.env.LIMIT_UPLOAD_MB ? process.env.LIMIT_UPLOAD_MB + 'mb' : 0.1 + 'mb'
         }));
 
         // parse application/json
-        this.parseBody.push(parser.json({
+        this.parseBody.actor.push(parser.json({
             limit: process.env.LIMIT_UPLOAD_MB ? process.env.LIMIT_UPLOAD_MB + 'mb' : 0.1 + 'mb'
         }));
 
@@ -51,12 +58,12 @@ export class Helper {
 
         // if projected then these handlers are needed
         if (options.middleware.parsers.user === true || options.protected === true) {
-            Array.prototype.push.apply(handlers, this.rm.parsers.user);
+            Array.prototype.push.apply(handlers, this.ac.getUser);
         }
 
         // if bodyparse is needed 
         if (options.middleware.parsers.body === true) {
-            Array.prototype.push.apply(handlers, this.rm.parsers.body);
+            Array.prototype.push.apply(handlers, this.parseBody.actor);
         }
 
         // if protected then validate requestion for authenticated
@@ -78,6 +85,7 @@ export class Helper {
 
         // send back result
         return handlers;
+    
     }
     /**
      * Parese information about the resource to the request
