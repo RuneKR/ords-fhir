@@ -10,39 +10,39 @@ export class DatabaseComponent {
     /**
      * Create something in the database
      */
-    public create: HookableModels.All<RoutingModels.Request>;
+    public create: HookableModels.All<RoutingModels.Request, any>;
     /**
      * Read something from the database
      */
-    public read: HookableModels.All<RoutingModels.Request>;
+    public read: HookableModels.All<RoutingModels.Request, Array<any>>;
     /**
      * Update something in the database
      */
-    public update: HookableModels.All<RoutingModels.Request>;
+    public update: HookableModels.All<RoutingModels.Request, any>;
     /**
      * Create something in the database
      */
-    public delete: HookableModels.All<RoutingModels.Request>;
+    public delete: HookableModels.All<RoutingModels.Request, any>;
     /**
      * Read history of something in the database
      */
-    public history: HookableModels.All<RoutingModels.Request>;
+    public history: HookableModels.All<RoutingModels.Request, Array<any>>;
     /**
      * Patch something in the database
      */
-    public patch: HookableModels.All<RoutingModels.Request>;
+    public patch: HookableModels.All<RoutingModels.Request, any>;
     /**
      * Create new instance of DBManager and bind middleware to it
      */
     constructor(hc: HookableComponent) {
 
         // init hookable
-        this.create = hc.threeLayer<RoutingModels.Request>();
-        this.read = hc.threeLayer<RoutingModels.Request>();
-        this.update = hc.threeLayer<RoutingModels.Request>();
-        this.delete = hc.threeLayer<RoutingModels.Request>();
-        this.history = hc.threeLayer<RoutingModels.Request>();
-        this.patch = hc.threeLayer<RoutingModels.Request>();
+        this.create     = hc.threeLayer<RoutingModels.Request, any>();
+        this.read       = hc.threeLayer<RoutingModels.Request, Array<any>>();
+        this.update     = hc.threeLayer<RoutingModels.Request, any>();
+        this.delete     = hc.threeLayer<RoutingModels.Request, any>();
+        this.history    = hc.threeLayer<RoutingModels.Request, Array<any>>();
+        this.patch      = hc.threeLayer<RoutingModels.Request, any>();
 
     }
 }

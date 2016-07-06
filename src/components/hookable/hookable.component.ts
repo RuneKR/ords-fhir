@@ -1,4 +1,3 @@
-import {RequestHandler, Request, Response, NextFunction}   from 'express';
 import {All}                                               from './models/all';
 import {Actor}                                             from './models/actor';
 import {Next}                                              from './models/next';
@@ -8,14 +7,14 @@ export class HookableComponent {
     /**
      * Generate a three layer middleware
      */
-    public oneLayer<T>(): Actor<T> {
+    public oneLayer<T, U>(): Actor<T, U> {
 
-        let f: Actor<T> = function (args: T): Promise<any> {
+        let f: Actor<T, U> = function (args: T): Promise<U> {
 
             return new Promise((resolve: Function, reject: Function) => {
 
                 // create stack that are being run
-                let stack: Array<Next<T>> = f.actor;
+                let stack: Array<Next<T, U>> = f.actor;
 
                 // run stack
                 let next: any = function (res: any): void {
@@ -26,7 +25,7 @@ export class HookableComponent {
                     }
 
                     // next function to run
-                    let func: Next<T> = stack.shift();
+                    let func: Next<T, U> = stack.shift();
 
                     // try to run through the whole stack
                     try {
@@ -53,14 +52,14 @@ export class HookableComponent {
     /**
      * Generate a three layer middleware
      */
-    public threeLayer<T>(): All<T> {
+    public threeLayer<T, U>(): All<T, U> {
 
-        let f: All<T> = function (args: T): Promise<any> {
+        let f: All<T, U> = function (args: T): Promise<U> {
 
             return new Promise((resolve: Function, reject: Function) => {
 
                 // create stack that are being run
-                let stack: Array<Next<T>> = [];
+                let stack: Array<Next<T, U>> = [];
 
                 Array.prototype.push.apply(stack, f.pre);
                 Array.prototype.push.apply(stack, f.actor);
@@ -75,7 +74,7 @@ export class HookableComponent {
                     }
 
                     // next function to run
-                    let func: Next<T> = stack.shift();
+                    let func: Next<T, U> = stack.shift();
 
                     // try to run through the whole stack
                     try {

@@ -1,3 +1,3 @@
-export interface Next<T> {
-    (arg: T, res: any, next: Next<T>): void;
+export interface Next<T, U> {
+    (arg: T, res: U, next: Next<T, U>): void;
 }

@@ -1,8 +1,8 @@
 import {Next}       from    './next';
 
-export interface All<T> {
+export interface All<T, U> {
     (args: T): void;
-    pre?: Array<Next<T>>;
-    post?: Array<Next<T>>;
-    actor?: Array<Next<T>>;
+    pre?: Array<Next<T, U>>;
+    post?: Array<Next<T, U>>;
+    actor?: Array<Next<T, U>>;
 }
