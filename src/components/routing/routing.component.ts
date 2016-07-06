@@ -1,31 +1,28 @@
-import {RouteOptions}                   from './models/RouteOptions';
-import {Helper}                         from './services/Helper';
-import * as cors                        from 'cors';
-import {Router}                         from './models/Router';
-import {RequestHandler}                 from './models/RequestHandler';
-import {DependencyInjectorComponent}    from '../dependency-injector';
+import {RouteOptions}                       from './models/RouteOptions';
+import {Helper}                             from './services/helper';
+import * as cors                            from 'cors';
+import {Router}                             from './models/Router';
+import {RequestHandler}                     from './models/RequestHandler';
+import {DependencyInjectorComponent}        from '../dependency-injector';
+import {HookableComponent}                  from '../hookable';
 
 /**
  * Main ORDS application
  */
-@DependencyInjectorComponent.createWith(Helper)
-export class RoutingComponent {
+@DependencyInjectorComponent.createWith(HookableComponent)
+export class RoutingComponent extends Helper {
     /**
      * Main express application
      */
     public router: Router = Router();
     /**
-     * Reference to helper
-     */
-    private helper: Helper;
-    /**
      * Start the controller and add routes
      * @returns {void}
      */
-    constructor(helper: Helper) {
+    constructor(hc: HookableComponent) {
 
-        // save reference
-        this.helper = helper;
+        // do super call
+        super(hc);
 
         // calculate whitelist array and set as empty is not specified
         if (process.env.WHITELIST === undefined) {
@@ -56,7 +53,7 @@ export class RoutingComponent {
         options.middleware.parsers.body = false;
 
         // create a stack of handlers for that path
-        let handlers: Array<any> = this.helper.createStack(options, handler);
+        let handlers: Array<any> = this.createStack(options, handler);
 
         // resource or normal path
         if (options.isResource) {
@@ -81,7 +78,7 @@ export class RoutingComponent {
         options.middleware.parsers.body = false;
 
         // create a stack of handlers for that path
-        let handlers: Array<any> = this.helper.createStack(options, handler);
+        let handlers: Array<any> = this.createStack(options, handler);
 
         // resource or normal path
         if (options.isResource) {
@@ -106,7 +103,7 @@ export class RoutingComponent {
         options.middleware.parsers.body = true;
 
         // create a stack of handlers for that path
-        let handlers: Array<any> = this.helper.createStack(options, handler);
+        let handlers: Array<any> = this.createStack(options, handler);
         // resource or normal path
         if (options.isResource) {
             handlers.unshift('/:resource/' + path);
@@ -130,7 +127,7 @@ export class RoutingComponent {
         options.middleware.parsers.body = true;
 
         // create a stack of handlers for that path
-        let handlers: Array<any> = this.helper.createStack(options, handler);
+        let handlers: Array<any> = this.createStack(options, handler);
         // resource or normal path
         if (options.isResource) {
             handlers.unshift('/:resource/' + path);
@@ -154,7 +151,7 @@ export class RoutingComponent {
         options.middleware.parsers.body = true;
 
         // create a stack of handlers for that path
-        let handlers: Array<any> = this.helper.createStack(options, handler);
+        let handlers: Array<any> = this.createStack(options, handler);
         // resource or normal path
         if (options.isResource) {
             handlers.unshift('/:resource/' + path);
@@ -178,7 +175,7 @@ export class RoutingComponent {
         options.middleware.parsers.body = true;
 
         // create a stack of handlers for that path
-        let handlers: Array<any> = this.helper.createStack(options, handler);
+        let handlers: Array<any> = this.createStack(options, handler);
         // resource or normal path
         if (options.isResource) {
             handlers.unshift('/:resource/' + path);

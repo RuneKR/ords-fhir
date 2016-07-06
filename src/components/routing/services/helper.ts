@@ -1,12 +1,11 @@
 import {ConformanceComponent}                                           from '../../conformance';
-import {RoutingMiddleware}                                              from '../routing.middleware';
-import {DependencyInjectorComponent}                                    from '../../dependency-injector';
-import {RouteOptions, RequestHandler, Request, Response, NextFunction}  from '../../routing/routing.models';
+import {RouteOptions, RequestHandler, Request, Response, NextFunction}  from '../routing.models';
+import {HookableComponent, HookableModels}                              from '../../hookable';
+import * as parser                                                      from 'body-parser';
 
 /**
  * ORDS middleware for routes
  */
-@DependencyInjectorComponent.createWith(ConformanceComponent, RoutingMiddleware)
 export class Helper {
     /**
      * Reference to conformance
@@ -15,16 +14,23 @@ export class Helper {
     /**
      * Reference to route middleware
      */
-    private rm: RoutingMiddleware;
+    public parseBody: HookableModels.Actor<any, any>;
     /**
      * Create a new instance of routes middleware handler
      */
-    constructor(rc: ConformanceComponent, rm: RoutingMiddleware) {
+    constructor(hc: HookableComponent) {
 
-        // bind the two injected
-        this.rc = rc;
-        this.rm = rm;
-        
+        // parse body application/x-www-form-urlencoded
+        this.parseBody.push(parser.urlencoded({
+            extended: false,
+            limit: process.env.LIMIT_UPLOAD_MB ? process.env.LIMIT_UPLOAD_MB + 'mb' : 0.1 + 'mb'
+        }));
+
+        // parse application/json
+        this.parseBody.push(parser.json({
+            limit: process.env.LIMIT_UPLOAD_MB ? process.env.LIMIT_UPLOAD_MB + 'mb' : 0.1 + 'mb'
+        }));
+
     }
     /**
      * Adds middlware based to a handler for all resource 
