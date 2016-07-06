@@ -1,7 +1,6 @@
-import {PropertyDefinition}         from    '../property-definition';
-import * as Datatypes               from    './primeitive';
-import {SchemaComponent}            from    '../../schema.component';
-import {Enforce}                    from    '../enforce';
+import {SchemaComponent, SchemaModels}            from    '../../../schema';
+import * as Datatypes                             from    './primeitive';
+
 
 export interface ICoding {
     system: string;
@@ -13,32 +12,32 @@ export interface ICoding {
 
 @SchemaComponent
 export class Coding {
-    public system: PropertyDefinition = {
+    public system: SchemaModels.PropertyDefinition = {
         max: 1,
         min: 0,
         types: [Datatypes.Uri]
     };
-    public version: PropertyDefinition = {
+    public version: SchemaModels.PropertyDefinition = {
         max: 1,
         min: 0,
         types: [Datatypes.String]
     };
-    public code: PropertyDefinition = {
+    public code: SchemaModels.PropertyDefinition = {
         max: 1,
         min: 0,
         types: [Datatypes.Code]
     };
-    public display: PropertyDefinition = {
+    public display: SchemaModels.PropertyDefinition = {
         max: 1,
         min: 0,
         types: [Datatypes.String]
     };
-    public userSelected: PropertyDefinition = {
+    public userSelected: SchemaModels.PropertyDefinition = {
         max: 1,
         min: 0,
         types: [Datatypes.Boolean]
     };
-    constructor(data: any, enforce: Enforce) {
+    constructor(data: any, enforce: SchemaModels.Enforce) {
 
         // do nothing
     }

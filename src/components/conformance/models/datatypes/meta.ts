@@ -1,8 +1,6 @@
-import {PropertyDefinition}         from    '../property-definition';
-import * as Datatypes               from    './primeitive';
-import {SchemaComponent}            from    '../../schema.component';
-import {Enforce}                    from    '../enforce';
-import {ICoding, Coding}            from     './Coding';
+import {SchemaComponent, SchemaModels}            from    '../../../schema';
+import * as Datatypes                             from    './primeitive';
+import {ICoding, Coding}                          from     './Coding';
 
 export interface IMeta {
     versionId: number;
@@ -14,31 +12,31 @@ export interface IMeta {
 
 @SchemaComponent
 export class Meta {
-    public versionId: PropertyDefinition = {
+    public versionId: SchemaModels.PropertyDefinition = {
         max: 1,
         min: 0,
         types: [Datatypes.Id]
     };
-    public lastUpdated: PropertyDefinition = {
+    public lastUpdated: SchemaModels.PropertyDefinition = {
         max: 1,
         min: 0,
         types: [Datatypes.Instant]
     };
-    public profile: PropertyDefinition = {
+    public profile: SchemaModels.PropertyDefinition = {
         max: 1,
         min: 0,
         types: [Datatypes.Uri]
     };
-    public tag: PropertyDefinition = {
+    public tag: SchemaModels.PropertyDefinition = {
         min: 0,
         types: [Coding]
     };
-    public security: PropertyDefinition = {
+    public security: SchemaModels.PropertyDefinition = {
         min: 0,
         types: [Coding]
         // there are some binding to remember here https://www.hl7.org/fhir/valueset-security-labels.html
     };
-    constructor(data: any, enforce: Enforce) {
+    constructor(data: any, enforce: SchemaModels.Enforce) {
 
         // do nothing
     }

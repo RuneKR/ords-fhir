@@ -1,8 +1,8 @@
-import {Element}        from    '../Element';
+import {SchemaModels}      from    '../../../schema';
 
 // include all the these simple hl7 fhir
 
-export class Any implements Element {
+export class Any implements SchemaModels.Element {
     public _value: any;
     constructor(data: any) {
         
@@ -10,7 +10,7 @@ export class Any implements Element {
     }
 }
 
-export class Boolean implements Element {
+export class Boolean implements SchemaModels.Element {
     public _value: any;
     constructor(data: any) {
 
@@ -31,7 +31,7 @@ export class Boolean implements Element {
 /**
  * Date is reserved so DateFHIR is to be used instead
  */
-export class DateFHIR implements Element {
+export class DateFHIR implements SchemaModels.Element {
     public _value: any;
     constructor(data: string) {
         if (!!new Date(data).getTime()) {
@@ -41,7 +41,7 @@ export class DateFHIR implements Element {
     }
 }
 
-export class DateTime implements Element {
+export class DateTime implements SchemaModels.Element {
     public _value: any;
     constructor(data: string) {
         if (!!new Date(data).getTime()) {
@@ -51,7 +51,7 @@ export class DateTime implements Element {
     }
 }
 
-export class Time implements Element {
+export class Time implements SchemaModels.Element {
     public _value: any;
     constructor(data: string) {
         if (!!new Date(data).getTime()) {
@@ -61,7 +61,7 @@ export class Time implements Element {
     }
 }
 
-export class Instant implements Element {
+export class Instant implements SchemaModels.Element {
     public _value: any;
     constructor(data: string) {
         if (!!new Date(data).getTime()) {
@@ -71,7 +71,7 @@ export class Instant implements Element {
     }
 }
 
-export class String implements Element {
+export class String implements SchemaModels.Element {
     public _value: any;
     constructor(data: string) {
         if (data.toString() !== data) {
@@ -81,7 +81,7 @@ export class String implements Element {
     }
 }
 
-export class Id implements Element {
+export class Id implements SchemaModels.Element {
     public _value: any;
     constructor(data: string) {
         if (data.toString() !== data) {
@@ -91,7 +91,7 @@ export class Id implements Element {
     }
 }
 
-export class Markdown implements Element {
+export class Markdown implements SchemaModels.Element {
     public _value: any;
     constructor(data: string) {
         if (data.toString() !== data) {
@@ -101,7 +101,7 @@ export class Markdown implements Element {
     }
 }
 
-export class Oid implements Element {
+export class Oid implements SchemaModels.Element {
     public _value: any;
     constructor(data: string) {
         if (data.toString() !== data) {
@@ -111,7 +111,7 @@ export class Oid implements Element {
     }
 }
 
-export class Uri implements Element {
+export class Uri implements SchemaModels.Element {
     public _value: any;
     constructor(data: string) {
         if (data.toString() !== data) {
@@ -121,7 +121,7 @@ export class Uri implements Element {
     }
 }
 
-export class Decimal implements Element {
+export class Decimal implements SchemaModels.Element {
     public _value: any;
     constructor(data: string) {
         if (data.toString() !== data) {
@@ -131,7 +131,7 @@ export class Decimal implements Element {
     }
 }
 
-export class Integer implements Element {
+export class Integer implements SchemaModels.Element {
     public _value: any;
     constructor(data: string) {
         if (data.toString() !== data) {
@@ -141,7 +141,7 @@ export class Integer implements Element {
     }
 }
 
-export class Base64Binary implements Element {
+export class Base64Binary implements SchemaModels.Element {
     public _value: any;
     constructor(data: string) {
         if (data.toString() !== data) {
@@ -151,7 +151,7 @@ export class Base64Binary implements Element {
     }
 }
 
-export class Code implements Element {
+export class Code implements SchemaModels.Element {
     public _value: any;
     constructor(data: string) {
         if (data.toString() !== data) {
@@ -161,7 +161,7 @@ export class Code implements Element {
     }
 }
 
-export class PositiveInt implements Element {
+export class PositiveInt implements SchemaModels.Element {
     public _value: any;
     constructor(data: string) {
         if (data.toString() !== data) {
@@ -171,7 +171,7 @@ export class PositiveInt implements Element {
     }
 }
 
-export class UnsignedInt implements Element {
+export class UnsignedInt implements SchemaModels.Element {
     public _value: any;
     constructor(data: string) {
         if (data.toString() !== data) {

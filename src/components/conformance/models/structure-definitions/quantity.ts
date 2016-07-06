@@ -1,4 +1,4 @@
-import {StructureDefinition}        from    '../models/general/structure-definition';
+import {StructureDefinition}        from    '../structure-definition';
  /*
 export const quantity: StructureDefinition = {
     id: 'Quantity',

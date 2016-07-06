@@ -1,7 +1,7 @@
-import {Values}     from    '../values';
+import {SchemaModels}     from    '../../../schema';
 
 // create the set
-export const quantityComparator: Values = {};
+export const quantityComparator: SchemaModels.Values = {};
 
 quantityComparator['<'] = true;
 quantityComparator['<='] = true;
