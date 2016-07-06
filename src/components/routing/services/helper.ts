@@ -71,14 +71,8 @@ export class Helper {
             handlers.push(this.isAuthenticated);
         }
 
-        // logger for input
-        Array.prototype.push.apply(handlers, this.rm.loggers.input);
-
         // add the route in the end
         handlers.push(handler);
-
-        // logger for output
-        Array.prototype.push.apply(handlers, this.rm.loggers.output);
 
         // the response back handler
         handlers.push(this.sendResponse);
