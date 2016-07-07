@@ -3,14 +3,9 @@
  */
 export interface RouteOptions {
     /**
-     * Indicate if these middlwares should be run
+     * body should be parsed
      */
-    middleware: {
-        parsers: {
-            user?: boolean;
-            body?: boolean;
-        };
-    };
+    parseBody: boolean;
     /**
      * Indicated if req.user should be populated or resource access will be declined
      */

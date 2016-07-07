@@ -12,13 +12,13 @@ export class Helper {
      */
     public parseBody: HookableModels.Actor<Request, Response>;
     /**
+     * Do the route
+     */
+    public doRoute: HookableModels.All<Request, Response>;
+    /**
      * Reference to auth component
      */
-    private ac: AuthComponent;
-    /**
-     * Do tha actual route
-     */
-    public doRoute: HookableModels.Actor<Request, Response>;
+    protected ac: AuthComponent;
     /**
      * Create a new instance of routes middleware handler
      */
@@ -46,7 +46,7 @@ export class Helper {
      * @param  {string | undefined}   rsource        resource where handler is attached
      * @return {Array<RequestHandler>}          middleware along with the handler 
      */
-    public createStack(options: RouteOptions, handler: RequestHandler): Array<RequestHandler> {
+    protected createStack(options: RouteOptions, handler: RequestHandler): Array<RequestHandler> {
 
         // pepare handlers that the request parses through
         let handlers: Array<RequestHandler> = [];
@@ -56,13 +56,11 @@ export class Helper {
             handlers.push(this.parseResourceInfo.bind(this));
         }
 
-        // if projected then these handlers are needed
-        if (options.middleware.parsers.user === true || options.protected === true) {
-            Array.prototype.push.apply(handlers, this.ac.getUser);
-        }
+        // parse information about the user performing the request
+        Array.prototype.push.apply(handlers, this.ac.getUser);
 
         // if bodyparse is needed 
-        if (options.middleware.parsers.body === true) {
+        if (options.parseBody === true) {
             Array.prototype.push.apply(handlers, this.parseBody.actor);
         }
 
@@ -71,15 +69,20 @@ export class Helper {
             handlers.push(this.isAuthenticated);
         }
 
+        // do pre routes
+        Array.prototype.push.apply(handlers, this.doRoute.pre);
+
         // add the route in the end
         handlers.push(handler);
+
+        // do post routes
+        Array.prototype.push.apply(handlers, this.doRoute.post);
 
         // the response back handler
         handlers.push(this.sendResponse);
 
         // send back result
         return handlers;
-    
     }
     /**
      * Parese information about the resource to the request

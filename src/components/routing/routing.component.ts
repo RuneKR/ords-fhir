@@ -50,7 +50,7 @@ export class RoutingComponent extends Helper {
     public get(path: string, options: RouteOptions, handler: RequestHandler): void {
 
         // force body parse to false
-        options.middleware.parsers.body = false;
+        options.parseBody = false;
 
         // create a stack of handlers for that path
         let handlers: Array<any> = this.createStack(options, handler);
@@ -75,7 +75,7 @@ export class RoutingComponent extends Helper {
     public options(path: string, options: RouteOptions, handler: RequestHandler): void {
 
         // force body parse to false
-        options.middleware.parsers.body = false;
+        options.parseBody = false;
 
         // create a stack of handlers for that path
         let handlers: Array<any> = this.createStack(options, handler);
@@ -100,7 +100,7 @@ export class RoutingComponent extends Helper {
     public post(path: string, options: RouteOptions, handler: RequestHandler): void {
 
         // force body parse to true
-        options.middleware.parsers.body = true;
+        options.parseBody = true;
 
         // create a stack of handlers for that path
         let handlers: Array<any> = this.createStack(options, handler);
@@ -124,7 +124,7 @@ export class RoutingComponent extends Helper {
     public put(path: string, options: RouteOptions, handler: RequestHandler): void {
 
         // force body parse to true
-        options.middleware.parsers.body = true;
+        options.parseBody = true;
 
         // create a stack of handlers for that path
         let handlers: Array<any> = this.createStack(options, handler);
@@ -148,7 +148,7 @@ export class RoutingComponent extends Helper {
     public delete(path: string, options: RouteOptions, handler: RequestHandler): void {
 
         // force body parse to true
-        options.middleware.parsers.body = true;
+        options.parseBody = true;
 
         // create a stack of handlers for that path
         let handlers: Array<any> = this.createStack(options, handler);
@@ -172,7 +172,7 @@ export class RoutingComponent extends Helper {
     public patch(path: string, options: RouteOptions, handler: RequestHandler): void {
 
         // force body parse to true
-        options.middleware.parsers.body = true;
+        options.parseBody = true;
 
         // create a stack of handlers for that path
         let handlers: Array<any> = this.createStack(options, handler);
