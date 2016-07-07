@@ -1,8 +1,7 @@
 import {ArgumentableNext}   from './argumentable-next';
-import {Promise}            from 'es6-promise';
+import {ArgumentableCb}     from './argumentable-cb';
 
-export interface Argumentable<T, U> {
-    (args: T, res: U): Promise<U>;
+export interface Argumentable<T, U> extends ArgumentableCb {
     pre?: Array<ArgumentableNext<T, U>>;
     post?: Array<ArgumentableNext<T, U>>;
     actor?: Array<ArgumentableNext<T, U>>;
