@@ -1,6 +1,6 @@
 import * as express                             from 'express';
 import {ConformResource}                        from '../../conformance/conformance.models';
-import {AuthComponent}                          from '../../auth';
+import {AuthModels}                             from '../../auth';
 
 /**
  * Extended express request object to match ORDS syntax
@@ -13,7 +13,7 @@ export interface Request extends express.Request {
     /**
      * The user doing the interaction
      */
-    auth: AuthComponent;
+    auth: AuthModels.User;
     /**
      * Query can contain anything and these specific fields
      * TODO: Search parameters should all be added to general search param for conformance

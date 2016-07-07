@@ -5,7 +5,7 @@ export interface RouteOptions {
     /**
      * body should be parsed
      */
-    parseBody: boolean;
+    parseBody?: boolean;
     /**
      * Indicated if req.user should be populated or resource access will be declined
      */

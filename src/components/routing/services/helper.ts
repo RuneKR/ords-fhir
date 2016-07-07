@@ -1,6 +1,7 @@
 import {RouteOptions, RequestHandler, Request, Response, NextFunction}  from '../routing.models';
 import {HookableComponent, HookableModels}                              from '../../hookable';
 import {AuthComponent}                                                  from '../../auth';
+import {ConformanceComponent}                                           from '../../conformance';
 import * as parser                                                      from 'body-parser';
 
 /**
@@ -20,9 +21,17 @@ export class Helper {
      */
     protected ac: AuthComponent;
     /**
+     * Reference to conformance component
+     */
+    protected cc: ConformanceComponent;
+    /**
      * Create a new instance of routes middleware handler
      */
-    constructor(hc: HookableComponent, ac: AuthComponent) {
+    constructor(hc: HookableComponent, ac: AuthComponent, cc: ConformanceComponent) {
+
+        // bind references
+        this.ac = ac;
+        this.cc = cc;
 
         // prepare body parsing layer
         this.parseBody = hc.oneLayer();
@@ -94,7 +103,7 @@ export class Helper {
     private parseResourceInfo(req: Request, res: Response, next: NextFunction): void {
 
         // grap info about the current route
-        let model: any = this.rc.getResource(req.params.resource);
+        let model: any = this.cc.getResource(req.params.resource);
 
         // check that resource actually exists
         if (model === undefined) {
@@ -118,6 +127,7 @@ export class Helper {
      * @return {void} 
      */
     private isAuthenticated(req: Request, res: Response, next: NextFunction): void {
+        
 
         // grap info about the current route
         if (req.user === undefined) {

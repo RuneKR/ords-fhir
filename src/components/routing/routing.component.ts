@@ -6,11 +6,12 @@ import {RequestHandler}                     from './models/RequestHandler';
 import {DependencyInjectorComponent}        from '../dependency-injector';
 import {HookableComponent}                  from '../hookable';
 import {AuthComponent}                      from '../auth';
+import {ConformanceComponent}               from '../conformance';
 
 /**
  * Main ORDS application
  */
-@DependencyInjectorComponent.createWith(HookableComponent, AuthComponent)
+@DependencyInjectorComponent.createWith(HookableComponent, AuthComponent, ConformanceComponent)
 export class RoutingComponent extends Helper {
     /**
      * Reference to express application instance
@@ -20,10 +21,10 @@ export class RoutingComponent extends Helper {
      * Start the controller and add routes
      * @returns {void}
      */
-    constructor(hc: HookableComponent, ac: AuthComponent) {
+    constructor(hc: HookableComponent, ac: AuthComponent, cc: ConformanceComponent) {
 
         // do super call
-        super(hc, ac);
+        super(hc, ac, cc);
 
         // calculate whitelist array and set as empty is not specified
         if (process.env.WHITELIST === undefined) {
