@@ -5,4 +5,4 @@ export *  from './components/conformance';
 export *  from './components/schema';
 export *  from './components/auth';
 export *  from './components/operation-outcome';
-export {Application} from './application';
+export {Application} from './application.component';

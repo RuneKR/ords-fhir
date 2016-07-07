@@ -1,8 +1,8 @@
-import {RoutingComponent}                               from '../../components/routing';
-import {ConformanceComponent}                           from '../../components/conformance';
-import {DependencyInjectorComponent}                    from '../../components/dependency-injector';
-import {RouteOptions, Request, Response, NextFunction}  from '../../components/routing/routing.models';
-import {OperationOutcomeComponent}                      from '../../components/operation-outcome';
+import {RoutingComponent}                               from '../components/routing';
+import {ConformanceComponent}                           from '../components/conformance';
+import {DependencyInjectorComponent}                    from '../components/dependency-injector';
+import {RouteOptions, Request, Response, NextFunction}  from '../components/routing/routing.models';
+import {OperationOutcomeComponent}                      from '../components/operation-outcome';
 
 
 /**
@@ -27,12 +27,6 @@ export class System {
         // options for added routes
         let options: RouteOptions = {
             isResource: false,
-            middleware: {
-                parsers: {
-                    body: false,
-                    user: false
-                }
-            },
             protected: false
         };
 

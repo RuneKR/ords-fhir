@@ -1,8 +1,8 @@
-import {RoutingComponent}                  from '../../components/routing';
-import {DatabaseComponent}                 from '../../components/database';
-import {DependencyInjectorComponent}       from '../../components/dependency-injector';
-import {RouteOptions, Request, Response, NextFunction}  from '../../components/routing/routing.models';
-import {OperationOutcomeComponent}         from '../../components/operation-outcome';
+import {RoutingComponent}                  from '../components/routing';
+import {DatabaseComponent}                 from '../components/database';
+import {DependencyInjectorComponent}       from '../components/dependency-injector';
+import {RouteOptions, Request, Response, NextFunction}  from '../components/routing/routing.models';
+import {OperationOutcomeComponent}         from '../components/operation-outcome';
 
 /**
  * HL7 FHIR instance interactions
@@ -26,20 +26,12 @@ export class Instance {
         // options for added routes
         let options: RouteOptions = {
             isResource: true,
-            middleware: {
-                parsers: {
-                    user: true
-                }
-            },
             protected: true
         };
 
         // bind model to router
         this.rc.get(':id', options, this.read.bind(this));
         this.rc.delete(':id', options, this.delete.bind(this));
-
-        // do body parsing here
-        options.middleware.parsers.body = true;
         this.rc.put(':id', options, this.update.bind(this));
 
     }

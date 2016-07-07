@@ -1,6 +1,6 @@
 import * as express                     from 'express';
-import {RoutingComponent}               from '../components/routing';
-import {DependencyInjectorComponent}    from '../components/dependency-injector';
+import {RoutingComponent}               from './components/routing';
+import {DependencyInjectorComponent}    from './components/dependency-injector';
 import * as cluster                     from 'cluster';
 import * as os                          from 'os';
 
@@ -8,10 +8,6 @@ import * as os                          from 'os';
 import {Instance}      from './routes/Instance';
 import {Type}          from './routes/Type';
 import {System}        from './routes/System';
-
-// bootstrapped
-import './middleware/database';
-import './middleware/routing';
 
 /**
  * Specification on how to run the application
