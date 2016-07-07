@@ -10,39 +10,39 @@ export class DatabaseComponent {
     /**
      * Create something in the database
      */
-    public create: HookableModels.All<RoutingModels.Request, any>;
+    public create: HookableModels.ReturnableAll<RoutingModels.Request, any>;
     /**
      * Read something from the database
      */
-    public read: HookableModels.All<RoutingModels.Request, Array<any>>;
+    public read: HookableModels.ReturnableAll<RoutingModels.Request, Array<any>>;
     /**
      * Update something in the database
      */
-    public update: HookableModels.All<RoutingModels.Request, any>;
+    public update: HookableModels.ReturnableAll<RoutingModels.Request, any>;
     /**
      * Create something in the database
      */
-    public delete: HookableModels.All<RoutingModels.Request, any>;
+    public delete: HookableModels.ReturnableAll<RoutingModels.Request, any>;
     /**
      * Read history of something in the database
      */
-    public history: HookableModels.All<RoutingModels.Request, Array<any>>;
+    public history: HookableModels.ReturnableAll<RoutingModels.Request, Array<any>>;
     /**
      * Patch something in the database
      */
-    public patch: HookableModels.All<RoutingModels.Request, any>;
+    public patch: HookableModels.ReturnableAll<RoutingModels.Request, any>;
     /**
      * Create new instance of DBManager and bind middleware to it
      */
     constructor(hc: HookableComponent) {
 
         // init hookable
-        this.create     = hc.threeLayer();
-        this.read       = hc.threeLayer();
-        this.update     = hc.threeLayer();
-        this.delete     = hc.threeLayer();
-        this.history    = hc.threeLayer();
-        this.patch      = hc.threeLayer();
+        this.create     = hc.returnableAll();
+        this.read       = hc.returnableAll();
+        this.update     = hc.returnableAll();
+        this.delete     = hc.returnableAll();
+        this.history    = hc.returnableAll();
+        this.patch      = hc.returnableAll();
 
     }
 }

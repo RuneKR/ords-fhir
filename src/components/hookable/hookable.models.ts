@@ -1,3 +1,3 @@
-export {All}                                               from './models/all';
-export {Actor}                                             from './models/actor';
-export {Next}                                              from './models/next';
+export {Returnable}                from './models/returnable';
+export {ReturnableAll}             from './models/returnable-all';
+export {ReturnableNext}            from './models/returnable-next';

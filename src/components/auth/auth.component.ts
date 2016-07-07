@@ -11,29 +11,29 @@ export class AuthComponent {
     /**
      * Get the user performing a request
      */
-    public getUser: HookableModels.All<Request, User>;
+    public getUser: HookableModels.ReturnableAll<Request, User>;
     /**
      * Create a new user based upon the information in the request
      */
-    public createUser: HookableModels.All<Request, User>;
+    public createUser: HookableModels.ReturnableAll<Request, User>;
     /**
      * Update information about the user
      */
-    public updateUser: HookableModels.All<Request, User>;
+    public updateUser: HookableModels.ReturnableAll<Request, User>;
     /**
      * Delete the user performing the request
      */
-    public deleteUser: HookableModels.All<Request, User>;
+    public deleteUser: HookableModels.ReturnableAll<Request, User>;
     /**
      * Create new instance of DBManager and bind middleware to it
      */
     constructor(hc: HookableComponent) {
 
         // init hookable
-        this.getUser     = hc.threeLayer();
-        this.createUser  = hc.threeLayer();
-        this.updateUser  = hc.threeLayer();
-        this.deleteUser  = hc.threeLayer();
+        this.getUser     = hc.returnableAll();
+        this.createUser  = hc.returnableAll();
+        this.updateUser  = hc.returnableAll();
+        this.deleteUser  = hc.returnableAll();
 
     }
 }
