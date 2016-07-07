@@ -11,11 +11,11 @@ export class Helper {
     /**
      * Parse the body content of a request
      */
-    public parseBody: HookableModels.Actor<Request, Response>;
+    public parseBody: HookableModels.Argumentable<Request, Response>;
     /**
      * Do the route
      */
-    public doRoute: HookableModels.All<Request, Response>;
+    public doRoute: HookableModels.ArgumentableAll<Request, Response>;
     /**
      * Reference to auth component
      */
@@ -33,8 +33,9 @@ export class Helper {
         this.ac = ac;
         this.cc = cc;
 
-        // prepare body parsing layer
-        this.parseBody = hc.oneLayer();
+        // prepare hookable layers
+        this.parseBody = hc.argumentable();
+        this.doRoute = hc.argumentableAll();
 
         // parse body application/x-www-form-urlencoded
         this.parseBody.actor.push(parser.urlencoded({
