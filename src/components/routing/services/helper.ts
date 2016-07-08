@@ -77,17 +77,17 @@ export class Helper {
             handlers.push(this.parseResourceInfo.bind(this));
         }
 
-        // if bodyparse is needed 
-        if (options.parseBody === true) {
-            Array.prototype.push.apply(handlers, this.parseBody.actor);
-        }
-
         // parse information about the user performing the request
         Array.prototype.push.apply(handlers, this.getAuth); 
 
         // if protected then validate requestion for authenticated
         if (options.protected === true) {
             handlers.push(this.isAuthenticated);
+        }
+
+        // if bodyparse is needed
+        if (options.parseBody === true) {
+            Array.prototype.push.apply(handlers, this.parseBody);
         }
 
         // the stack that is to be run
