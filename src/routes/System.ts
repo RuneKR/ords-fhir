@@ -81,7 +81,7 @@ export class System {
             }
 
             // send it back
-            res.result(structuredef);
+            res.send(structuredef);
             next();
         }
     }
@@ -111,7 +111,7 @@ export class System {
             }
         }
 
-        res.result = this.rsc.conformance;
+        res.send(this.rsc.conformance);
 
         next();
     }

@@ -51,7 +51,7 @@ export class Type {
         this.dc.read(req).then((result: Array<any>) => {
 
             // bind found result
-            res.result = result;
+            res.send(result);
 
             // send resulting doc back
             next();
@@ -88,7 +88,7 @@ export class Type {
         this.dc.read(req).then((result: Array<any>) => {
 
             // bind found result
-            res.result = result;
+            res.send(result);
 
             // send resulting doc back
             next();
@@ -112,19 +112,19 @@ export class Type {
         this.dc.create(req).then((result: any) => {
 
             // bind found result
-            res.result = result;
+            res.send(result);
 
             // if meta data is specified then use that in return
-            if (res.result.meta) {
+            if (result.meta) {
 
                 // set response headers
-                if (res.result.meta.versionId) {
+                if (result.meta.versionId) {
                     res.set({
-                        'ETag': 'W/"' + res.result.meta.versionId + '"'
+                        'ETag': 'W/"' + result.meta.versionId + '"'
                     });
 
                     // an insert has occured
-                    if (res.result.meta.versionId === 0) {
+                    if (result.meta.versionId === 0) {
                         res.set({
                             'Location': '/' + req.resource.name + '/' + req.params.id
                         });
@@ -132,9 +132,9 @@ export class Type {
                     }
                 }
 
-                if (res.result.meta.lastUpdated) {
+                if (result.meta.lastUpdated) {
                     res.set({
-                        'Last-Modified': res.result.meta.lastUpdated
+                        'Last-Modified': result.meta.lastUpdated
                     });
                 }
             }

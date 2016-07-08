@@ -50,26 +50,25 @@ export class Instance {
         // do database stuff
         this.dc.read(req).then((result: Array<any>) => {
 
-            // bind found result to res object
-            res.result = result;
-
             // if meta data is specified then use that in return
-            if (res.result[0].meta) {
+            if (result[0].meta) {
 
                 // set response headers of version
-                if (res.result[0].meta.versionId) {
+                if (result[0].meta.versionId) {
                     res.set({
-                        'ETag': 'W/"' + res.result[0].meta.versionId + '"'
+                        'ETag': 'W/"' + result[0].meta.versionId + '"'
                     });
                 }
 
                 // set response headers of last updated
-                if (res.result[0].meta.lastUpdated) {
+                if (result[0].meta.lastUpdated) {
                     res.set({
-                        'Last-Modified': res.result[0].meta.lastUpdated
+                        'Last-Modified': result[0].meta.lastUpdated
                     });
                 }
             }
+
+            res.send(result);
 
             // send resulting doc back
             next();
@@ -102,7 +101,7 @@ export class Instance {
 
             let code: any = err.httpcode;
             res.status(code);
-            res.result = err;
+            res.send(err);
 
             return next();
         }
@@ -111,21 +110,21 @@ export class Instance {
         this.dc.update(req).then((result: any) => {
 
             // bind found result to res object
-            res.result = result;
+            result = result;
 
             // if meta data is specified then use that in return
-            if (res.result.meta) {
+            if (result.meta) {
 
                 // set response headers
-                if (res.result.meta.versionId) {
+                if (result.meta.versionId) {
 
                     // set response headers of last updated
                     res.set({
-                        'ETag': 'W/"' + res.result.meta.versionId + '"'
+                        'ETag': 'W/"' + result.meta.versionId + '"'
                     });
 
                     // an insert has occurred report if so
-                    if (res.result.meta.versionId === 0) {
+                    if (result.meta.versionId === 0) {
                         res.set({
                             'Location': '/' + req.params.resource + '/' + req.params.id
                         });
@@ -134,12 +133,14 @@ export class Instance {
                 }
 
                 // set header for last modified
-                if (res.result.meta.lastUpdated) {
+                if (result.meta.lastUpdated) {
                     res.set({
-                        'Last-Modified': res.result.meta.lastUpdated
+                        'Last-Modified': result.meta.lastUpdated
                     });
                 }
             }
+
+            res.send(result);
 
             // go next
             next();
