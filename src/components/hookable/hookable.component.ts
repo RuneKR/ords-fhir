@@ -8,6 +8,12 @@ import {ArgumentableCb}            from './models/argumentable-cb';
 
 import {Promise}                   from 'es6-promise';
 
+/**
+ * Set of generic methods that can create hookable methods based upon 
+ * actors: Functions that atually perform the method
+ * pre: Functions to filter the input to the actors
+ * post: Functions that change of the actors
+ */
 export class HookableComponent {
     /**
      * Actors can be hooked into here a promise is returned

@@ -1,4 +1,7 @@
 import {Enforce}                               from '../models/enforce';
+import {Element}                               from '../models/element';
+
+//throw error so its understandable and catch it somewere
 
 /**
  * Interface describing a Data
@@ -152,11 +155,11 @@ export class Helper {
     public getValueFromType(type: any, value: any, validate: Enforce): any {
 
         // test if value type is okay and save it
-        let temp: any = new type(value, validate);
+        let temp: Element = new type(value, validate);
 
-        // some values have raw element use that
-        if (typeof temp._OneValue !== 'undefined') {
-            temp = temp._OneValue;
+        // some datatypes are pure elements check for that
+        if (typeof temp._value !== 'undefined') {
+            temp = temp._value;
         }
 
         return temp;
