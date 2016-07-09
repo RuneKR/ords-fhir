@@ -22,6 +22,10 @@ export class ConformanceComponent {
      */
     private resources: IResources = {};
     /**
+     * Rest operations avalable
+     */
+    public restOperations: any; //Put correct reference
+    /**
      * Populate standard conformance fields
      */
     constructor(conf: IConformance) {
@@ -67,6 +71,18 @@ export class ConformanceComponent {
     public getValueset(valueset: string, structdef?: boolean): any {
 
         //return content
+       
+    }
+    /**
+     * Calculate the content of the conformance and send it back
+     * @param   {string}       valueset                 name of the valueset
+     * @param   {boolean}      structdef                flag if structdef should be returned of that resource
+     * @returns {Valueset}     all information about the valueset
+     */
+    public getConformance(): IConformance {
+
+        //return content
+        return this.conformance;
        
     }
 }
