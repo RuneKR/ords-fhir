@@ -1,8 +1,6 @@
 import {Enforce}                               from '../models/enforce';
 import {Element}                               from '../models/element';
 
-//throw error so its understandable and catch it somewere
-
 /**
  * Interface describing a Data
  */
@@ -46,7 +44,7 @@ export class Helper {
                     } else if (target[key].required === true) {
 
                         // notify about error
-                        throw new Error('Key ' + key + ': is required in the Data');
+                        throw new Error(key + ': is required and not present in provided data');
 
                         // delete prop if not being set
                     } else {
@@ -83,7 +81,7 @@ export class Helper {
         Object.keys(data).forEach((key: string) => {
 
             // no fields should be present so write that back
-            throw new Error('Key ' + key + ': is not in the Data');
+            throw new Error('Your data ' + key + ': is not allowed');
         });
     }
     /**
@@ -109,7 +107,7 @@ export class Helper {
 
                 // is provided data all so an array
                 if (!Array.isArray(data[key])) {
-                    throw new Error('not an array');
+                    throw new Error('Your data ' + key + ' should be an array');
 
                     // provided data IS an array
                 } else {
@@ -134,7 +132,7 @@ export class Helper {
                 && target[key].binding.valueSet.isInValueSet(value, target[key].binding.strength) === false) {
 
                 // notify that valueset is not okay
-                throw new Error('Valuesets were not okay for ' + value + ' in ' + key);
+                throw new Error('Provided value for ' + key + ' is not supported');
 
             }
 

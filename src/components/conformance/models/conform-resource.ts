@@ -1,5 +1,6 @@
 import {SearchParameter}        from './structure-definitions/search-parameter';
 import {StructureDefinition}    from './structure-definition';
+import {SchemaModels}           from '../../schema';
 
 export interface RuleEntry {
     datakey: string;
@@ -12,6 +13,7 @@ export interface IConformResource {
     structure: StructureDefinition;
     queryables: Array<SearchParameter>;
     rules: Array<RuleEntry>;
+    schema: SchemaModels.Schema;
 }
 
 export class ConformResource {
@@ -22,7 +24,7 @@ export class ConformResource {
     /**
      * Schema for this resource
      */
-    public schema: {};
+    public schema: SchemaModels.Schema;
     /**
      * Rules for the usages of this resource
      */
@@ -32,13 +34,19 @@ export class ConformResource {
      */
     public name: string;
     /**
+     * Name for the resource
+     */
+    public structure: StructureDefinition;
+    /**
      * Create a new resource conform to ORDS
      */
     constructor(data: IConformResource) {
 
         this.queryables = data.queryables;
-        this.rules = data.rules;
+        this.rules      = data.rules;
+        this.schema     = data.schema;
 
-        this.name = data.structure.id;
+        // set name to this
+        this.name       = data.structure.id;
     }
 }

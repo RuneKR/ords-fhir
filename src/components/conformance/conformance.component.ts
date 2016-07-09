@@ -10,15 +10,15 @@ export interface IResources {
 }
 
 /**
- * Manage conformance
+ * Manage conformance of implementation
  */
 export class ConformanceComponent {
     /**
-     * All resources avalable in the implementation
+     * The raw content of the conformance
      */
     public conformance: IConformance;
     /**
-     * All resources avalable in the implementation
+     * Avalable resources
      */
     private resources: IResources = {};
     /**
@@ -64,7 +64,7 @@ export class ConformanceComponent {
      * @param   {boolean}      structdef                flag if structdef should be returned of that resource
      * @returns {Valueset}     all information about the valueset
      */
-    public getValuesetURL(valueset: string, structdef?: boolean): any {
+    public getValueset(valueset: string, structdef?: boolean): any {
 
         //return content
        
