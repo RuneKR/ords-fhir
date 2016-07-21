@@ -6,3 +6,8 @@ export *  from './components/schema';
 export *  from './components/auth';
 export *  from './components/operation-outcome';
 export {Application} from './application.component';
+
+// bootstrapped operations
+import './operations/Instance';
+import './operations/Type';
+import './operations/System';

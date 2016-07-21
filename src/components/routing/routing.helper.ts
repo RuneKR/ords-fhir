@@ -1,46 +1,38 @@
-import {RouteOptions, RequestHandler, Request, Response, NextFunction}  from '../routing.models';
-import {HookableComponent, HookableModels}                              from '../../hookable';
-import {AuthComponent}                                                  from '../../auth';
-import {ConformanceComponent}                                           from '../../conformance';
+import {RouteOptions, RequestHandler, Request, Response, NextFunction}  from './routing.models';
+import {HookableComponent, HookableModels}                              from '../hookable';
+import {AuthComponent}                                                  from '../auth';
+import {ConformanceComponent}                                           from '../conformance';
 import * as parser                                                      from 'body-parser';
+import * as cors                                                        from 'cors';
 
 /**
  * ORDS middleware for routes
  */
-export class Helper {
+export class RoutingHelper {
     /**
      * Parse the body content of a request
      */
-    public parseBody: HookableModels.Argumentable<Request, Response>;
+    public parseBody: HookableModels.Argumentable<Request, Response> = HookableComponent.argumentable();
     /**
      * Called by the router to do the actuall route
      */
-    public doRoute: HookableModels.ArgumentableAll<Request, Response>;
+    public doRoute: HookableModels.ArgumentableAll<Request, Response> = HookableComponent.argumentableAll();
     /**
      * Reference to auth component
      */
-    protected ac: AuthComponent;
+    private ac: AuthComponent;
     /**
      * Reference to conformance component
      */
-    protected cc: ConformanceComponent;
-    /**
-     * Reference to hookable component
-     */
-    protected hc: HookableComponent;
+    private cc: ConformanceComponent;
     /**
      * Create a new instance of routes middleware handler
      */
-    constructor(hc: HookableComponent, ac: AuthComponent, cc: ConformanceComponent) {
+    constructor(ac: AuthComponent, cc: ConformanceComponent) {
 
         // bind references
         this.ac = ac;
         this.cc = cc;
-        this.hc = hc;
-
-        // prepare hookable layers
-        this.parseBody = hc.argumentable();
-        this.doRoute = hc.argumentableAll();
 
         // parse body application/x-www-form-urlencoded
         this.parseBody.actor.push(parser.urlencoded({
@@ -53,6 +45,24 @@ export class Helper {
             limit: process.env.LIMIT_UPLOAD_MB ? process.env.LIMIT_UPLOAD_MB + 'mb' : 0.1 + 'mb'
         }));
 
+
+    }
+    protected addCors(router: any): void {
+
+        // calculate whitelist array and set as empty is not specified
+        if (process.env.WHITELIST === undefined) {
+            process.env.WHITELIST = '';
+        }
+        let whitelist: Array<string> = process.env.WHITELIST;
+
+        // setup the usage of the whitelist
+        router.use(cors({
+            allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin', 'Authentication'],
+            credentials: true,
+            origin: function (origin: string, callback: Function): void {
+                callback(undefined, whitelist.indexOf(origin) !== -1);
+            }
+        }));
     }
     /**
      * Adds middlware based to a handler for all resource 
@@ -64,21 +74,13 @@ export class Helper {
     protected createStack(options: RouteOptions, handler: RequestHandler): Array<RequestHandler> {
 
         // prepare a stack
-        let stack: HookableModels.ArgumentableAll<Request, Response> = this.hc.argumentableAll();
+        let stack: HookableModels.ArgumentableAll<Request, Response> = HookableComponent.argumentableAll();
         stack.pre = this.doRoute.pre;
         stack.post = this.doRoute.post;
         stack.actor.push(handler);
 
         // pepare handlers that the request parses through
         let handlers: Array<RequestHandler> = [];
-
-        // if route is a resource route validate that the resource exist on requests
-        if (options.isResource === true) {
-            handlers.push(this.parseResourceInfo.bind(this));
-        }
-
-        // parse information about the user performing the request
-        Array.prototype.push.apply(handlers, this.getAuth); 
 
         // if protected then validate requestion for authenticated
         if (options.protected === true) {
@@ -97,13 +99,13 @@ export class Helper {
         return handlers;
     }
     /**
-     * Parese information about the resource to the request
+     * Get information about the requested resource from the request params
      * @param  {Request}      req        request send to the server
      * @param  {Response}     res        respond to be send by the server
      * @param  {NextFunction} res        next function to be run of middlewares
      * @return {void} 
      */
-    private parseResourceInfo(req: Request, res: Response, next: NextFunction): void {
+    protected getResourceFromParams(req: Request, res: Response, next: NextFunction): void {
 
         // grap info about the current route
         let model: any = this.cc.getResource(req.params.resource);
@@ -123,13 +125,13 @@ export class Helper {
         next();
     }
     /**
-     * Validate that a user is authenticated
+     * Get information about the user performing a request
      * @param  {Request}      req        request send to the server
      * @param  {Response}     res        respond to be send by the server
      * @param  {NextFunction} res        next function to be run of middlewares
      * @return {void} 
      */
-    private getAuth(req: Request, res: Response, next: NextFunction): void {
+    protected getUserFromRequest(req: Request, res: Response, next: NextFunction): void {
 
         // get information about the user
         this.ac.getUser(req).then((user: any) => {
@@ -141,10 +143,9 @@ export class Helper {
             next();
         });
 
-        //catch and send back error
     }
     /**
-     * Validate that a user is authenticated
+     * Validate that a user is authenticated or block the request
      * @param  {Request}      req        request send to the server
      * @param  {Response}     res        respond to be send by the server
      * @param  {NextFunction} res        next function to be run of middlewares
@@ -152,14 +153,15 @@ export class Helper {
      */
     private isAuthenticated(req: Request, res: Response, next: NextFunction): void {
 
-
         // grap info about the current route
         if (req.user === undefined) {
 
-            // throw some error
-        }
+            // throw some error in the next
+            next();
+        } else {
 
-        // go next
-        next();
+            // no errors so go next
+            next();
+        }
     }
 }

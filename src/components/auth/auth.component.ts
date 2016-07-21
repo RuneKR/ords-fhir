@@ -6,34 +6,22 @@ import {User}                               from './models/user';
 /**
  * Connect to a database and perform operation in that
  */
-@DependencyInjectorComponent.createWith(HookableComponent)
+@DependencyInjectorComponent.createWith()
 export class AuthComponent {
     /**
      * Get the user performing a request
      */
-    public getUser: HookableModels.Returnable<Request, User>;
+    public getUser: HookableModels.Returnable<Request, User> = HookableComponent.returnable();
     /**
      * Create a new user based upon the information in the request
      */
-    public createUser: HookableModels.Returnable<Request, User>;
+    public createUser: HookableModels.Returnable<Request, User> = HookableComponent.returnable();
     /**
      * Update information about the user
      */
-    public updateUser: HookableModels.Returnable<Request, User>;
+    public updateUser: HookableModels.Returnable<Request, User> = HookableComponent.returnable();
     /**
      * Delete the user performing the request
      */
-    public deleteUser: HookableModels.Returnable<Request, User>;
-    /**
-     * Create new instance of DBManager and bind middleware to it
-     */
-    constructor(hc: HookableComponent) {
-
-        // init hookable
-        this.getUser     = hc.returnable();
-        this.createUser  = hc.returnable();
-        this.updateUser  = hc.returnable();
-        this.deleteUser  = hc.returnable();
-
-    }
+    public deleteUser: HookableModels.Returnable<Request, User> = HookableComponent.returnable();
 }

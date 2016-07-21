@@ -1,45 +1,39 @@
 import {RouteOptions}                       from './models/RouteOptions';
-import {Helper}                             from './services/helper';
-import * as cors                            from 'cors';
 import {Router}                             from './models/Router';
 import {RequestHandler}                     from './models/RequestHandler';
 import {DependencyInjectorComponent}        from '../dependency-injector';
-import {HookableComponent}                  from '../hookable';
 import {AuthComponent}                      from '../auth';
 import {ConformanceComponent}               from '../conformance';
+import {RoutingHelper}                      from './routing.helper';
 
 /**
- * Main ORDS application
+ * Manage routes that are added
  */
-@DependencyInjectorComponent.createWith(HookableComponent, AuthComponent, ConformanceComponent)
-export class RoutingComponent extends Helper {
+@DependencyInjectorComponent.createWith(AuthComponent, ConformanceComponent)
+export class RoutingComponent extends RoutingHelper {
     /**
      * Reference to express application instance
      */
-    public router: Router = Router();
+    public resourceRouter: Router = Router();
+    /**
+     * Reference to express application instance
+     */
+    public systemRouter: Router = Router();
     /**
      * Start the controller and add routes
      * @returns {void}
      */
-    constructor(hc: HookableComponent, ac: AuthComponent, cc: ConformanceComponent) {
+    constructor(ac: AuthComponent, cc: ConformanceComponent) {
 
-        // do super call
-        super(hc, ac, cc);
+        super(ac, cc);
 
-        // calculate whitelist array and set as empty is not specified
-        if (process.env.WHITELIST === undefined) {
-            process.env.WHITELIST = '';
-        }
-        let whitelist: Array<string> = process.env.WHITELIST;
+        // add functionalities to be run on every request
+        this.resourceRouter.use(this.addCors);
+        this.resourceRouter.use(this.getResourceFromParams);
+        this.resourceRouter.use(this.getUserFromRequest);
 
-        // set the cors
-        this.router.use(cors({
-            allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin', 'Authentication'],
-            credentials: true,
-            origin: function (origin: string, callback: Function): void {
-                callback(undefined, whitelist.indexOf(origin) !== -1);
-            }
-        }));
+        this.systemRouter.use(this.addCors);
+        this.systemRouter.use(this.getUserFromRequest);
     }
     /**
      * Adding an handler for a GET HTTP method for all resources
@@ -59,12 +53,11 @@ export class RoutingComponent extends Helper {
         // resource or normal path
         if (options.isResource) {
             handlers.unshift('/:resource/' + path);
+            this.resourceRouter.get.apply(this.resourceRouter, handlers);
         } else {
             handlers.unshift(path);
+            this.systemRouter.get.apply(this.systemRouter, handlers);
         }
-
-        // apply to express router
-        this.router.get.apply(this.router, handlers);
     }
     /**
      * Adding an handler for a GET OPTIONS method for all resources
@@ -81,15 +74,14 @@ export class RoutingComponent extends Helper {
         // create a stack of handlers for that path
         let handlers: Array<any> = this.createStack(options, handler);
 
-        // resource or normal path
+        /// resource or normal path
         if (options.isResource) {
             handlers.unshift('/:resource/' + path);
+            this.resourceRouter.options.apply(this.resourceRouter, handlers);
         } else {
             handlers.unshift(path);
+            this.systemRouter.options.apply(this.systemRouter, handlers);
         }
-
-        // apply to express router
-        this.router.options.apply(this.router, handlers);
     }
     /**
      * Adding an handler for a POST HTTP method for all resources
@@ -112,8 +104,14 @@ export class RoutingComponent extends Helper {
             handlers.unshift(path);
         }
 
-        // apply to express router
-        this.router.post.apply(this.router, handlers);
+        // resource or normal path
+        if (options.isResource) {
+            handlers.unshift('/:resource/' + path);
+            this.resourceRouter.post.apply(this.resourceRouter, handlers);
+        } else {
+            handlers.unshift(path);
+            this.systemRouter.post.apply(this.systemRouter, handlers);
+        }
     }
     /**
      * Adding an handler for a PUT HTTP method for all resources
@@ -129,15 +127,15 @@ export class RoutingComponent extends Helper {
 
         // create a stack of handlers for that path
         let handlers: Array<any> = this.createStack(options, handler);
+        
         // resource or normal path
         if (options.isResource) {
             handlers.unshift('/:resource/' + path);
+            this.resourceRouter.put.apply(this.resourceRouter, handlers);
         } else {
             handlers.unshift(path);
+            this.systemRouter.put.apply(this.systemRouter, handlers);
         }
-
-        // apply to express router
-        this.router.put.apply(this.router, handlers);
     }
     /**
      * Adding an handler for a DELETE HTTP method for all resources
@@ -153,15 +151,15 @@ export class RoutingComponent extends Helper {
 
         // create a stack of handlers for that path
         let handlers: Array<any> = this.createStack(options, handler);
+        
         // resource or normal path
         if (options.isResource) {
             handlers.unshift('/:resource/' + path);
+            this.resourceRouter.delete.apply(this.resourceRouter, handlers);
         } else {
             handlers.unshift(path);
+            this.systemRouter.delete.apply(this.systemRouter, handlers);
         }
-
-        // apply to express router
-        this.router.delete.apply(this.router, handlers);
     }
     /**
      * Adding an handler for a PATCH HTTP method for all resources
@@ -177,14 +175,14 @@ export class RoutingComponent extends Helper {
 
         // create a stack of handlers for that path
         let handlers: Array<any> = this.createStack(options, handler);
+        
         // resource or normal path
         if (options.isResource) {
             handlers.unshift('/:resource/' + path);
+            this.resourceRouter.patch.apply(this.resourceRouter, handlers);
         } else {
             handlers.unshift(path);
+            this.systemRouter.patch.apply(this.systemRouter, handlers);
         }
-
-        // apply to express router
-        this.router.patch.apply(this.router, handlers);
     }
 }

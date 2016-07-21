@@ -1,27 +1,7 @@
-import * as express                     from 'express';
-import {RoutingComponent}               from './components/routing';
-import {DependencyInjectorComponent}    from './components/dependency-injector';
 import * as cluster                     from 'cluster';
 import * as os                          from 'os';
-
-// routes to be bootstrapped
-import {Instance}      from './routes/Instance';
-import {Type}          from './routes/Type';
-import {System}        from './routes/System';
-
-/**
- * Specification on how to run the application
- */
-export interface Options {
-    /**
-     * Port to run the application
-     */
-    port: number;
-    /**
-     * Prefix to be added to all routes
-     */
-    prefix: string;
-}
+import {Options}                        from './application.models';
+import {ApplicationHelper}              from './application.helper';
 
 /*
 * Map with number as key and value as a cluster.Worker
@@ -44,7 +24,7 @@ export class Application {
      * Childworker attached to the process
      * @type {ChildWorker}
      */
-    public slave: Slave;
+    public slave: ApplicationHelper;
     /**
      * Generate a new Worker on each cpu and attach elements from the config variables to them as enviroment variables
      * @param {StringMapAny}    config      configuration for ords-fhir
@@ -92,7 +72,7 @@ export class Application {
         } else {
 
             // start child
-            this.slave = new Slave(config);
+            this.slave = new ApplicationHelper(config);
         }
     }
     /**
@@ -113,40 +93,4 @@ export class Application {
     }
 }
 
-/**
- * Worker for HL7 FHIR ORDS application
- */
-export class Slave {
-    /**
-     * Reference to routing component singleton
-     */
-    @DependencyInjectorComponent.inject(RoutingComponent)
-    private rc: RoutingComponent;
-    /**
-     * Instanciated routes
-     */
-    private routes: Array<any> = [];
-    /**
-     * Router
-     */
-    private router: express.Express;
-    /**
-     * Start the router to listen on incomming traffic
-     * @param   {Options}     options     the options specificing how to listen
-     * @returns {void}
-     */
-    constructor(options: Options) {
 
-        // set included routes
-        this.routes.push(new System(), new Instance(), new Type());
-
-        // init instance of router
-        this.router = express();
-        
-        // bind app from route manager
-        this.router.use(options.prefix, this.rc.router);
-        
-        // start to listen for input
-        this.router.listen(options.port);
-    }
-}

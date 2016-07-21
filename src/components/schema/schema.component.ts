@@ -1,5 +1,5 @@
-import {Helper}     from    './services/helper';
-import {Enforce}    from    './models/enforce';
+import {SchemaHelper}   from    './schema.helper';
+import {Enforce}        from    './models/enforce';
 
 /**
  * Decorator for auto validation of input upon new construction of a resource class
@@ -30,9 +30,9 @@ export function SchemaComponent(target: any): any {
     f.prototype = original.prototype;
 
     // add functions from the validator
-    f.prototype.popAndValidate = Helper.prototype.popAndValidate;
-    f.prototype.getValueFromType = Helper.prototype.getValueFromType;
-    f.prototype.setValue = Helper.prototype.setValue;
+    f.prototype.popAndValidate = SchemaHelper.prototype.popAndValidate;
+    f.prototype.getValueFromType = SchemaHelper.prototype.getValueFromType;
+    f.prototype.setValue = SchemaHelper.prototype.setValue;
 
     // return new constructor (will override original)
     return f;

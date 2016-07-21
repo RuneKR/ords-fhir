@@ -18,7 +18,7 @@ export class HookableComponent {
     /**
      * Actors can be hooked into here a promise is returned
      */
-    public returnable<T, U>(): Returnable<T, U> {
+    public static returnable<T, U>(): Returnable<T, U> {
 
         let f: Returnable<T, U> = function (args: T): Promise<U> {
 
@@ -63,7 +63,7 @@ export class HookableComponent {
     /**
      * Generate a three layer middleware
      */
-    public returnableAll<T, U>(): ReturnableAll<T, U> {
+    public static returnableAll<T, U>(): ReturnableAll<T, U> {
 
         let f: ReturnableAll<T, U> = function (args: T): Promise<U> {
 
@@ -114,7 +114,7 @@ export class HookableComponent {
     /**
      * Generate a three layer middleware
      */
-    public argumentable<T, U>(): Argumentable<T, U> {
+    public static argumentable<T, U>(): Argumentable<T, U> {
 
         let f: Argumentable<T, U> = function (req: T, res: U, resolve: ArgumentableCb): void {
 
@@ -163,7 +163,7 @@ export class HookableComponent {
     /**
      * Generate a one layer middleware
      */
-    public argumentableAll<T, U>(): ArgumentableAll<T, U> {
+    public static argumentableAll<T, U>(): ArgumentableAll<T, U> {
 
         let f: ArgumentableAll<T, U> = function (req: T, res: U, resolve: ArgumentableCb): void {
 

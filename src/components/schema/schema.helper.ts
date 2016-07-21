@@ -1,5 +1,5 @@
-import {Enforce}                               from '../models/enforce';
-import {Element}                               from '../models/element';
+import {Enforce}                               from './models/enforce';
+import {Element}                               from './models/element';
 
 /**
  * Interface describing a Data
@@ -9,9 +9,9 @@ export interface Data {
 }
 
 /**
- * Methods for validation of an resource
+ * Methods for validation of the content of an object
  */
-export class Helper {
+export class SchemaHelper {
     /**
      * Populate the instance of a Data with some data and validate the data
      * @param {Data}   data        data to be used in population and to be validated
