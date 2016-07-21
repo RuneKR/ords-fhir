@@ -1,6 +1,6 @@
 import {RoutingModels}                      from '../routing';
-import {HookableComponent, HookableModels}  from '../hookable';
-import {DependencyInjectorComponent}        from '../dependency-injector';
+import {HookableComponent, HookableModels}  from '../../lib/hookable';
+import {DependencyInjectorComponent}        from '../../lib/dependency-injector';
 
 /**
  * Connect to a database and perform operation in that

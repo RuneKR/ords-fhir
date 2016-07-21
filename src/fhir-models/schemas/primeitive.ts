@@ -1,4 +1,4 @@
-import {SchemaModels}      from    '../../../schema';
+import {SchemaModels}      from    '../../lib/schema';
 
 // include all the these simple hl7 fhir
 

@@ -1,5 +1,5 @@
-import {IMeta}       from    './datatypes/meta'; 
-import {INarrative}  from    './datatypes/narrative'; 
+import {IMeta}       from    './meta'; 
+import {INarrative}  from    './narrative'; 
 
 export interface DomainResource {
     id?: string;

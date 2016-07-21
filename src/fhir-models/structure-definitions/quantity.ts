@@ -1,4 +1,4 @@
-import {StructureDefinition}        from    '../structure-definition';
+import {IStructureDefinition}        from    '../schemas/structure-definition';
  /*
 export const quantity: StructureDefinition = {
     id: 'Quantity',

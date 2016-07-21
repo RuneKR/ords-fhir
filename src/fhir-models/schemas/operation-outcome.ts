@@ -1,6 +1,8 @@
-import {OperationOutcome}       from    './models/operation-outcome';
+export interface IOperationOutcome {
 
-export class OperationOutcomeComponent {
+}
+
+export class OperationOutcome {
     public httpcode: number;
     public issue: {
         code: string,

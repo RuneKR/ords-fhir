@@ -16,7 +16,7 @@ export interface IConformResource {
     schema: SchemaModels.Schema;
 }
 
-export class Resource {
+export class ConformResource {
     /**
      * Parameters that can be queried / pre indexed variables
      */

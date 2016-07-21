@@ -1,6 +1,6 @@
 import {Request}                            from 'express';
-import {HookableComponent, HookableModels}  from '../hookable';
-import {DependencyInjectorComponent}        from '../dependency-injector';
+import {HookableComponent, HookableModels}  from '../../lib/hookable';
+import {DependencyInjectorComponent}        from '../../lib/dependency-injector';
 import {User}                               from './models/user';
 
 /**

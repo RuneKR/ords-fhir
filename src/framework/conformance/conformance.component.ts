@@ -1,6 +1,6 @@
-import {ConformResource}        from './models/conform-resource';
-import {IConformance}           from './models/structure-definitions/conformance';
-import {StructureDefinition}    from './models/structure-definition';
+import {ConformResource}         from './models/conform-resource';
+import {IConformance}            from '../../fhir-models/schemas/conformance';
+import {IStructureDefinition}    from '../../fhir-models/schemas/structure-definition';
 
 /**
  * String index of resources
@@ -57,7 +57,7 @@ export class ConformanceComponent {
      * @param   {boolean}      structdef            flag if structdef should be returned of that resource
      * @returns {Resource | Structuredefenition}    all information about the resource
      */
-    public getResource(resource: string, structdef?: boolean): ConformResource | StructureDefinition {
+    public getResource(resource: string, structdef?: boolean): ConformResource | IStructureDefinition {
 
         // return content
         return this.resources[resource];
@@ -79,7 +79,7 @@ export class ConformanceComponent {
      * @param   {boolean}      structdef                flag if structdef should be returned of that resource
      * @returns {Valueset}     all information about the valueset
      */
-    public getConformance(): IConformance {
+    public getConformance(uri: string): IConformance {
 
         //return content
         return this.conformance;
