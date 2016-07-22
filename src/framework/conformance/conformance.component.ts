@@ -9,6 +9,8 @@ export interface IResources {
     [key: string]: ConformResource;
 }
 
+// IMPORT ALL FHIR-MODELS structures
+
 /**
  * Manage conformance of implementation
  */
