@@ -1,5 +1,5 @@
 import {RouteOptions, RequestHandler, Request, Response, NextFunction}  from './routing.models';
-import {HookableComponent, HookableModels}                              from '../hookable';
+import {HookableComponent, HookableModels}                              from '../../lib/hookable';
 import {AuthComponent}                                                  from '../auth';
 import {ConformanceComponent}                                           from '../conformance';
 import * as parser                                                      from 'body-parser';

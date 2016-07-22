@@ -1,7 +1,7 @@
-import {RoutingComponent}                               from '../components/routing';
-import {DatabaseComponent}                              from '../components/database';
-import {DependencyInjectorComponent}                    from '../components/dependency-injector';
-import {RouteOptions, Request, Response, NextFunction}  from '../components/routing/routing.models';
+import {RoutingComponent}                               from '../framework/routing';
+import {DatabaseComponent}                              from '../framework/database';
+import {DependencyInjectorComponent}                    from '../lib/dependency-injector';
+import {RouteOptions, Request, Response, NextFunction}  from '../framework/routing/routing.models';
 
 /**
  * HL7 FHIR instance interactions
@@ -43,8 +43,8 @@ export class Type {
     public search(req: Request, res: Response, next: NextFunction): void {
 
         // prepare options for the db action
-        if (req.query._count === undefined) {
-            req.query._count = 30;
+        if (req.query['_count'] === undefined) {
+            req.query['_count'] = 30;
         }
 
         // do database stuff
@@ -72,8 +72,8 @@ export class Type {
     public search_body(req: Request, res: Response, next: NextFunction): void {
 
         // prepare options for the db action
-        if (req.query._count === undefined) {
-            req.query._count = 30;
+        if (req.query['._count'] === undefined) {
+            req.query['._count'] = 30;
         }
 
         // move all from body to query in req object

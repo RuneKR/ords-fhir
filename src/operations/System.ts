@@ -1,7 +1,7 @@
-import {RoutingComponent, RoutingModels}     from '../components/routing';
-import {ConformanceComponent}                from '../components/conformance';
-import {DependencyInjectorComponent}         from '../components/dependency-injector';
-import {OperationOutcomeComponent}           from '../components/operation-outcome';
+import {RoutingComponent, RoutingModels}     from '../framework/routing';
+import {ConformanceComponent}                from '../framework/conformance';
+import {DependencyInjectorComponent}         from '../lib/dependency-injector';
+import {Schemas}                             from '../fhir-models';
 
 
 /**
@@ -46,7 +46,7 @@ export class System {
 
         if (this.rsc.getResource(req.params.resource, true) === undefined) {
             
-            let err: OperationOutcomeComponent = {
+            let err: Schemas.OperationOutcome = {
                 httpcode: 404, 
                 issue: {
                     code: 'processing.not-found',
@@ -98,7 +98,7 @@ export class System {
 
         if (this.rsc.getResource(req.params.resource, true) === undefined) {
             
-            let err: OperationOutcomeComponent = {
+            let err: Schemas.OperationOutcome = {
                 httpcode: 404, 
                 issue: {
                     code: 'processing.not-found',

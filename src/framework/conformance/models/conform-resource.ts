@@ -1,6 +1,6 @@
-import {SearchParameter}        from './structure-definitions/search-parameter';
-import {StructureDefinition}    from './structure-definition';
-import {SchemaModels}           from '../../schema';
+import {SearchParameter}        from './search-parameter';
+import {Schemas}                from './../../../fhir-models';
+import {SchemaModels}           from '../../../lib/schema';
 
 export interface RuleEntry {
     datakey: string;
@@ -10,7 +10,7 @@ export interface RuleEntry {
 }
 
 export interface IConformResource {
-    structure: StructureDefinition;
+    structure: Schemas.IStructureDefinition;
     queryables: Array<SearchParameter>;
     rules: Array<RuleEntry>;
     schema: SchemaModels.Schema;
@@ -36,7 +36,7 @@ export class ConformResource {
     /**
      * Name for the resource
      */
-    public structure: StructureDefinition;
+    public structure: Schemas.IStructureDefinition;
     /**
      * Create a new resource conform to ORDS
      */

@@ -1,11 +1,11 @@
-export *  from './components/database';
-export *  from './components/dependency-injector';
-export *  from './components/routing';
-export *  from './components/conformance'; 
-export *  from './components/schema';
-export *  from './components/auth';
-export *  from './components/operation-outcome';
+export *  from './framework/database';
+export *  from './lib/dependency-injector';
+export *  from './framework/routing';
+export *  from './framework/conformance'; 
+export *  from './lib/schema';
+export *  from './framework/auth';
 export {Application} from './application.component';
+import * as FHIRModels from './fhir-models'; export {FHIRModels};
 
 // bootstrapped operations
 import './operations/Instance';

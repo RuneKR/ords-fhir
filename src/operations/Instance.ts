@@ -1,8 +1,8 @@
-import {RoutingComponent}                  from '../components/routing';
-import {DatabaseComponent}                 from '../components/database';
-import {DependencyInjectorComponent}       from '../components/dependency-injector';
-import {RouteOptions, Request, Response, NextFunction}  from '../components/routing/routing.models';
-import {OperationOutcomeComponent}         from '../components/operation-outcome';
+import {RoutingComponent}                  from '../framework/routing';
+import {DatabaseComponent}                 from '../framework/database';
+import {DependencyInjectorComponent}       from '../lib/dependency-injector';
+import {RouteOptions, Request, Response, NextFunction}  from '../framework/routing/routing.models';
+import {Schemas}                           from '../fhir-models';
 
 /**
  * HL7 FHIR instance interactions
@@ -45,7 +45,7 @@ export class Instance {
     public read(req: Request, res: Response, next: NextFunction): void {
 
         // prepare options for the db action
-        req.query._count = 1;
+        req.query['_count'] = 1;
 
         // do database stuff
         this.dc.read(req).then((result: Array<any>) => {
@@ -91,7 +91,7 @@ export class Instance {
         // check if id is set for update and do not match with params.id 
         if (req.body.id !== undefined && req.params.id !== req.body.id) {
 
-            let err: OperationOutcomeComponent = {
+            let err: Schemas.OperationOutcome = {
                 httpcode: 400, issue: {
                     code: 'invalid.invariant',
                     diagnostics: 'id field cannot be changed',
