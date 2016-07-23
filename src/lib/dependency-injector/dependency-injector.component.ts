@@ -1,9 +1,4 @@
-/**
- * list of all singletons used in the DependencyInjector
- */
-export interface Singletons {
-    [key: string]: any;             // hate this notation any better ideas?
-}
+import {Singletons}     from    './models/singletons';
 
 /**
  * Manage singletons for all dependencies

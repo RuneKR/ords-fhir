@@ -1,37 +1,14 @@
 import * as cluster                     from 'cluster';
 import * as os                          from 'os';
-import {Options}                        from './application.models';
-import {ApplicationHelper}              from './application.helper';
+import {SlaveByProcessid}               from './models/slave-by-processid';
+import {Slave}                          from './models/slave';
 
 /**
- * Specification on how to run the application
+ * Scaling with hardware component
  */
-export interface Options {
+export class HorizontalScaleComponent<T extends Slave> {
     /**
-     * Port to run the application
-     */
-    port: number;
-    /**
-     * Prefix to be added to all routes
-     */
-    prefix: string;
-}
-
-
-/*
-* Map with number as key and value as a cluster.Worker
-*/
-export interface SlaveByProcessid {
-    [key: number]: cluster.Worker;
-}
-
-/**
- * HL7 FHIR REST server main application
- * @class Application
- */
-export class Application {
-    /**
-     * Active workers by their process id
+     * Active slaves by their process id
      * @type {SlaveByProcessid}
      */
     public slaves: SlaveByProcessid;
@@ -39,12 +16,12 @@ export class Application {
      * Childworker attached to the process
      * @type {ChildWorker}
      */
-    public slave: ApplicationHelper;
+    public slave: T;
     /**
      * Generate a new Worker on each cpu and attach elements from the config variables to them as enviroment variables
      * @param {StringMapAny}    config      configuration for ords-fhir
      */
-    constructor(config: Options) {
+    constructor(slave: T, ...args: Array<any>) {
 
         // check if worker forked by the cluster is a master
         if (cluster.isMaster) {
@@ -87,7 +64,10 @@ export class Application {
         } else {
 
             // start child
-            this.slave = new ApplicationHelper(config);
+            this.slave = Object.create(slave.prototype);
+
+            // set arguments
+            slave.apply(this.slave, args);
         }
     }
     /**
