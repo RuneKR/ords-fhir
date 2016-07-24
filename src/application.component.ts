@@ -1,111 +1,36 @@
-import * as cluster                     from 'cluster';
-import * as os                          from 'os';
+import * as express                     from 'express';
+import {RoutingComponent}               from './framework/routing';
+import {DependencyInjectorComponent}    from './lib/dependency-injector';
 import {Options}                        from './application.models';
-import {ApplicationHelper}              from './application.helper';
 
 /**
- * Specification on how to run the application
+ * Worker for HL7 FHIR ORDS application
  */
-export interface Options {
+export class ApplicationHelper {
     /**
-     * Port to run the application
+     * Reference to routing component singleton
      */
-    port: number;
+    @DependencyInjectorComponent.inject(RoutingComponent)
+    private rc: RoutingComponent;
     /**
-     * Prefix to be added to all routes
+     * Router
      */
-    prefix: string;
-}
-
-
-/*
-* Map with number as key and value as a cluster.Worker
-*/
-export interface SlaveByProcessid {
-    [key: number]: cluster.Worker;
-}
-
-/**
- * HL7 FHIR REST server main application
- * @class Application
- */
-export class Application {
+    private router: express.Express;
     /**
-     * Active workers by their process id
-     * @type {SlaveByProcessid}
+     * Start the router to listen on incomming traffic
+     * @param   {Options}     options     the options specificing how to listen
+     * @returns {void}
      */
-    public slaves: SlaveByProcessid;
-    /**
-     * Childworker attached to the process
-     * @type {ChildWorker}
-     */
-    public slave: ApplicationHelper;
-    /**
-     * Generate a new Worker on each cpu and attach elements from the config variables to them as enviroment variables
-     * @param {StringMapAny}    config      configuration for ords-fhir
-     */
-    constructor(config: Options) {
+    constructor(options: Options) {
 
-        // check if worker forked by the cluster is a master
-        if (cluster.isMaster) {
+        // init instance of router
+        this.router = express();
 
-            // init a list of active workers
-            this.slaves = {};
+        // bind routers from routing component
+        this.router.use(options.prefix, this.rc.systemRouter);
+        this.router.use(options.prefix, this.rc.resourceRouter);
 
-            // number of CPU on the system
-            let numCPUs: number = os.cpus().length;
-
-            // iterator key
-            let i: number = 0;
-
-            // begin to boot workers
-            while (i < numCPUs) {
-
-                // start worker
-                let worker: any = cluster.fork();
-
-                // terminate everything if needed by one worker
-                worker.on('message', (msg: any) => {
-
-                    // terminate clean if cmd is terminate
-                    if (msg.cmd === 'terminate') {
-                        process.exit(0);
-                    }
-                });
-
-                // save reference to worker
-                this.slaves[worker.process.pid] = worker;
-
-                // iterate
-                i++;
-            }
-
-            // bind exit function
-            cluster.on('exit', (worker: cluster.Worker) => this.rebootSlaves(worker));
-
-            // none master but slave worker
-        } else {
-
-            // start child
-            this.slave = new ApplicationHelper(config);
-        }
-    }
-    /**
-     * Rebooting the slaves worker and delete the old worker from list
-     * @param {cluster.Worker}  worker  worker that is being terminated
-     * @returns void            no feedback is provided
-     */
-    public rebootSlaves(worker: cluster.Worker): void {
-
-        // remove from active worker pool
-        delete this.slaves[worker.process.pid];
-
-        // reboot worker
-        let child: cluster.Worker = cluster.fork();
-
-        // save path to active worker
-        this.slaves[child.process.pid] = child;
+        // start to listen for input
+        this.router.listen(options.port);
     }
 }
-
-
