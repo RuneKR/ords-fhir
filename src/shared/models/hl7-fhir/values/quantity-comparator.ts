@@ -1,4 +1,4 @@
-import {SchemaModels}     from    '../../lib/schema';
+import {SchemaModels}     from    '../../../../lib/schema';
 
 // create the set
 export const quantityComparator: SchemaModels.Values = {};

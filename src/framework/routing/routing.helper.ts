@@ -1,9 +1,10 @@
-import {RouteOptions, RequestHandler, Request, Response, NextFunction}  from './routing.models';
-import {HookableComponent, HookableModels}                              from '../../lib/hookable';
-import {AuthComponent}                                                  from '../auth';
-import {ConformanceComponent}                                           from '../conformance';
-import * as parser                                                      from 'body-parser';
-import * as cors                                                        from 'cors';
+import {RouteOptions, RequestHandler, NextFunction}     from './routing.models';
+import {HookableComponent, HookableModels}              from '../../lib/hookable';
+import {AuthComponent}                                  from '../auth';
+import {ConformanceComponent}                           from '../conformance';
+import * as parser                                      from 'body-parser';
+import * as cors                                        from 'cors';
+import {Request, Response}                              from 'express';
 
 /**
  * ORDS middleware for routes

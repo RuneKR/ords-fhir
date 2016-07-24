@@ -1,6 +1,6 @@
 import * as express                             from 'express';
-import {ConformanceModels}                      from '../../conformance';
-import {AuthModels}                             from '../../auth';
+import {ConformanceModels}                      from '../../../framework/conformance';
+import {AuthModels}                             from '../../../framework/auth';
 
 /**
  * Extended express request object to match ORDS syntax

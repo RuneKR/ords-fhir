@@ -6,7 +6,7 @@ import {Options}                        from './application.models';
 /**
  * Worker for HL7 FHIR ORDS application
  */
-export class ApplicationHelper {
+export class Application {
     /**
      * Reference to routing component singleton
      */

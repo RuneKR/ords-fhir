@@ -5,7 +5,7 @@ export *  from './framework/conformance';
 export *  from './lib/schema';
 export *  from './framework/auth';
 export {Application} from './application.component';
-import * as FHIRModels from './fhir-models'; export {FHIRModels};
+import * as Models from './shared/models'; export {Models};
 
 // bootstrapped operations
 import './operations/Instance';
