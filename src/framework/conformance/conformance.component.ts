@@ -12,6 +12,33 @@ export interface IResources {
 // IMPORT ALL FHIR-MODELS structures
 
 /**
+     * Get information about the requested resource from the request params
+     * @param  {Request}      req        request send to the server
+     * @param  {Response}     res        respond to be send by the server
+     * @param  {NextFunction} res        next function to be run of middlewares
+     * @return {void} 
+     */
+    public getResourceFromParams(req: Request, res: Response, next: NextFunction): void {
+
+        // grap info about the current route
+        let model: any = this.cc.getResource(req.params.resource);
+
+        // check that resource actually exists
+        if (model === undefined) {
+
+            // throw some error
+        }
+
+        delete req.params.resource;
+
+        // set reference to that
+        req.resource = model;
+
+        // go next
+        next();
+    }
+
+/**
  * Manage conformance of implementation
  */
 export class ConformanceComponent {

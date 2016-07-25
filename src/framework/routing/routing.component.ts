@@ -1,12 +1,11 @@
 import {HandlerOptions}                     from './models/handler-options';
 import {Router}                             from './models/router';
 import {RequestHandler}                     from './models/request-handler';
-import {RoutingHelper}                      from './routing.helper';
 import {HookableComponent, HookableModels}  from '../../lib/hookable';
-import {DependencyInjectorComponent}        from '../../lib/dependency-injector';
 import {Request, Response}                  from 'express';
+import * as parser                          from 'body-parser';
+import * as cors                            from 'cors';
 
-@DependencyInjectorComponent.createWith(RoutingHelper)
 export class RoutingComponent {
     /**
      * Exectued before all handlers
@@ -20,6 +19,10 @@ export class RoutingComponent {
      * Exectued after all handlers
      */
     public postHandler: HookableModels.Argumentable<Request, Response> = HookableComponent.argumentable();
+    /**
+     * Authentication handlers
+     */
+    public authenticate: HookableModels.Argumentable<Request, Response> = HookableComponent.argumentable();
     /**
      * Reference to express application instance
      */
@@ -108,21 +111,53 @@ export class RoutingComponent {
     /**
      * Binds default functions to router and create a new instance
      */
-    constructor(rh: RoutingHelper) {
+    constructor() {
 
         // cors
-        rh.addCors(this.resourceRouter);
-        rh.addCors(this.systemRouter);
+        this.addCors(this.resourceRouter);
+        this.addCors(this.systemRouter);
 
         // bind default resource parsing
         this.resourceRouter.use(rh.getResourceFromParams);
 
         // bind auth parsing
-        this.resourceRouter.use(rh.getUserFromRequest);
-        this.systemRouter.use(rh.getUserFromRequest);
+        this.resourceRouter.use(this.authenticate); // do something else now
+        this.systemRouter.use(this.authenticate);
 
-       
+       // parse body application/x-www-form-urlencoded
+        this.bodyParse.actor.push(parser.urlencoded({
+            extended: false,
+            limit: process.env.LIMIT_UPLOAD_MB ? process.env.LIMIT_UPLOAD_MB + 'mb' : 0.1 + 'mb'
+        }));
+
+        // parse application/json
+        this.bodyParse.actor.push(parser.json({
+            limit: process.env.LIMIT_UPLOAD_MB ? process.env.LIMIT_UPLOAD_MB + 'mb' : 0.1 + 'mb'
+        }));
 
     }
+    /**
+     * Adds cors 
+     */
+     private addCors(router: any): void {
+
+        // calculate whitelist array and set as empty is not specified
+        if (process.env.WHITELIST === undefined) {
+            process.env.WHITELIST = '';
+        }
+        let whitelist: Array<string> = process.env.WHITELIST;
+
+        // setup the usage of the whitelist
+        router.use(cors({
+            allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin', 'Authentication'],
+            credentials: true,
+            origin: function (origin: string, callback: Function): void {
+                callback(undefined, whitelist.indexOf(origin) !== -1);
+            }
+        }));
+    }
+    /**
+     * Check that a user is actually present
+     */
 }
 

@@ -25,3 +25,25 @@ export class AuthComponent {
      */
     public deleteUser: HookableModels.Returnable<Request, User> = HookableComponent.returnable();
 }
+
+    /**
+     * Get information about the user performing a request
+     * @param  {Request}      req        request send to the server
+     * @param  {Response}     res        respond to be send by the server
+     * @param  {NextFunction} res        next function to be run of middlewares
+     * @return {void} 
+     */
+    public getUserFromRequest(req: Request, res: Response, next: NextFunction): void {
+
+        // get information about the user
+        this.ac.getUser(req).then((user: any) => {
+
+            // bind found user
+            req.user = user;
+
+            // go next
+            next();
+        });
+
+    }
+    
