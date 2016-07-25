@@ -1,188 +1,200 @@
-import {RouteOptions}                       from './models/RouteOptions';
+import {HandlerOptions}                     from './models/handlerOptions';
 import {Router}                             from './models/Router';
 import {RequestHandler}                     from './models/RequestHandler';
-import {DependencyInjectorComponent}        from '../../lib/dependency-injector';
-import {AuthComponent}                      from '../auth';
-import {ConformanceComponent}               from '../conformance';
-import {RoutingHelper}                      from './routing.helper';
+import {RoutingHelper}                      from './models/routing.helper'
+import {HookableComponent, HookableModels}  from '../../lib/hookable';
+import {Request, Response}                  from 'express';
+import * as parser                          from 'body-parser';
+import * as cors                            from 'cors';
 
-/**
- * Manage routes that are added
- */
-@DependencyInjectorComponent.createWith(AuthComponent, ConformanceComponent)
-export class RoutingComponent extends RoutingHelper {
+export class RoutingComponent {
+    /**
+     * Exectued before all handlers
+     */
+    public preHandler: HookableModels.Argumentable<Request, Response> = HookableComponent.argumentable();
+    /**
+     * Parse the HTTP body of the request
+     */
+    public bodyParse: HookableModels.Argumentable<Request, Response> = HookableComponent.argumentable();
+    /**
+     * Exectued after all handlers
+     */
+    public postHandler: HookableModels.Argumentable<Request, Response> = HookableComponent.argumentable();
     /**
      * Reference to express application instance
      */
-    public resourceRouter: Router = Router();
+    private systemRouter: Router = Router();
     /**
      * Reference to express application instance
      */
-    public systemRouter: Router = Router();
+    private resourceRouter: Router = Router();
     /**
-     * Start the controller and add routes
-     * @returns {void}
+     * Add a handler to handle system interactions
      */
-    constructor(ac: AuthComponent, cc: ConformanceComponent) {
+    public addToSystem(options: HandlerOptions, handler: RequestHandler): void {
 
-        super(ac, cc);
+        // prepare a stack
+        let stack: HookableModels.ArgumentableAll<Request, Response> = HookableComponent.argumentableAll();
 
-        // add functionalities to be run on every request
-        this.resourceRouter.use(this.addCors);
+        // bind hookables
+        stack.pre = this.preHandler.pre;
+        stack.post = this.postHandler.post;
+
+        // push actual handler handler
+        stack.actor.push(handler);
+
+        // prepare and add stack to router
+        switch (options.httpmethod) {
+            case 'GET':
+                this.systemRouter.get(options.path, stack);
+                break;
+            case 'POST':
+                this.systemRouter.post(options.path, this.bodyParse, stack);
+                break;
+            case 'PUT':
+                this.systemRouter.put(options.path, this.bodyParse, stack);
+                break;
+            case 'DELETE':
+                this.systemRouter.delete(options.path, stack);
+                break;
+            case 'OPTIONS':
+                this.systemRouter.options(options.path, stack);
+                break;
+            default:
+                throw new Error('Unsupported HTTP method');
+
+        }
+    }
+    /**
+     * Add a handler to handle resource interactions
+     */
+    public addToResources(options: HandlerOptions, handler: RequestHandler): void {
+
+        // prepare a stack
+        let stack: HookableModels.ArgumentableAll<Request, Response> = HookableComponent.argumentableAll();
+
+        // bind hookables
+        stack.pre = this.preHandler.pre;
+        stack.post = this.postHandler.post;
+
+        // push actual handler handler
+        stack.actor.push(handler);
+
+        // set correct path
+        options.path = '/:resource' + options.path;
+
+        // prepare and add stack to router
+        switch (options.httpmethod) {
+            case 'GET':
+                this.resourceRouter.get(options.path, stack);
+                break;
+            case 'POST':
+                this.resourceRouter.post(options.path, this.bodyParse, stack);
+                break;
+            case 'PUT':
+                this.resourceRouter.put(options.path, this.bodyParse, stack);
+                break;
+            case 'DELETE':
+                this.resourceRouter.delete(options.path, stack);
+                break;
+            case 'OPTIONS':
+                this.resourceRouter.options(options.path, stack);
+                break;
+            default:
+                throw new Error('Unsupported HTTP method');
+
+        }
+    }
+    /**
+     * Binds default functions to router and create a new instance
+     */
+    constructor() {
+
+        // cors
+        this.addCors(this.resourceRouter);
+        this.addCors(this.systemRouter);
+
+        // bind default resource parsing
         this.resourceRouter.use(this.getResourceFromParams);
+
+        // bind auth parsing
         this.resourceRouter.use(this.getUserFromRequest);
-
-        this.systemRouter.use(this.addCors);
         this.systemRouter.use(this.getUserFromRequest);
+
+        // parse body application/x-www-form-urlencoded
+        this.bodyParse.actor.push(parser.urlencoded({
+            extended: false,
+            limit: process.env.LIMIT_UPLOAD_MB ? process.env.LIMIT_UPLOAD_MB + 'mb' : 0.1 + 'mb'
+        }));
+
+        // parse application/json
+        this.bodyParse.actor.push(parser.json({
+            limit: process.env.LIMIT_UPLOAD_MB ? process.env.LIMIT_UPLOAD_MB + 'mb' : 0.1 + 'mb'
+        }));
+
     }
     /**
-     * Adding an handler for a GET HTTP method for all resources
-     * @param   {string}         path      path being added to the router
-     * @param   {RouteOptions}   options   options for that given path
-     * @param   {RequestHandler} handler   fuction handling request on that path
-     * @returns {void}
+     * Get information about the requested resource from the request params
+     * @param  {Request}      req        request send to the server
+     * @param  {Response}     res        respond to be send by the server
+     * @param  {NextFunction} res        next function to be run of middlewares
+     * @return {void} 
      */
-    public get(path: string, options: RouteOptions, handler: RequestHandler): void {
+    private getResourceFromParams(req: Request, res: Response, next: NextFunction): void {
 
-        // force body parse to false
-        options.parseBody = false;
+        // grap info about the current route
+        let model: any = this.cc.getResource(req.params.resource);
 
-        // create a stack of handlers for that path
-        let handlers: Array<any> = this.createStack(options, handler);
+        // check that resource actually exists
+        if (model === undefined) {
 
-        // resource or normal path
-        if (options.isResource) {
-            handlers.unshift('/:resource/' + path);
-            this.resourceRouter.get.apply(this.resourceRouter, handlers);
-        } else {
-            handlers.unshift(path);
-            this.systemRouter.get.apply(this.systemRouter, handlers);
+            // throw some error
         }
+
+        delete req.params.resource;
+
+        // set reference to that
+        req.resource = model;
+
+        // go next
+        next();
     }
     /**
-     * Adding an handler for a GET OPTIONS method for all resources
-     * @param   {string}         path      path being added to the router
-     * @param   {RouteOptions}   options   options for that given path
-     * @param   {RequestHandler} handler   fuction handling request on that path
-     * @returns {void}
+     * Get information about the user performing a request
+     * @param  {Request}      req        request send to the server
+     * @param  {Response}     res        respond to be send by the server
+     * @param  {NextFunction} res        next function to be run of middlewares
+     * @return {void} 
      */
-    public options(path: string, options: RouteOptions, handler: RequestHandler): void {
+    private getUserFromRequest(req: Request, res: Response, next: NextFunction): void {
 
-        // force body parse to false
-        options.parseBody = false;
+        // get information about the user
+        this.ac.getUser(req).then((user: any) => {
 
-        // create a stack of handlers for that path
-        let handlers: Array<any> = this.createStack(options, handler);
+            // bind found user
+            req.user = user;
 
-        /// resource or normal path
-        if (options.isResource) {
-            handlers.unshift('/:resource/' + path);
-            this.resourceRouter.options.apply(this.resourceRouter, handlers);
-        } else {
-            handlers.unshift(path);
-            this.systemRouter.options.apply(this.systemRouter, handlers);
-        }
+            // go next
+            next();
+        });
+
     }
-    /**
-     * Adding an handler for a POST HTTP method for all resources
-     * @param   {string}         path      path being added to the router
-     * @param   {RouteOptions}   options   options for that given path
-     * @param   {RequestHandler} handler   fuction handling request on that path
-     * @returns {void}
-     */
-    public post(path: string, options: RouteOptions, handler: RequestHandler): void {
+    private addCors(router: any): void {
 
-        // force body parse to true
-        options.parseBody = true;
-
-        // create a stack of handlers for that path
-        let handlers: Array<any> = this.createStack(options, handler);
-        // resource or normal path
-        if (options.isResource) {
-            handlers.unshift('/:resource/' + path);
-        } else {
-            handlers.unshift(path);
+        // calculate whitelist array and set as empty is not specified
+        if (process.env.WHITELIST === undefined) {
+            process.env.WHITELIST = '';
         }
+        let whitelist: Array<string> = process.env.WHITELIST;
 
-        // resource or normal path
-        if (options.isResource) {
-            handlers.unshift('/:resource/' + path);
-            this.resourceRouter.post.apply(this.resourceRouter, handlers);
-        } else {
-            handlers.unshift(path);
-            this.systemRouter.post.apply(this.systemRouter, handlers);
-        }
-    }
-    /**
-     * Adding an handler for a PUT HTTP method for all resources
-     * @param   {string}         path      path being added to the router
-     * @param   {RouteOptions}   options   options for that given path
-     * @param   {RequestHandler} handler   fuction handling request on that path
-     * @returns {void}
-     */
-    public put(path: string, options: RouteOptions, handler: RequestHandler): void {
-
-        // force body parse to true
-        options.parseBody = true;
-
-        // create a stack of handlers for that path
-        let handlers: Array<any> = this.createStack(options, handler);
-        
-        // resource or normal path
-        if (options.isResource) {
-            handlers.unshift('/:resource/' + path);
-            this.resourceRouter.put.apply(this.resourceRouter, handlers);
-        } else {
-            handlers.unshift(path);
-            this.systemRouter.put.apply(this.systemRouter, handlers);
-        }
-    }
-    /**
-     * Adding an handler for a DELETE HTTP method for all resources
-     * @param   {string}         path      path being added to the router
-     * @param   {RouteOptions}   options   options for that given path
-     * @param   {RequestHandler} handler   fuction handling request on that path
-     * @returns {void}
-     */
-    public delete(path: string, options: RouteOptions, handler: RequestHandler): void {
-
-        // force body parse to true
-        options.parseBody = true;
-
-        // create a stack of handlers for that path
-        let handlers: Array<any> = this.createStack(options, handler);
-        
-        // resource or normal path
-        if (options.isResource) {
-            handlers.unshift('/:resource/' + path);
-            this.resourceRouter.delete.apply(this.resourceRouter, handlers);
-        } else {
-            handlers.unshift(path);
-            this.systemRouter.delete.apply(this.systemRouter, handlers);
-        }
-    }
-    /**
-     * Adding an handler for a PATCH HTTP method for all resources
-     * @param   {string}         path      path being added to the router
-     * @param   {RouteOptions}   options   options for that given path
-     * @param   {RequestHandler} handler   fuction handling request on that path
-     * @returns {void}
-     */
-    public patch(path: string, options: RouteOptions, handler: RequestHandler): void {
-
-        // force body parse to true
-        options.parseBody = true;
-
-        // create a stack of handlers for that path
-        let handlers: Array<any> = this.createStack(options, handler);
-        
-        // resource or normal path
-        if (options.isResource) {
-            handlers.unshift('/:resource/' + path);
-            this.resourceRouter.patch.apply(this.resourceRouter, handlers);
-        } else {
-            handlers.unshift(path);
-            this.systemRouter.patch.apply(this.systemRouter, handlers);
-        }
+        // setup the usage of the whitelist
+        router.use(cors({
+            allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin', 'Authentication'],
+            credentials: true,
+            origin: function (origin: string, callback: Function): void {
+                callback(undefined, whitelist.indexOf(origin) !== -1);
+            }
+        }));
     }
 }
+
