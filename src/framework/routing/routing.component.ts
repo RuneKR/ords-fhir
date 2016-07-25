@@ -1,7 +1,7 @@
-import {HandlerOptions}                     from './models/handlerOptions';
-import {Router}                             from './models/Router';
-import {RequestHandler}                     from './models/RequestHandler';
-import {RoutingHelper}                      from './models/routing.helper'
+import {HandlerOptions}                     from './models/handler-options';
+import {Router}                             from './models/router';
+import {RequestHandler}                     from './models/request-handler';
+import {RoutingHelper}                      from './routing.helper';
 import {HookableComponent, HookableModels}  from '../../lib/hookable';
 import {Request, Response}                  from 'express';
 import * as parser                          from 'body-parser';
