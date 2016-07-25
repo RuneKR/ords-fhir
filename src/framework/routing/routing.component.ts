@@ -3,10 +3,10 @@ import {Router}                             from './models/router';
 import {RequestHandler}                     from './models/request-handler';
 import {RoutingHelper}                      from './routing.helper';
 import {HookableComponent, HookableModels}  from '../../lib/hookable';
+import {DependencyInjectorComponent}        from '../../lib/dependency-injector';
 import {Request, Response}                  from 'express';
-import * as parser                          from 'body-parser';
-import * as cors                            from 'cors';
 
+@DependencyInjectorComponent.createWith(RoutingHelper)
 export class RoutingComponent {
     /**
      * Exectued before all handlers
@@ -108,93 +108,21 @@ export class RoutingComponent {
     /**
      * Binds default functions to router and create a new instance
      */
-    constructor() {
+    constructor(rh: RoutingHelper) {
 
         // cors
-        this.addCors(this.resourceRouter);
-        this.addCors(this.systemRouter);
+        rh.addCors(this.resourceRouter);
+        rh.addCors(this.systemRouter);
 
         // bind default resource parsing
-        this.resourceRouter.use(this.getResourceFromParams);
+        this.resourceRouter.use(rh.getResourceFromParams);
 
         // bind auth parsing
-        this.resourceRouter.use(this.getUserFromRequest);
-        this.systemRouter.use(this.getUserFromRequest);
+        this.resourceRouter.use(rh.getUserFromRequest);
+        this.systemRouter.use(rh.getUserFromRequest);
 
-        // parse body application/x-www-form-urlencoded
-        this.bodyParse.actor.push(parser.urlencoded({
-            extended: false,
-            limit: process.env.LIMIT_UPLOAD_MB ? process.env.LIMIT_UPLOAD_MB + 'mb' : 0.1 + 'mb'
-        }));
+       
 
-        // parse application/json
-        this.bodyParse.actor.push(parser.json({
-            limit: process.env.LIMIT_UPLOAD_MB ? process.env.LIMIT_UPLOAD_MB + 'mb' : 0.1 + 'mb'
-        }));
-
-    }
-    /**
-     * Get information about the requested resource from the request params
-     * @param  {Request}      req        request send to the server
-     * @param  {Response}     res        respond to be send by the server
-     * @param  {NextFunction} res        next function to be run of middlewares
-     * @return {void} 
-     */
-    private getResourceFromParams(req: Request, res: Response, next: NextFunction): void {
-
-        // grap info about the current route
-        let model: any = this.cc.getResource(req.params.resource);
-
-        // check that resource actually exists
-        if (model === undefined) {
-
-            // throw some error
-        }
-
-        delete req.params.resource;
-
-        // set reference to that
-        req.resource = model;
-
-        // go next
-        next();
-    }
-    /**
-     * Get information about the user performing a request
-     * @param  {Request}      req        request send to the server
-     * @param  {Response}     res        respond to be send by the server
-     * @param  {NextFunction} res        next function to be run of middlewares
-     * @return {void} 
-     */
-    private getUserFromRequest(req: Request, res: Response, next: NextFunction): void {
-
-        // get information about the user
-        this.ac.getUser(req).then((user: any) => {
-
-            // bind found user
-            req.user = user;
-
-            // go next
-            next();
-        });
-
-    }
-    private addCors(router: any): void {
-
-        // calculate whitelist array and set as empty is not specified
-        if (process.env.WHITELIST === undefined) {
-            process.env.WHITELIST = '';
-        }
-        let whitelist: Array<string> = process.env.WHITELIST;
-
-        // setup the usage of the whitelist
-        router.use(cors({
-            allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin', 'Authentication'],
-            credentials: true,
-            origin: function (origin: string, callback: Function): void {
-                callback(undefined, whitelist.indexOf(origin) !== -1);
-            }
-        }));
     }
 }
 
