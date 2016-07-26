@@ -1,6 +1,7 @@
 import {HandlerOptions}                     from './models/handler-options';
 import {Router}                             from './models/router';
 import {RequestHandler}                     from './models/request-handler';
+import {NextFunction}                       from './models/next-function';
 import {HookableComponent, HookableModels}  from '../../lib/hookable';
 import {Request, Response}                  from 'express';
 import * as parser                          from 'body-parser';
@@ -24,6 +25,10 @@ export class RoutingComponent {
      */
     public authenticate: HookableModels.Argumentable<Request, Response> = HookableComponent.argumentable();
     /**
+     * Checks that a requested resource eksists
+     */
+    public isResource: HookableModels.Argumentable<Request, Response> = HookableComponent.argumentable();
+    /**
      * Reference to express application instance
      */
     private systemRouter: Router = Router();
@@ -42,6 +47,11 @@ export class RoutingComponent {
         // bind hookables
         stack.pre = this.preHandler.pre;
         stack.post = this.postHandler.post;
+
+        // protected then check it
+        if (options.protected === true) {
+            stack.actor.push(this.isAuthenticated);
+        }
 
         // push actual handler handler
         stack.actor.push(handler);
@@ -80,6 +90,11 @@ export class RoutingComponent {
         stack.pre = this.preHandler.pre;
         stack.post = this.postHandler.post;
 
+        // protected then check it
+        if (options.protected === true) {
+            stack.actor.push(this.isAuthenticated);
+        }
+
         // push actual handler handler
         stack.actor.push(handler);
 
@@ -117,14 +132,14 @@ export class RoutingComponent {
         this.addCors(this.resourceRouter);
         this.addCors(this.systemRouter);
 
-        // bind default resource parsing
-        this.resourceRouter.use(rh.getResourceFromParams);
+        // check that a resources exists
+        this.resourceRouter.use(this.isResource);
 
         // bind auth parsing
-        this.resourceRouter.use(this.authenticate); // do something else now
+        this.resourceRouter.use(this.authenticate);
         this.systemRouter.use(this.authenticate);
 
-       // parse body application/x-www-form-urlencoded
+        // parse body application/x-www-form-urlencoded
         this.bodyParse.actor.push(parser.urlencoded({
             extended: false,
             limit: process.env.LIMIT_UPLOAD_MB ? process.env.LIMIT_UPLOAD_MB + 'mb' : 0.1 + 'mb'
@@ -137,9 +152,9 @@ export class RoutingComponent {
 
     }
     /**
-     * Adds cors 
+     * Adds cors to the router
      */
-     private addCors(router: any): void {
+    private addCors(router: any): void {
 
         // calculate whitelist array and set as empty is not specified
         if (process.env.WHITELIST === undefined) {
@@ -157,7 +172,21 @@ export class RoutingComponent {
         }));
     }
     /**
-     * Check that a user is actually present
+     * Check that a user is actually authenticated
+     * @param  {Request}      req        request send to the server
+     * @param  {Response}     res        respond to be send by the server
+     * @param  {NextFunction} res        next function to be run
+     * @return {void} 
      */
+    private isAuthenticated(req: Request, res: Response, next: NextFunction): void {
+
+        // check if user is set
+        if (req.user === undefined) {
+
+            // do some return of an error with next(error)
+        } else {
+            next();
+        }
+    }
 }
 
