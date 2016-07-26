@@ -1,5 +1,5 @@
 import {HandlerOptions}                     from './models/handler-options';
-import {Router}                             from './models/router';
+import {Router}                             from 'express';
 import {RequestHandler}                     from './models/request-handler';
 import {HookableComponent, HookableModels}  from '../../lib/hookable';
 import {Request, Response}                  from 'express';
@@ -29,12 +29,14 @@ export class RoutingComponent {
     public isResource: HookableModels.Argumentable<Request, Response> = HookableComponent.argumentable();
     /**
      * Reference to express application instance
+     * Use with caution
      */
-    private systemRouter: Router = Router();
+    public systemRouter: Router = Router();
     /**
      * Reference to express application instance
+     * Use with caution
      */
-    private resourceRouter: Router = Router();
+    public resourceRouter: Router = Router();
     /**
      * Add a handler to handle system interactions
      */
