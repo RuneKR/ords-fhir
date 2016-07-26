@@ -1,7 +1,6 @@
 import {HandlerOptions}                     from './models/handler-options';
 import {Router}                             from './models/router';
 import {RequestHandler}                     from './models/request-handler';
-import {NextFunction}                       from './models/next-function';
 import {HookableComponent, HookableModels}  from '../../lib/hookable';
 import {Request, Response}                  from 'express';
 import * as parser                          from 'body-parser';
@@ -178,7 +177,7 @@ export class RoutingComponent {
      * @param  {NextFunction} res        next function to be run
      * @return {void} 
      */
-    private isAuthenticated(req: Request, res: Response, next: NextFunction): void {
+    private isAuthenticated(req: Request, res: Response, next: HookableModels.ArgumentableCb): void {
 
         // check if user is set
         if (req.user === undefined) {
