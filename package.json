@@ -9,6 +9,7 @@
     "cors": "^2.7.1",
     "es6-promise": "^3.2.1",
     "express": "^4.13.4",
+    "make-it-hookable": "^1.1.0",
     "mongodb": "^2.1.18"
   },
   "scripts": {

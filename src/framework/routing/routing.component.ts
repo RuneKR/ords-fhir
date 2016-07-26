@@ -1,7 +1,7 @@
 import {HandlerOptions}                     from './models/handler-options';
 import {Router}                             from 'express';
 import {RequestHandler}                     from './models/request-handler';
-import {HookableComponent, HookableModels}  from '../../lib/hookable';
+import {HookableComponent, HookableModels}  from 'make-it-hookable';
 import {Request, Response}                  from 'express';
 import * as parser                          from 'body-parser';
 import * as cors                            from 'cors';

@@ -1,5 +1,5 @@
 import {Request}                            from 'express';
-import {HookableComponent, HookableModels}  from '../../lib/hookable';
+import {HookableComponent, HookableModels}  from 'make-it-hookable';
 import {DependencyInjectorComponent}        from '../../lib/dependency-injector';
 import {User}                               from './models/user';
 
