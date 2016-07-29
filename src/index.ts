@@ -1,5 +1,4 @@
 export *  from './framework/database';
-export *  from './lib/dependency-injector';
 export *  from './framework/routing';
 export *  from './framework/conformance'; 
 export *  from './lib/schema';

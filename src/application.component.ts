@@ -1,6 +1,6 @@
 import * as express                     from 'express';
 import {RoutingComponent}               from './framework/routing';
-import {DependencyInjectorComponent}    from './lib/dependency-injector';
+import {DependencyInjectorComponent}    from 'di-type';
 import {Options}                        from './application.models';
 
 /**
