@@ -1,6 +1,6 @@
 import {Request}                            from 'express';
 import {HookableComponent, HookableModels}  from 'make-it-hookable';
-import {DependencyInjectorComponent}        from '../../lib/dependency-injector';
+import {DependencyInjectorComponent}        from 'di-type';
 import {User}                               from './models/user';
 
 /**
@@ -24,8 +24,6 @@ export class AuthComponent {
      * Delete the user performing the request
      */
     public deleteUser: HookableModels.Returnable<Request, User> = HookableComponent.returnable();
-}
-
     /**
      * Get information about the user performing a request
      * @param  {Request}      req        request send to the server
@@ -33,7 +31,7 @@ export class AuthComponent {
      * @param  {NextFunction} res        next function to be run of middlewares
      * @return {void} 
      */
-    public getUserFromRequest(req: Request, res: Response, next: NextFunction): void {
+    private getUserFromRequest(req: Request, res: Response, next: NextFunction): void {
 
         // get information about the user
         this.ac.getUser(req).then((user: any) => {
@@ -46,4 +44,4 @@ export class AuthComponent {
         });
 
     }
-    
+}

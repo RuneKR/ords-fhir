@@ -5,15 +5,15 @@ import {Request, Response}                  from 'express';
 import * as parser                          from 'body-parser';
 import * as cors                            from 'cors';
 
-export class RoutingComponent {
+export class ApplicationRouting {
     /**
      * Run prior to the handlers in the system
      */
-    public preHandler: HookableModels.Argumentable<Request, Response> = HookableComponent.argumentable();
+    public preHandlers: HookableModels.Argumentable<Request, Response> = HookableComponent.argumentable();
     /**
      * Run prior to the handlers in the system
      */
-    public postHandler: HookableModels.Argumentable<Request, Response> = HookableComponent.argumentable();
+    public postHandlers: HookableModels.Argumentable<Request, Response> = HookableComponent.argumentable();
     /**
      * Parse the HTTP body of the request
      */
@@ -23,30 +23,21 @@ export class RoutingComponent {
      */
     public authenticate: HookableModels.Argumentable<Request, Response> = HookableComponent.argumentable();
     /**
-     * Checks that a requested resource eksists
-     */
-    public isResource: HookableModels.Argumentable<Request, Response> = HookableComponent.argumentable();
-    /**
      * Reference to express application instance
-     * Use with caution
+     * Use on OWN risk inteded visible for the Application class only
      */
-    public systemRouter: Router = Router();
-    /**
-     * Reference to express application instance
-     * Use with caution
-     */
-    public resourceRouter: Router = Router();
+    public router: Router = Router();
     /**
      * Add a handler to handle system interactions
      */
-    public addToSystem(options: HandlerOptions, handler: RequestHandler): void {
+    public addToSystem(options: HandlerOptions, ...handlers: Array<RequestHandler>): void {
 
         // prepare a stack
         let stack: HookableModels.ArgumentableAll<Request, Response> = HookableComponent.argumentableAll();
 
         // bind hookables
-        stack.pre = this.preHandler.actor;
-        stack.post = this.postHandler.actor;
+        stack.pre = this.preHandlers.actor;
+        stack.post = this.postHandlers.actor;
 
         // protected then check it
         if (options.protected === true) {
@@ -54,24 +45,24 @@ export class RoutingComponent {
         }
 
         // push actual handler handler
-        stack.actor.push(handler);
+        Array.prototype.push.apply(stack.actor, handlers);
 
         // prepare and add stack to router
         switch (options.httpmethod) {
             case 'GET':
-                this.systemRouter.get(options.path, stack);
+                this.router.get(options.path, stack);
                 break;
             case 'POST':
-                this.systemRouter.post(options.path, this.bodyParse, stack);
+                this.router.post(options.path, this.bodyParse, stack);
                 break;
             case 'PUT':
-                this.systemRouter.put(options.path, this.bodyParse, stack);
+                this.router.put(options.path, this.bodyParse, stack);
                 break;
             case 'DELETE':
-                this.systemRouter.delete(options.path, stack);
+                this.router.delete(options.path, stack);
                 break;
             case 'OPTIONS':
-                this.systemRouter.options(options.path, stack);
+                this.router.options(options.path, stack);
                 break;
             default:
                 throw new Error('Unsupported HTTP method');
@@ -79,65 +70,27 @@ export class RoutingComponent {
         }
     }
     /**
-     * Add a handler to handle resource interactions
-     */
-    public addToResources(options: HandlerOptions, handler: RequestHandler): void {
-
-        // prepare a stack
-        let stack: HookableModels.ArgumentableAll<Request, Response> = HookableComponent.argumentableAll();
-
-        // bind hookables
-        stack.pre = this.preHandler.actor;
-        stack.post = this.postHandler.actor;
-
-        // protected then check it
-        if (options.protected === true) {
-            stack.actor.push(this.isAuthenticated);
-        }
-
-        // push actual handler handler
-        stack.actor.push(handler);
-
-        // set correct path
-        options.path = '/:resource' + options.path;
-
-        // prepare and add stack to router
-        switch (options.httpmethod) {
-            case 'GET':
-                this.resourceRouter.get(options.path, stack);
-                break;
-            case 'POST':
-                this.resourceRouter.post(options.path, this.bodyParse, stack);
-                break;
-            case 'PUT':
-                this.resourceRouter.put(options.path, this.bodyParse, stack);
-                break;
-            case 'DELETE':
-                this.resourceRouter.delete(options.path, stack);
-                break;
-            case 'OPTIONS':
-                this.resourceRouter.options(options.path, stack);
-                break;
-            default:
-                throw new Error('Unsupported HTTP method');
-
-        }
-    }
-    /**
-     * Binds default functions to router and create a new instance
+     * Binds default functions to pre stack
      */
     constructor() {
 
-        // cors
-        this.addCors(this.resourceRouter);
-        this.addCors(this.systemRouter);
+        // calculate whitelist array and set as empty is not specified
+        if (process.env.WHITELIST === undefined) {
+            process.env.WHITELIST = '';
+        }
+        let whitelist: Array<string> = process.env.WHITELIST;
 
-        // check that a resources exists
-        this.resourceRouter.use(this.isResource);
+        // setup the usage of the whitelist
+        this.preHandlers.actor.push(cors({
+            allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin', 'Authentication'],
+            credentials: true,
+            origin: function (origin: string, callback: Function): void {
+                callback(undefined, whitelist.indexOf(origin) !== -1);
+            }
+        }));
 
         // bind auth parsing
-        this.resourceRouter.use(this.authenticate);
-        this.systemRouter.use(this.authenticate);
+        this.preHandlers.actor.push(this.authenticate);
 
         // parse body application/x-www-form-urlencoded
         this.bodyParse.actor.push(parser.urlencoded({
@@ -150,26 +103,6 @@ export class RoutingComponent {
             limit: process.env.LIMIT_UPLOAD_MB ? process.env.LIMIT_UPLOAD_MB + 'mb' : 0.1 + 'mb'
         }));
 
-    }
-    /**
-     * Adds cors to the router
-     */
-    private addCors(router: any): void {
-
-        // calculate whitelist array and set as empty is not specified
-        if (process.env.WHITELIST === undefined) {
-            process.env.WHITELIST = '';
-        }
-        let whitelist: Array<string> = process.env.WHITELIST;
-
-        // setup the usage of the whitelist
-        router.use(cors({
-            allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin', 'Authentication'],
-            credentials: true,
-            origin: function (origin: string, callback: Function): void {
-                callback(undefined, whitelist.indexOf(origin) !== -1);
-            }
-        }));
     }
     /**
      * Check that a user is actually authenticated

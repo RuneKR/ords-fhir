@@ -1,5 +1,5 @@
 import * as express                     from 'express';
-import {RoutingComponent}               from './lib/routing';
+import {ApplicationRouting}             from './application.routing';
 import {DependencyInjectorComponent}    from 'di-type';
 import {Options}                        from './application.models';
 
@@ -10,8 +10,8 @@ export class Application {
     /**
      * Reference to routing component singleton
      */
-    @DependencyInjectorComponent.inject(RoutingComponent)
-    private rc: RoutingComponent;
+    @DependencyInjectorComponent.inject(ApplicationRouting)
+    private appRouting: ApplicationRouting;
     /**
      * Router
      */
@@ -27,8 +27,7 @@ export class Application {
         this.router = express();
 
         // bind routers from routing component
-        this.router.use(options.prefix, this.rc.systemRouter);
-        this.router.use(options.prefix, this.rc.resourceRouter);
+        this.router.use(options.prefix, this.appRouting.router);
 
         // start to listen for input
         this.router.listen(options.port);
