@@ -1,23 +1,13 @@
-import * as express                             from 'express';
-import {ConformanceModels}                      from '../../../framework/conformance';
-import {AuthModels}                             from '../../../framework/auth';
+import {Request as AppRequest}     from    '../../../application.client-interaction';
+import {Request as AuthRequest}    from    '../../../lib/auth/auth.client-interaction';
+import {Request as ConformRequest} from    '../../../lib/conformance/conformance.client-interaction';
 
 /**
  * Extended express request object to match ORDS syntax
+ * AppRequest, 
  */
-export interface Request extends express.Request {
-    /**
-     * Resource that are being interacted with
-     */
-    resource: ConformanceModels.ConformResource;
-    /**
-     * The user doing the interaction
-     */
-    auth: AuthModels.User;
-    /**
-     * Query can contain anything and these specific fields
-     */
-    query: {
+export interface Request extends AuthRequest, ConformRequest {
+    req: {
         [key: string]: any;
-    };
+    }
 }
