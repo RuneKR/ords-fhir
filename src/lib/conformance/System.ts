@@ -3,7 +3,6 @@ import {ConformanceComponent}                from '../framework/conformance';
 import {DependencyInjectorComponent}         from 'di-type';
 import {Schemas}                             from '../fhir-models';
 
-
 /**
  * HL7 FHIR instance interactions
  */

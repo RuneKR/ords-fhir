@@ -1,8 +1,8 @@
-export *  from './framework/database';
-export *  from './framework/routing';
-export *  from './framework/conformance'; 
-export *  from './lib/schema';
-export *  from './framework/auth';
+export *  from './lib/database';
+export *  from './lib/routing';
+export *  from './lib/conformance';
+export *  from './lib/auth';
+export *  from './lib/horizontal-scale';
 export {Application} from './application.component';
 import * as Models from './shared/models'; export {Models};
 
