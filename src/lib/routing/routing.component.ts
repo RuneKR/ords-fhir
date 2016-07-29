@@ -8,17 +8,13 @@ import * as cors                            from 'cors';
 
 export class RoutingComponent {
     /**
-     * Exectued before all handlers
+     * Run the handlers in the system
      */
-    public preHandler: HookableModels.Argumentable<Request, Response> = HookableComponent.argumentable();
+    public runHandler: HookableModels.ArgumentableAll<Request, Response> = HookableComponent.argumentable();
     /**
      * Parse the HTTP body of the request
      */
     public bodyParse: HookableModels.Argumentable<Request, Response> = HookableComponent.argumentable();
-    /**
-     * Exectued after all handlers
-     */
-    public postHandler: HookableModels.Argumentable<Request, Response> = HookableComponent.argumentable();
     /**
      * Authentication handlers
      */
@@ -46,8 +42,8 @@ export class RoutingComponent {
         let stack: HookableModels.ArgumentableAll<Request, Response> = HookableComponent.argumentableAll();
 
         // bind hookables
-        stack.pre = this.preHandler.pre;
-        stack.post = this.postHandler.post;
+        stack.pre = this.runHandler.pre;
+        stack.post = this.runHandler.post;
 
         // protected then check it
         if (options.protected === true) {
@@ -55,7 +51,7 @@ export class RoutingComponent {
         }
 
         // push actual handler handler
-        stack.actor.push(handler);
+        stack.actor = handler;
 
         // prepare and add stack to router
         switch (options.httpmethod) {
@@ -88,8 +84,8 @@ export class RoutingComponent {
         let stack: HookableModels.ArgumentableAll<Request, Response> = HookableComponent.argumentableAll();
 
         // bind hookables
-        stack.pre = this.preHandler.pre;
-        stack.post = this.postHandler.post;
+        stack.pre = this.runHandler.pre;
+        stack.post = this.runHandler.post;
 
         // protected then check it
         if (options.protected === true) {
@@ -97,7 +93,7 @@ export class RoutingComponent {
         }
 
         // push actual handler handler
-        stack.actor.push(handler);
+        stack.actor = handler;
 
         // set correct path
         options.path = '/:resource' + options.path;
