@@ -1,5 +1,5 @@
 import * as Datatypes                       from    './primeitive';
-import {SchemaComponent, SchemaModels}      from    '../../../../lib/schema';
+import {SchemaComponent, SchemaModels}      from    'simple-ts-schema';
 
 export interface INarrative {
     status: string;

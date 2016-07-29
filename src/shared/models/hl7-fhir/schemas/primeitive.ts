@@ -1,4 +1,4 @@
-import {SchemaModels}      from    '../../../../lib/schema';
+import {SchemaModels}      from    'simple-ts-schema';
 
 // include all the these simple hl7 fhir
 

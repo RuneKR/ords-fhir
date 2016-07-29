@@ -1,4 +1,4 @@
-import {SchemaComponent, SchemaModels}      from    '../../../../lib/schema';
+import {SchemaComponent, SchemaModels}      from    'simple-ts-schema';
 import * as Datatypes                       from    './primeitive';
 import {quantityComparator}                 from    '../values/quantity-comparator';
 
