@@ -1,6 +1,5 @@
-import {HandlerOptions}                     from './models/handler-options';
+import {HandlerOptions, RequestHandler}     from './application.models';
 import {Router}                             from 'express';
-import {RequestHandler}                     from './models/request-handler';
 import {HookableComponent, HookableModels}  from 'make-it-hookable';
 import {Request, Response}                  from 'express';
 import * as parser                          from 'body-parser';
@@ -55,7 +54,7 @@ export class RoutingComponent {
         }
 
         // push actual handler handler
-        stack.actor = handler;
+        stack.actor.push(handler);
 
         // prepare and add stack to router
         switch (options.httpmethod) {
@@ -88,8 +87,8 @@ export class RoutingComponent {
         let stack: HookableModels.ArgumentableAll<Request, Response> = HookableComponent.argumentableAll();
 
         // bind hookables
-        stack.pre = this.runHandler.pre;
-        stack.post = this.runHandler.post;
+        stack.pre = this.preHandler.actor;
+        stack.post = this.postHandler.actor;
 
         // protected then check it
         if (options.protected === true) {
@@ -97,7 +96,7 @@ export class RoutingComponent {
         }
 
         // push actual handler handler
-        stack.actor = handler;
+        stack.actor.push(handler);
 
         // set correct path
         options.path = '/:resource' + options.path;
