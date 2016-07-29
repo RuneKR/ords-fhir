@@ -1,6 +1,6 @@
 import {RoutingComponent, RoutingModels}     from '../framework/routing';
 import {ConformanceComponent}                from '../framework/conformance';
-import {DependencyInjectorComponent}         from '../lib/dependency-injector';
+import {DependencyInjectorComponent}         from 'di-type';
 import {Schemas}                             from '../fhir-models';
 
 

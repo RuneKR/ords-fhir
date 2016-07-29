@@ -1,6 +1,6 @@
 import {RoutingComponent}                               from '../framework/routing';
 import {DatabaseComponent}                              from '../framework/database';
-import {DependencyInjectorComponent}                    from '../lib/dependency-injector';
+import {DependencyInjectorComponent}                    from 'di-type';
 import {RouteOptions, Request, Response, NextFunction}  from '../framework/routing/routing.models';
 
 /**

@@ -1,11 +1,9 @@
 import {Request}                            from 'express';
 import {HookableComponent, HookableModels}  from 'make-it-hookable';
-import {DependencyInjectorComponent}        from '../../lib/dependency-injector';
 
 /**
  * Connect to a database and perform operation in that
  */
-@DependencyInjectorComponent.createWith()
 export class DatabaseComponent {
     /**
      * Create something in the database
