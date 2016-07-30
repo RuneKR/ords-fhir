@@ -27,7 +27,8 @@ export class Application {
         this.router = express();
 
         // bind routers from routing component
-        this.router.use(options.prefix, this.appRouting.router);
+        this.router.use(options.prefix, this.appRouting._systemRouter);
+        this.router.use(options.prefix, this.appRouting._resourceRouter);
 
         // start to listen for input
         this.router.listen(options.port);

@@ -1,6 +1,6 @@
 import {ConformResource}         from './models/conform-resource';
-import {IConformance}            from '../../fhir-models/schemas/conformance';
-import {IStructureDefinition}    from '../../fhir-models/schemas/structure-definition';
+import {IConformance}            from '../../shared/models/hl7-fhir/schemas/conformance';
+import {IStructureDefinition}    from '../../shared/models/hl7-fhir/schemas/structure-definition';
 
 /**
  * String index of resources
@@ -12,7 +12,7 @@ export interface IResources {
 // IMPORT ALL FHIR-MODELS structures
 
 /**
- * Manage conformance of implementation
+ * Manage all valueset and resources including structure definitions that an implementation conforms too
  */
 export class ConformanceComponent {
     /**

@@ -26,12 +26,12 @@ export class ApplicationRouting {
      * Reference to express application instance
      * Use on OWN risk inteded visible for the Application class only
      */
-    private systemRouter: Router = Router();
+    public _systemRouter: Router = Router();
     /**
      * Reference to express application instance
      * Use on OWN risk inteded visible for the Application class only
      */
-    private resourceRouter: Router = Router();
+    public _resourceRouter: Router = Router();
     /**
      * Refernece to injected authcomponent
      */
@@ -102,19 +102,19 @@ export class ApplicationRouting {
         // prepare and add stack to router
         switch (options.httpmethod) {
             case 'GET':
-                this.systemRouter.get(options.path, stack);
+                this._systemRouter.get(options.path, stack);
                 break;
             case 'POST':
-                this.systemRouter.post(options.path, this.bodyParse, stack);
+                this._systemRouter.post(options.path, this.bodyParse, stack);
                 break;
             case 'PUT':
-                this.systemRouter.put(options.path, this.bodyParse, stack);
+                this._systemRouter.put(options.path, this.bodyParse, stack);
                 break;
             case 'DELETE':
-                this.systemRouter.delete(options.path, stack);
+                this._systemRouter.delete(options.path, stack);
                 break;
             case 'OPTIONS':
-                this.systemRouter.options(options.path, stack);
+                this._systemRouter.options(options.path, stack);
                 break;
             default:
                 throw new Error('Unsupported HTTP method');
@@ -144,19 +144,19 @@ export class ApplicationRouting {
         // prepare and add stack to router
         switch (options.httpmethod) {
             case 'GET':
-                this.resourceRouter.get(options.path, stack);
+                this._resourceRouter.get(options.path, this.getResourceFromParams, stack);
                 break;
             case 'POST':
-                this.resourceRouter.post(options.path, this.bodyParse, stack);
+                this._resourceRouter.post(options.path, this.getResourceFromParams, this.bodyParse, stack);
                 break;
             case 'PUT':
-                this.resourceRouter.put(options.path, this.bodyParse, stack);
+                this._resourceRouter.put(options.path, this.getResourceFromParams, this.bodyParse, stack);
                 break;
             case 'DELETE':
-                this.resourceRouter.delete(options.path, stack);
+                this._resourceRouter.delete(options.path, this.getResourceFromParams, stack);
                 break;
             case 'OPTIONS':
-                this.resourceRouter.options(options.path, stack);
+                this._resourceRouter.options(options.path, this.getResourceFromParams, stack);
                 break;
             default:
                 throw new Error('Unsupported HTTP method');
