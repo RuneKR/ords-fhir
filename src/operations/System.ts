@@ -1,7 +1,9 @@
-import {RoutingComponent, RoutingModels}     from '../framework/routing';
-import {ConformanceComponent}                from '../framework/conformance';
+import {RoutingComponent}                    from '../lib/routing';
+import {ConformanceComponent}                from '../lib/conformance';
 import {DependencyInjectorComponent}         from 'di-type';
-import {Schemas}                             from '../fhir-models';
+import {Schemas}                             from '../shared/models/hl7-fhir';
+import {Request, Response}                   from '../shared/models/client-interaction';
+import {HookableModels}                      from 'make-it-hookable';
 
 /**
  * HL7 FHIR instance interactions
@@ -22,17 +24,39 @@ export class System {
      */
     constructor() {
 
-        // options for added routes
-        let options: RoutingModels.RouteOptions = {
-            isResource: false,
-            protected: false
-        };
-
         // bind to router
-        this.rm.get('metadata', options, this.displayConStatement.bind(this));
-        this.rm.options('', options, this.displayConStatement.bind(this));
-        this.rm.post('StructureDefinition/:resource', options, this.displayStructureDef.bind(this));
-        this.rm.post('ValueSet/:resource', options, this.displayValueset.bind(this));
+        this.rm.addToSystem(
+            {
+                httpmethod: 'GET',
+                path: '/metadata',
+                protected: false
+            },
+            this.displayConStatement.bind(this)
+        );
+        this.rm.addToSystem(
+            {
+                httpmethod: 'OPTIONS',
+                path: '/',
+                protected: false
+            },
+            this.displayConStatement.bind(this)
+        );
+        this.rm.addToSystem(
+            {
+                httpmethod: 'GET',
+                path: '/StructureDefinition/:resource',
+                protected: false
+            },
+            this.displayStructureDef.bind(this)
+        );
+        this.rm.addToSystem(
+            {
+                httpmethod: 'GET',
+                path: '/ValueSet/:resource',
+                protected: false
+            },
+            this.displayValueset.bind(this)
+        );
     }
     /**
      * Display a structure definition
@@ -41,12 +65,12 @@ export class System {
      * @param   {NextFunction}  next    next handler after this
      * @returns {Void}
      */
-    public displayStructureDef(req: RoutingModels.Request, res: RoutingModels.Response, next: RoutingModels.NextFunction): void {
+    public displayStructureDef(req: Request, res: Response, next: HookableModels.ArgumentableCb): void {
 
         if (this.rsc.getResource(req.params.resource, true) === undefined) {
-            
+
             let err: Schemas.OperationOutcome = {
-                httpcode: 404, 
+                httpcode: 404,
                 issue: {
                     code: 'processing.not-found',
                     severity: 'warning'
@@ -93,12 +117,12 @@ export class System {
      * @param   {NextFunction}  next    next handler after this
      * @returns {Void}
      */
-    public displayValueset(req: RoutingModels.Request, res: RoutingModels.Response, next: RoutingModels.NextFunction): void {
+    public displayValueset(req: Request, res: Response, next: HookableModels.ArgumentableCb): void {
 
         if (this.rsc.getResource(req.params.resource, true) === undefined) {
-            
+
             let err: Schemas.OperationOutcome = {
-                httpcode: 404, 
+                httpcode: 404,
                 issue: {
                     code: 'processing.not-found',
                     severity: 'warning'
@@ -144,7 +168,7 @@ export class System {
      * @param   {Response}    res     responsehandler for the client
      * @returns {Void}
      */
-    public displayConStatement(req: RoutingModels.Request, res: RoutingModels.Response, next: RoutingModels.NextFunction): void {
+    public displayConStatement(req: Request, res: Response, next: HookableModels.ArgumentableCb): void {
 
         // set meta if needed
         if (this.rsc.conformance.meta) {

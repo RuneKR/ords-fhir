@@ -81,9 +81,10 @@ export class Bootstrap {
             // throw some error
         }
 
+        // set reference to that
         delete req.params.resource;
 
-        // set reference to that
+        // bind model to request
         req.resource = model;
 
         // go next

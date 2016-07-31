@@ -1,6 +1,6 @@
 import {SearchParameter}        from './search-parameter';
-import {Schemas}                from './../../../fhir-models';
-import {SchemaModels}           from '../../../lib/schema';
+import {Schemas}                from '../../../shared/models/hl7-fhir';
+import {SchemaModels}           from 'simple-ts-schema';
 
 export interface RuleEntry {
     datakey: string;

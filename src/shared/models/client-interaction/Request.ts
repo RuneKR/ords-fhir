@@ -14,10 +14,4 @@ export interface Request extends express.Request {
      * The user doing the interaction
      */
     auth: AuthModels.User;
-    /**
-     * Query can contain anything and these specific fields
-     */
-    query: {
-        [key: string]: any;
-    };
 }

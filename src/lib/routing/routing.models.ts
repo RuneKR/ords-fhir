@@ -1,1 +1,2 @@
-export {RequestHandler}   from 'express';
+export {RequestHandler}   from './models/request-handler';
+export {HandlerOptions}   from './models/handler-options';
