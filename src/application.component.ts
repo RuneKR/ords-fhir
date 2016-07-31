@@ -1,7 +1,8 @@
 import * as express                     from 'express';
-import {ApplicationRouting}             from './application.routing';
+import {RoutingComponent}               from './lib/routing';
 import {DependencyInjectorComponent}    from 'di-type';
 import {Options}                        from './application.models';
+import * as cors                        from 'cors';
 
 /**
  * Worker for HL7 FHIR ORDS application
@@ -10,8 +11,8 @@ export class Application {
     /**
      * Reference to routing component singleton
      */
-    @DependencyInjectorComponent.inject(ApplicationRouting)
-    private appRouting: ApplicationRouting;
+    @DependencyInjectorComponent.inject(RoutingComponent)
+    private rc: RoutingComponent;
     /**
      * Router
      */
@@ -26,9 +27,24 @@ export class Application {
         // init instance of router
         this.router = express();
 
+        // calculate whitelist array and set as empty is not specified
+        if (process.env.WHITELIST === undefined) {
+            process.env.WHITELIST = '';
+        }
+        let whitelist: Array<string> = process.env.WHITELIST;
+
+        // setup the usage of the whitelist
+        this.router.use(cors({
+            allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin', 'Authentication'],
+            credentials: true,
+            origin: function (origin: string, callback: Function): void {
+                callback(undefined, whitelist.indexOf(origin) !== -1);
+            }
+        }));
+
         // bind routers from routing component
-        this.router.use(options.prefix, this.appRouting._systemRouter);
-        this.router.use(options.prefix, this.appRouting._resourceRouter);
+        this.router.use(options.prefix, this.rc._routers.system);
+        this.router.use(options.prefix, this.rc._routers.resource);
 
         // start to listen for input
         this.router.listen(options.port);

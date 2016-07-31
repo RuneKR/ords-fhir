@@ -1,8 +1,8 @@
 import {HandlerOptions}                     from './models/handler-options';
 import {RequestHandler}                     from './models/request-handler';
-import {Router}                             from 'express';
+import {Router, Request, Response}          from 'express';
+import {RouterContainer}                    from './models/router-container';
 import {HookableComponent, HookableModels}  from 'make-it-hookable';
-import {Request, Response}                  from '../../shared/models/client-interaction';
 
 export class RoutingComponent {
     /**
@@ -18,15 +18,30 @@ export class RoutingComponent {
      */
     public bodyParse: HookableModels.Argumentable<Request, Response> = HookableComponent.argumentable();
     /**
-     * Reference to express application instance
-     * Use on OWN risk inteded visible for the Application class only
+     * Authenticate the request
      */
-    public _systemRouter: Router = Router();
+    public authenticate: HookableModels.Argumentable<Request, Response> = HookableComponent.argumentable();
     /**
-     * Reference to express application instance
+     * Validates that the requested resource exists
+     */
+    public isResource: HookableModels.Argumentable<Request, Response> = HookableComponent.argumentable();
+    /**
+     * Reference to express application instances
      * Use on OWN risk inteded visible for the Application class only
      */
-    public _resourceRouter: Router = Router();
+    public _routers: RouterContainer = {
+        resource: Router(),
+        system: Router()
+    };
+    /**
+     * Bind the hookable methods to the router
+     */
+    constructor() {
+
+        this._routers.resource.use(this.isResource);
+        this._routers.resource.use(this.authenticate);
+        this._routers.system.use(this.authenticate);
+    }
     /**
      * Add a handler to handle system interactions
      */
@@ -50,19 +65,19 @@ export class RoutingComponent {
         // prepare and add stack to router
         switch (options.httpmethod) {
             case 'GET':
-                this._systemRouter.get(options.path, stack);
+                this._routers.system.get(options.path, stack);
                 break;
             case 'POST':
-                this._systemRouter.post(options.path, this.bodyParse, stack);
+                this._routers.system.post(options.path, this.bodyParse, stack);
                 break;
             case 'PUT':
-                this._systemRouter.put(options.path, this.bodyParse, stack);
+                this._routers.system.put(options.path, this.bodyParse, stack);
                 break;
             case 'DELETE':
-                this._systemRouter.delete(options.path, stack);
+                this._routers.system.delete(options.path, stack);
                 break;
             case 'OPTIONS':
-                this._systemRouter.options(options.path, stack);
+                this._routers.system.options(options.path, stack);
                 break;
             default:
                 throw new Error('Unsupported HTTP method');
@@ -89,22 +104,25 @@ export class RoutingComponent {
         // push actual handler handler
         Array.prototype.push.apply(stack.actor, handlers);
 
+        // correct path
+        options.path = '/:resource' + options.path;
+
         // prepare and add stack to router
         switch (options.httpmethod) {
             case 'GET':
-                this._resourceRouter.get(options.path, this.getResourceFromParams, stack);
+                this._routers.resource.get(options.path, stack);
                 break;
             case 'POST':
-                this._resourceRouter.post(options.path, this.getResourceFromParams, this.bodyParse, stack);
+                this._routers.resource.post(options.path, this.bodyParse, stack);
                 break;
             case 'PUT':
-                this._resourceRouter.put(options.path, this.getResourceFromParams, this.bodyParse, stack);
+                this._routers.resource.put(options.path, this.bodyParse, stack);
                 break;
             case 'DELETE':
-                this._resourceRouter.delete(options.path, this.getResourceFromParams, stack);
+                this._routers.resource.delete(options.path, stack);
                 break;
             case 'OPTIONS':
-                this._resourceRouter.options(options.path, this.getResourceFromParams, stack);
+                this._routers.resource.options(options.path, stack);
                 break;
             default:
                 throw new Error('Unsupported HTTP method');
@@ -127,51 +145,6 @@ export class RoutingComponent {
         } else {
             next();
         }
-    }
-    /**
-     * Get information about the user performing a request
-     * @param  {Request}      req        request send to the server
-     * @param  {Response}     res        respond to be send by the server
-     * @param  {NextFunction} res        next function to be run of middlewares
-     * @return {void} 
-     */
-    private authenticate(req: Request, res: Response, next: HookableModels.ArgumentableCb): void {
-
-        // get information about the user
-        this.ac.getUser(req).then((user: any) => {
-
-            // bind found user
-            req.user = user;
-
-            // go next
-            next();
-        });
-    }
-    /**
-     * Get information about the requested resource from the request params
-     * @param  {Request}      req        request send to the server
-     * @param  {Response}     res        respond to be send by the server
-     * @param  {NextFunction} res        next function to be run of middlewares
-     * @return {void} 
-     */
-    private getResourceFromParams(req: Request, res: Response, next: HookableModels.ArgumentableCb): void {
-
-        // grap info about the current route
-        let model: any = this.cc.getResource(req.params.resource);
-
-        // check that resource actually exists
-        if (model === undefined) {
-
-            // throw some error
-        }
-
-        delete req.params.resource;
-
-        // set reference to that
-        req.resource = model;
-
-        // go next
-        next();
     }
 }
 
