@@ -1,15 +1,10 @@
-import {HandlerOptions, RequestHandler}     from './application.models';
+import {HandlerOptions}                     from './models/handler-options';
+import {RequestHandler}                     from './models/request-handler';
 import {Router}                             from 'express';
 import {HookableComponent, HookableModels}  from 'make-it-hookable';
-import {Request, Response}                  from './shared/models/client-interaction';
-import * as parser                          from 'body-parser';
-import * as cors                            from 'cors';
-import {DependencyInjectorComponent}        from 'di-type';
-import {AuthComponent}                      from './lib/auth';
-import {ConformanceComponent}               from './lib/conformance';
+import {Request, Response}                  from '../../shared/models/client-interaction';
 
-@DependencyInjectorComponent.createWith(AuthComponent, ConformanceComponent)
-export class ApplicationRouting {
+export class RoutingComponent {
     /**
      * Run prior to the handlers in the system
      */
@@ -32,53 +27,6 @@ export class ApplicationRouting {
      * Use on OWN risk inteded visible for the Application class only
      */
     public _resourceRouter: Router = Router();
-    /**
-     * Refernece to injected authcomponent
-     */
-    private ac: AuthComponent;
-    /**
-     * Refernece to injected cnformancecomponent
-     */
-    private cc: ConformanceComponent;
-    /**
-     * Binds default functions to pre stack
-     */
-    constructor(ac: AuthComponent, cc: ConformanceComponent) {
-
-        // bind references
-        this.ac = ac;
-        this.cc = cc;
-
-        // calculate whitelist array and set as empty is not specified
-        if (process.env.WHITELIST === undefined) {
-            process.env.WHITELIST = '';
-        }
-        let whitelist: Array<string> = process.env.WHITELIST;
-
-        // setup the usage of the whitelist
-        this.preHandlers.actor.push(cors({
-            allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin', 'Authentication'],
-            credentials: true,
-            origin: function (origin: string, callback: Function): void {
-                callback(undefined, whitelist.indexOf(origin) !== -1);
-            }
-        }));
-
-        // bind auth parsing
-        this.preHandlers.actor.push(this.authenticate);
-
-        // parse body application/x-www-form-urlencoded
-        this.bodyParse.actor.push(parser.urlencoded({
-            extended: false,
-            limit: process.env.LIMIT_UPLOAD_MB ? process.env.LIMIT_UPLOAD_MB + 'mb' : 0.1 + 'mb'
-        }));
-
-        // parse application/json
-        this.bodyParse.actor.push(parser.json({
-            limit: process.env.LIMIT_UPLOAD_MB ? process.env.LIMIT_UPLOAD_MB + 'mb' : 0.1 + 'mb'
-        }));
-
-    }
     /**
      * Add a handler to handle system interactions
      */

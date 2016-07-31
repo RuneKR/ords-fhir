@@ -11,3 +11,6 @@ import * as ApplicationModels from './application.models'; export {ApplicationMo
 
 // shared
 import * as Models            from './shared/models'; export {Models};
+
+// bootstrap
+import './bootstrap';
