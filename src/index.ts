@@ -2,7 +2,7 @@
 export *  from './lib/database';
 export *  from './lib/conformance';
 export *  from './lib/auth';
-export *  from './lib/horizontal-scale';
+export *  from './lib/routing';
 
 // application
 export {Application}          from './application.component';
