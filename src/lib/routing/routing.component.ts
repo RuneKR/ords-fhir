@@ -48,16 +48,7 @@ export class RoutingComponent {
     public addToSystem(options: HandlerOptions, ...handlers: Array<RequestHandler>): void {
 
         // prepare a stack
-        let stack: HookableModels.ArgumentableAll<Request, Response> = HookableComponent.argumentableAll();
-
-        // bind hookables
-        stack.pre = this.preHandlers.actor;
-        stack.post = this.postHandlers.actor;
-
-        // protected then check it
-        if (options.protected === true) {
-            stack.actor.push(this.isAuthenticated);
-        }
+        let stack: HookableModels.ArgumentableAll<Request, Response> = this.prepareStack(options, handlers);
 
         // push actual handler handler
         Array.prototype.push.apply(stack.actor, handlers);
@@ -90,19 +81,7 @@ export class RoutingComponent {
     public addToResources(options: HandlerOptions, ...handlers: Array<RequestHandler>): void {
 
         // prepare a stack
-        let stack: HookableModels.ArgumentableAll<Request, Response> = HookableComponent.argumentableAll();
-
-        // bind hookables
-        stack.pre = this.preHandlers.actor;
-        stack.post = this.postHandlers.actor;
-
-        // protected then check it
-        if (options.protected === true) {
-            stack.actor.push(this.isAuthenticated);
-        }
-
-        // push actual handler handler
-        Array.prototype.push.apply(stack.actor, handlers);
+        let stack: HookableModels.ArgumentableAll<Request, Response> = this.prepareStack(options, handlers);
 
         // correct path
         options.path = '/:resource' + options.path;
@@ -128,6 +107,29 @@ export class RoutingComponent {
                 throw new Error('Unsupported HTTP method');
 
         }
+    }
+    /**
+     * prepare stack of handlers to be added to routing
+     */
+    private prepareStack(options: HandlerOptions, handlers: Array<RequestHandler>): HookableModels.ArgumentableAll<Request, Response> {
+
+        // prepare a stack
+        let stack: HookableModels.ArgumentableAll<Request, Response> = HookableComponent.argumentableAll();
+
+        // bind hookables
+        stack.pre = this.preHandlers.actor;
+        stack.post = this.postHandlers.actor;
+
+        // protected then check it
+        if (options.protected === true) {
+            stack.actor.push(this.isAuthenticated);
+        }
+
+        // push actual handler handler
+        Array.prototype.push.apply(stack.actor, handlers);
+
+        // return the stack
+        return stack;
     }
     /**
      * Check that a user is actually authenticated
