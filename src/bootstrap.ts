@@ -1,6 +1,7 @@
 import {Request, Response}                  from './shared/models/client-interaction';
 import * as parser                          from 'body-parser';
 import {DependencyInjectorComponent}        from 'di-type';
+import {Constants}                          from './shared/services/constants';
 import {AuthComponent}                      from './lib/auth';
 import {ConformanceComponent}               from './lib/conformance';
 import {RoutingComponent}                   from './lib/routing';
@@ -35,12 +36,12 @@ export class Bootstrap {
         // parse body application/x-www-form-urlencoded
         rc.bodyParse.actor.push(parser.urlencoded({
             extended: false,
-            limit: process.env.LIMIT_UPLOAD_MB ? process.env.LIMIT_UPLOAD_MB + 'mb' : 0.1 + 'mb'
+            limit: process.env.LIMIT_UPLOAD_MB ? Constants.LIMIT_UPLOAD_MB + 'mb' : 0.1 + 'mb'
         }));
 
         // parse application/json
         rc.bodyParse.actor.push(parser.json({
-            limit: process.env.LIMIT_UPLOAD_MB ? process.env.LIMIT_UPLOAD_MB + 'mb' : 0.1 + 'mb'
+            limit: process.env.LIMIT_UPLOAD_MB ? Constants.LIMIT_UPLOAD_MB + 'mb' : 0.1 + 'mb'
         }));
 
         // ADD ALL SHARED FHIR THINGS TO HERE
