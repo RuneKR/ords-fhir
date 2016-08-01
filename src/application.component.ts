@@ -31,14 +31,13 @@ export class Application {
         if (process.env.WHITELIST === undefined) {
             process.env.WHITELIST = '';
         }
-        let whitelist: Array<string> = process.env.WHITELIST;
-
+        
         // setup the usage of the whitelist
         this.router.use(cors({
             allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin', 'Authentication'],
             credentials: true,
             origin: function (origin: string, callback: Function): void {
-                callback(undefined, whitelist.indexOf(origin) !== -1);
+                callback(undefined, options.whitelist.indexOf(origin) !== -1);
             }
         }));
 
