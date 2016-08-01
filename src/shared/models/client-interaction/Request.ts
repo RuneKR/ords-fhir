@@ -1,5 +1,5 @@
 import * as express                             from 'express';
-import {ConformanceModels}                      from '../../../lib/conformance';
+import {ConformResource}                        from '../resources';
 import {AuthModels}                             from '../../../lib/auth';
 
 /**
@@ -9,7 +9,7 @@ export interface Request extends express.Request {
     /**
      * Resource that are being interacted with
      */
-    resource: ConformanceModels.ConformResource;
+    resource: ConformResource;
     /**
      * The user doing the interaction
      */

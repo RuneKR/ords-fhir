@@ -1,5 +1,10 @@
 // export IConformance and the Conformance itself
 
+// what operations a resource can support
+export interface IResourceOP{
+
+}
+
 /**
  * Content of a conformance
  */

@@ -43,6 +43,8 @@ export class Bootstrap {
             limit: process.env.LIMIT_UPLOAD_MB ? process.env.LIMIT_UPLOAD_MB + 'mb' : 0.1 + 'mb'
         }));
 
+        // ADD ALL SHARED FHIR THINGS TO HERE
+
     }
     /**
      * Get information about the user performing a request
