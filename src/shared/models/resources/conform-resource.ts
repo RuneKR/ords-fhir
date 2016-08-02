@@ -1,26 +1,31 @@
-import {SearchParameter}        from './search-parameter';
+import {RuleEntry}              from './rule-entry';
 import {Schemas}                from '../../../shared/models/hl7-fhir';
 import {SchemaModels}           from 'simple-ts-schema';
 
-export interface RuleEntry {
-    datakey: string;
-    comparator: string;
-    source: string;
-    sourcekey: string;
-}
-
 export interface IConformResource {
-    structure: Schemas.IStructureDefinition;
-    queryables: Array<SearchParameter>;
-    rules: Array<RuleEntry>;
+    /**
+     * Parameters that can be queried / pre indexed variables
+     */
+    restConformance: Schemas.IRestResource;
+    /**
+     * Schema for this resource
+     */
     schema: SchemaModels.Schema;
+    /**
+     * Rules for the usages of this resource
+     */
+    rules: Array<RuleEntry>;
+    /**
+     * Name for the resource
+     */
+    structure: Schemas.IStructureDefinition;
 }
 
 export class ConformResource {
     /**
      * Parameters that can be queried / pre indexed variables
      */
-    public queryables: Array<SearchParameter>;
+    public restConformance: Schemas.IRestResource;
     /**
      * Schema for this resource
      */
@@ -32,21 +37,14 @@ export class ConformResource {
     /**
      * Name for the resource
      */
-    public name: string;
-    /**
-     * Name for the resource
-     */
     public structure: Schemas.IStructureDefinition;
     /**
      * Create a new resource conform to ORDS
      */
     constructor(data: IConformResource) {
 
-        this.queryables = data.queryables;
-        this.rules      = data.rules;
-        this.schema     = data.schema;
-
-        // set name to this
-        this.name       = data.structure.id;
+        this.restConformance = data.restConformance;
+        this.rules = data.rules;
+        this.schema = data.schema;
     }
 }

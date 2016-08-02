@@ -1,8 +1,8 @@
 // export IConformance and the Conformance itself
 
-// what operations a resource can support
-export interface IResourceOP{
-
+//The whole backbone element description the resource in rest specfications
+export interface IRestResource{
+    type: string;
 }
 
 /**

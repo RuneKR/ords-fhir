@@ -1,7 +1,6 @@
-import {ConformResource}            from '../../shared/models/resources/conform-resource';
-import {IConformance, IResourceOP}  from '../../shared/models/hl7-fhir/schemas/conformance';
-import {IStructureDefinition}       from '../../shared/models/hl7-fhir/schemas/structure-definition';
-import {IValueSet}                  from '../../shared/models/hl7-fhir/schemas/value-set';
+import {ConformResource}                from '../../shared/models/resources/conform-resource';
+import {IConformance, IRestResource}    from '../../shared/models/hl7-fhir/schemas/conformance';
+import {IValueSet}                      from '../../shared/models/hl7-fhir/schemas/value-set';
 
 /**
  * String index of resources
@@ -21,7 +20,7 @@ interface Valuesets {
  * String index of valuesets
  */
 interface RestOperations {
-    [key: string]: IResourceOP;
+    [key: string]: IRestResource;
 }
 
 /**
@@ -43,7 +42,7 @@ export class ConformanceComponent {
     /**
      * List of rest operations supported by resource
      */
-    private resourceRestOperations: RestOperations = {};
+    private resourceRestConformance: RestOperations = {};
     /**
      * Adds a resource to the stack of resources in an implementation
      * @param   {string}       Resource             the resource itself being added
@@ -52,24 +51,23 @@ export class ConformanceComponent {
     public addResource(resource: ConformResource): void {
 
         // init new holder
-        this.resources[resource.name] = resource;
-        this.resourceRestOperations[resource.name] = {};
+        this.resources[resource.restConformance.type] = resource;
+        this.resourceRestConformance[resource.restConformance.type] = resource.restConformance;
     }
     /**
-     * Grap all known information about a resource or its structure definition
-     * @param   {string}       resource             name of the resource
-     * @param   {boolean}      structdef            flag if structdef should be returned or the resource
-     * @returns {Resource | Structuredefenition}    all information about the resource in the requested form
+     * Grap all known information about a resource type
+     * @param   {string}       type     type of the resource
+     * @returns {ConformResource}       all information about the resource in the requested form
      */
-    public getResource(resource: string, structdef?: boolean): ConformResource | IStructureDefinition {
+    public getResource(type: string): ConformResource {
 
         // return content
-        return this.resources[resource];
+        return this.resources[type];
     }
     /**
      * Grap all known information about a valueset
-     * @param   {string}       valueset                 name of the valueset
-     * @returns {Valueset}     all information about the valueset
+     * @param   {string}       valueset   name of the valueset
+     * @returns {Valueset}                all information about the valueset
      */
     public getValueset(valueset: string): IValueSet {
 
@@ -85,7 +83,7 @@ export class ConformanceComponent {
         this.valuesets[name] = valueset;
     }
     /**
-     * Calculate the content of the conformance and send it back
+     * Calculate the content of the conformance and return it back
      * @param   {string}       uri      uri that should be used for references in the conformance
      * @returns {IConformance}          
      */
@@ -93,12 +91,4 @@ export class ConformanceComponent {
 
         return this.conformance;
     }
-    /**
-     * Get the supported rest operation of the specific resource or all (wildcard)
-     * @param   {string}        name    name of resource or the wildcard *
-     */
-    public getResourceRestOPeration(name: string): IResourceOP {
-
-        return this.resourceRestOperations[name];
-     }
 }

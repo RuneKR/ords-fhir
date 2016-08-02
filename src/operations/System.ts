@@ -67,7 +67,7 @@ export class System {
      */
     public displayStructureDef(req: Request, res: Response, next: HookableModels.ArgumentableCb): void {
 
-        if (this.rsc.getResource(req.params.resource, true) === undefined) {
+        if (this.rsc.getResource(req.params.resource) === undefined) {
 
             let err: Schemas.OperationOutcome = {
                 httpcode: 404,
@@ -83,7 +83,7 @@ export class System {
         } else {
 
             // temp ref
-            let structuredef: any = this.rsc.getResource(req.params.resource, true);
+            let structuredef: any = this.rsc.getResource(req.params.resource);
 
             // set meta if needed
             if (structuredef.meta) {
@@ -119,7 +119,7 @@ export class System {
      */
     public displayValueset(req: Request, res: Response, next: HookableModels.ArgumentableCb): void {
 
-        if (this.rsc.getResource(req.params.resource, true) === undefined) {
+        if (this.rsc.getResource(req.params.resource) === undefined) {
 
             let err: Schemas.OperationOutcome = {
                 httpcode: 404,

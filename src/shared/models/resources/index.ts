@@ -1,2 +1,2 @@
-export {ConformResource}        from    './conform-resource';
-export {SearchParameter}        from    './search-parameter';
+export {ConformResource}  from    './conform-resource';
+export {RuleEntry}        from    './rule-entry';
