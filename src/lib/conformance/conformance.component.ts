@@ -52,7 +52,17 @@ export class ConformanceComponent {
 
         // init new holder
         this.resources[resource.restConformance.type] = resource;
-        this.resourceRestConformance[resource.restConformance.type] = resource.restConformance;
+
+        // merge with what is allready added about if anything is added
+        if (this.resourceRestConformance[resource.restConformance.type] !== undefined) {
+
+            // see all keys
+            for (let )
+        } else {
+
+            this.resourceRestConformance[resource.restConformance.type] = resource.restConformance;
+
+        }
     }
     /**
      * Grap all known information about a resource type

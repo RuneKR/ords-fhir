@@ -4,6 +4,7 @@ import {DependencyInjectorComponent}         from 'di-type';
 import {Schemas}                             from '../shared/models/hl7-fhir';
 import {Request, Response}                   from '../shared/models/client-interaction';
 import {HookableModels}                      from 'make-it-hookable';
+import {Constants}                           from '../shared/services/constants';
 
 /**
  * HL7 FHIR instance interactions
@@ -44,7 +45,7 @@ export class System {
         this.rm.addToSystem(
             {
                 httpmethod: 'GET',
-                path: '/StructureDefinition/:resource',
+                path: Constants.SYSTEM_STRUCTURE_DEFINITION_RELATIVE_URI + '/:resource',
                 protected: false
             },
             this.displayStructureDef.bind(this)
@@ -52,7 +53,7 @@ export class System {
         this.rm.addToSystem(
             {
                 httpmethod: 'GET',
-                path: '/ValueSet/:resource',
+                path: Constants.SYSTEM_VALUE_SET_RELATIVE_URI + '/:resource',
                 protected: false
             },
             this.displayValueset.bind(this)
