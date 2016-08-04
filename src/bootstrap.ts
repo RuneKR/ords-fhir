@@ -1,6 +1,6 @@
 import {Request, Response}                  from './shared/models/client-interaction';
 import * as parser                          from 'body-parser';
-import {DependencyInjectorComponent}        from 'di-type';
+import {Component}                          from 'di-type';
 import {Constants}                          from './shared/services/constants';
 import {AuthComponent}                      from './lib/auth';
 import {ConformanceComponent}               from './lib/conformance';
@@ -10,7 +10,10 @@ import {HookableModels}                     from 'make-it-hookable';
 /**
  * Bootstrap the application together with the libery
  */
-@DependencyInjectorComponent.createWith(AuthComponent, ConformanceComponent, RoutingComponent)
+@Component({
+    directives: [AuthComponent, ConformanceComponent, RoutingComponent],
+    providers: []
+})
 export class Bootstrap {
     /**
      * Refernece to injected authcomponent

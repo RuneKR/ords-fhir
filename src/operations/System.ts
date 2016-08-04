@@ -1,6 +1,6 @@
 import {RoutingComponent}                    from '../lib/routing';
 import {ConformanceComponent}                from '../lib/conformance';
-import {DependencyInjectorComponent}         from 'di-type';
+import {Component}                           from 'di-type';
 import {Schemas}                             from '../shared/models/hl7-fhir';
 import {Request, Response}                   from '../shared/models/client-interaction';
 import {HookableModels}                      from 'make-it-hookable';
@@ -9,24 +9,25 @@ import {Constants}                           from '../shared/services/constants'
 /**
  * HL7 FHIR instance interactions
  */
+@Component({
+    directives: [ConformanceComponent, RoutingComponent],
+    providers: []
+})
 export class System {
     /**
      * Reference to conformance
      */
-    @DependencyInjectorComponent.inject(ConformanceComponent)
     private rsc: ConformanceComponent;
-    /**
-     * Reference to route component
-     */
-    @DependencyInjectorComponent.inject(RoutingComponent)
-    private rm: RoutingComponent;
     /**
      * Binding the routes their function
      */
-    constructor() {
+    constructor(rm: RoutingComponent, rsc: ConformanceComponent) {
+
+        // bind reference
+        this.rsc = rsc;
 
         // bind to router
-        this.rm.addToSystem(
+        rm.addToSystem(
             {
                 httpmethod: 'GET',
                 path: '/metadata',
@@ -34,7 +35,7 @@ export class System {
             },
             this.displayConStatement.bind(this)
         );
-        this.rm.addToSystem(
+        rm.addToSystem(
             {
                 httpmethod: 'OPTIONS',
                 path: '/',
@@ -42,7 +43,7 @@ export class System {
             },
             this.displayConStatement.bind(this)
         );
-        this.rm.addToSystem(
+        rm.addToSystem(
             {
                 httpmethod: 'GET',
                 path: Constants.SYSTEM_STRUCTURE_DEFINITION_RELATIVE_URI + '/:resource',
@@ -50,7 +51,7 @@ export class System {
             },
             this.displayStructureDef.bind(this)
         );
-        this.rm.addToSystem(
+        rm.addToSystem(
             {
                 httpmethod: 'GET',
                 path: Constants.SYSTEM_VALUE_SET_RELATIVE_URI + '/:resource',

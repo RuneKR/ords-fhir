@@ -1,18 +1,17 @@
 import * as express                     from 'express';
 import {RoutingComponent}               from './lib/routing';
-import {DependencyInjectorComponent}    from 'di-type';
+import {Component}                      from 'di-type';
 import * as cors                        from 'cors';
 import {Constants}                      from './shared/services/constants';
 
 /**
  * Worker for HL7 FHIR ORDS application
  */
+@Component({
+    directives: [RoutingComponent],
+    providers: []
+})
 export class Application {
-    /**
-     * Reference to routing component singleton
-     */
-    @DependencyInjectorComponent.inject(RoutingComponent)
-    private rc: RoutingComponent;
     /**
      * Router
      */
@@ -21,7 +20,7 @@ export class Application {
      * Start the router to listen on incomming traffic
      * @returns {void}
      */
-    constructor() {
+    constructor(rc: RoutingComponent) {
 
         // init instance of router
         this.router = express();
@@ -36,8 +35,8 @@ export class Application {
         }));
 
         // bind routers from routing component
-        this.router.use(this.rc._routers.system);
-        this.router.use(this.rc._routers.resource);
+        this.router.use(rc._routers.system);
+        this.router.use(rc._routers.resource);
 
         // start to listen for input
         this.router.listen(Constants.PORT);
