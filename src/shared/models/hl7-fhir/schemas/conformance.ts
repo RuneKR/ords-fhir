@@ -1,7 +1,7 @@
 // export IConformance and the Conformance itself
 
 //The whole backbone element description the resource in rest specfications
-export interface IRestResource{
+export interface IRestResource {
     type: string;
 }
 
@@ -26,7 +26,7 @@ export class IConformance {
     public kind: string;
     public fhirVersion: string;
     public acceptUnknown: string;
-    public format: Array<string>;       
+    public format: Array<string>;
     public profile: Array<any>; //Array<IReference>;
     public rest: any;      // set to any because of the depth pleas just look at how it is used in ConformanceManager
 }

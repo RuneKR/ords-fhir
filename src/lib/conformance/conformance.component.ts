@@ -50,19 +50,9 @@ export class ConformanceComponent {
      */
     public addResource(resource: ConformResource): void {
 
-        // init new holder
+        // init new holder and save reference to it
         this.resources[resource.restConformance.type] = resource;
 
-        // merge with what is allready added about if anything is added
-        if (this.resourceRestConformance[resource.restConformance.type] !== undefined) {
-
-            // see all keys
-            for (let )
-        } else {
-
-            this.resourceRestConformance[resource.restConformance.type] = resource.restConformance;
-
-        }
     }
     /**
      * Grap all known information about a resource type
@@ -73,6 +63,24 @@ export class ConformanceComponent {
 
         // return content
         return this.resources[type];
+    }
+    /**
+     * Adds a definition to the stack of definitions in an implementation
+     * @param   {string}       Resource             the resource itself being added
+     * @returns {void}
+     */
+    public addStructureDefinition(resource: ConformResource): void {
+
+        // add structure difinition
+    }
+    /**
+     * Gets a definition supported by the implementation
+     * @param   {string}       Resource             the resource itself being added
+     * @returns {void}
+     */
+    public getStructureDefinition(resource: ConformResource): void {
+
+        // add structure difinition
     }
     /**
      * Grap all known information about a valueset
