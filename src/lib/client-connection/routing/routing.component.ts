@@ -1,9 +1,19 @@
 import {HandlerOptions}                     from './models/handler-options';
 import {RequestHandler}                     from './models/request-handler';
-import {Router, Request, Response}          from 'express';
+import {Router}                             from 'express';
+import {Request}                            from './models/request';
+import {Response}                           from './models/response';
 import {RouterContainer}                    from './models/router-container';
 import {HookableComponent, HookableModels}  from 'make-it-hookable';
+import * as parser                          from 'body-parser';
+import {Constants}                          from '../../../shared/services/constants';
+import {Component}                          from 'di-type';
+import {ConformanceComponent}               from '../../conformance';
 
+@Component({
+    directives: [Constants, ConformanceComponent],
+    providers: []
+})
 export class RoutingComponent {
     /**
      * Run prior to the handlers in the system
@@ -22,25 +32,44 @@ export class RoutingComponent {
      */
     public authenticate: HookableModels.Argumentable<Request, Response> = HookableComponent.argumentable();
     /**
-     * Validates that the requested resource exists
-     */
-    public isResource: HookableModels.Argumentable<Request, Response> = HookableComponent.argumentable();
-    /**
      * Reference to express application instances
-     * Use on OWN risk inteded visible for the Application class only
      */
-    public _routers: RouterContainer = {
+    private _routers: RouterContainer = {
         resource: Router(),
         system: Router()
     };
     /**
+     * Refernce in constant instance
+     */
+    private _constants: Constants;
+    /**
+     * Refernce in conformance instance
+     */
+    private _conformance: ConformanceComponent;
+    /**
      * Bind the hookable methods to the router
      */
-    constructor() {
+    constructor(constants: Constants, conformance: ConformanceComponent) {
 
+        // keep reference
+        this._constants = constants;
+        this._conformance = conformance;
+
+        // bind to router
         this._routers.resource.use(this.isResource);
         this._routers.resource.use(this.authenticate);
         this._routers.system.use(this.authenticate);
+
+        // parse body application/x-www-form-urlencoded
+        this.bodyParse.actor.push(parser.urlencoded({
+            extended: false,
+            limit: process.env.LIMIT_UPLOAD_MB ? constants.LIMIT_UPLOAD_MB + 'mb' : 0.1 + 'mb'
+        }));
+
+        // parse application/json
+        this.bodyParse.actor.push(parser.json({
+            limit: process.env.LIMIT_UPLOAD_MB ? constants.LIMIT_UPLOAD_MB + 'mb' : 0.1 + 'mb'
+        }));
     }
     /**
      * Add a handler to handle system interactions
@@ -147,6 +176,33 @@ export class RoutingComponent {
         } else {
             next();
         }
+    }
+    /**
+     * Get information about the requested resource from the request params
+     * @param  {Request}      req        request send to the server
+     * @param  {Response}     res        respond to be send by the server
+     * @param  {NextFunction} res        next function to be run of middlewares
+     * @return {void} 
+     */
+    private isResource(req: Request, res: Response, next: HookableModels.ArgumentableCb): void {
+
+        // grap info about the current route
+        let model: any = this._conformance.getResource(req.params.resource);
+
+        // check that resource actually exists
+        if (model === undefined) {
+
+            // throw some error
+        }
+
+        // set reference to that
+        delete req.params.resource;
+
+        // bind model to request
+        req.resource = model;
+
+        // go next
+        next();
     }
 }
 
