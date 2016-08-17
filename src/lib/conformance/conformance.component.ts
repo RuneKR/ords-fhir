@@ -44,8 +44,9 @@ export class ConformanceComponent {
      */
     constructor() {
         
-        // standard value
+        // standard values
         this.resourceRestConformance = {};
+        this.conformance = {};
     }
     /**
      * Adds a resource to the stack of resources in an implementation

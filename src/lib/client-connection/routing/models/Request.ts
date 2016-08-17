@@ -1,5 +1,5 @@
 import * as express                             from 'express';
-import {ConformResource}                        from '../resources';
+import {ConformResource}                        from '../../../shared/models/resources';
 import {AuthModels}                             from '../../../lib/auth';
 
 /**
