@@ -36,13 +36,17 @@ export class ConformanceComponent {
      */
     private resources: IResources = {};
     /**
-     * List of valuesets supported
+     * General rest conformance for all resources
      */
-    private valuesets: Valuesets = {};
+    private resourceRestConformance: IRestResource;
     /**
-     * List of rest operations supported by resource
+     * Create empty conformance component
      */
-    private resourceRestConformance: RestOperations = {};
+    constructor() {
+        
+        // standard value
+        this.resourceRestConformance = {};
+    }
     /**
      * Adds a resource to the stack of resources in an implementation
      * @param   {string}       Resource             the resource itself being added
@@ -65,47 +69,14 @@ export class ConformanceComponent {
         return this.resources[type];
     }
     /**
-     * Adds a definition to the stack of definitions in an implementation
-     * @param   {string}       Resource             the resource itself being added
-     * @returns {void}
-     */
-    public addStructureDefinition(resource: ConformResource): void {
-
-        // add structure difinition
-    }
-    /**
-     * Gets a definition supported by the implementation
-     * @param   {string}       Resource             the resource itself being added
-     * @returns {void}
-     */
-    public getStructureDefinition(resource: ConformResource): void {
-
-        // add structure difinition
-    }
-    /**
-     * Grap all known information about a valueset
-     * @param   {string}       valueset   name of the valueset
-     * @returns {Valueset}                all information about the valueset
-     */
-    public getValueset(valueset: string): IValueSet {
-
-        return this.valuesets[valueset];
-    }
-    /**
-     * All a valueset to the list of supported valuesets
-     * @param   {String}          name                 name of the valueset
-     * @param   {IValueSet}       valueset             the valueset
-     */
-    public addValueset(name: string, valueset: IValueSet): void {
-
-        this.valuesets[name] = valueset;
-    }
-    /**
      * Calculate the content of the conformance and return it back
      * @param   {string}       uri      uri that should be used for references in the conformance
      * @returns {IConformance}          
      */
     public getConformance(uri: string): IConformance {
+
+
+        // NOT DONE
 
         return this.conformance;
     }
