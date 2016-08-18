@@ -2,6 +2,7 @@ import {RoutingConfig, RoutingModels}        from '../../lib/client-connection/r
 import {ConformanceComponent}                from '../../lib/conformance';
 import {Component}                           from 'di-type';
 import {HookableModels}                      from 'make-it-hookable';
+import {IConformance}                        from '../../shared/models/hl7-fhir/schemas/conformance';
 
 /**
  * HL7 FHIR instance interactions
@@ -49,20 +50,22 @@ export class System {
      */
     public displayConStatement(req: RoutingModels.Request, res: RoutingModels.Response, next: HookableModels.ArgumentableCb): void {
 
+        let conformance: IConformance = this.rsc.getConformance();
+
         // set meta if needed
-        if (this.rsc.conformance.meta) {
+        if (conformance.meta) {
 
             // set response headers of version
-            if (this.rsc.conformance.meta.versionId) {
+            if (conformance.meta.versionId) {
                 res.set({
-                    'ETag': 'W/"' + this.rsc.conformance.meta.versionId + '"'
+                    'ETag': 'W/"' + conformance.meta.versionId + '"'
                 });
             }
 
             // set response headers of last updated
-            if (this.rsc.conformance.meta.lastUpdated) {
+            if (conformance.meta.lastUpdated) {
                 res.set({
-                    'Last-Modified': this.rsc.conformance.meta.lastUpdated
+                    'Last-Modified': conformance.meta.lastUpdated
                 });
             }
         }

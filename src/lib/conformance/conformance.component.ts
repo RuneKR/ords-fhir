@@ -43,10 +43,20 @@ export class ConformanceComponent {
      * Create empty conformance component
      */
     constructor() {
-        
-        // standard values
-        this.resourceRestConformance = {};
-        this.conformance = {};
+
+        // standard values for the conformance for all resources
+        this.resourceRestConformance = {
+            type: '*'
+        };
+
+        // standard value for conformance
+        this.conformance = {
+            acceptUnknown: 'no',
+            contact: [],
+            format: ['json'],
+            profile: [],
+            rest: []
+        };
     }
     /**
      * Adds a resource to the stack of resources in an implementation
@@ -71,13 +81,24 @@ export class ConformanceComponent {
     }
     /**
      * Calculate the content of the conformance and return it back
-     * @param   {string}       uri      uri that should be used for references in the conformance
      * @returns {IConformance}          
      */
-    public getConformance(uri: string): IConformance {
+    public getConformance(): IConformance {
 
 
-        // NOT DONE
+        // reset calculated
+        this.conformance.rest = [];
+
+        // for all resources
+        for (let resource in this.resources) {
+
+            // check that it is not inherited
+            if (this.resources.hasOwnProperty(resource)) {
+
+                // push conformance into rest
+                this.conformance.rest.push(this.resources[resource].restConformance);
+            }
+        }
 
         return this.conformance;
     }
