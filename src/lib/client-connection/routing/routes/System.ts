@@ -1,15 +1,16 @@
-import {RoutingConfig, RoutingModels}        from '../../lib/client-connection/routing';
-import {ConformanceComponent}                from '../../lib/conformance';
+import {Request, Response}                   from '../routing.models';
+import {RoutingComponent}                    from '../routing.component';
+import {ConformanceComponent}                from '../../../conformance';
 import {Component}                           from 'di-type';
 import {HookableModels}                      from 'make-it-hookable';
-import {IConformance}                        from '../../shared/models/hl7-fhir/schemas/conformance';
+import {IConformance}                        from '../../../../shared/models/hl7-fhir/schemas/conformance';
 
 /**
  * HL7 FHIR instance interactions
  */
 @Component({
     directives: [ConformanceComponent],
-    providers: [RoutingConfig]
+    providers: [RoutingComponent]
 })
 export class System {
     /**
@@ -19,7 +20,7 @@ export class System {
     /**
      * Binding the routes their function
      */
-    constructor(config: RoutingConfig, rsc: ConformanceComponent) {
+    constructor(config: RoutingComponent, rsc: ConformanceComponent) {
 
         // bind reference
         this.rsc = rsc;
@@ -48,7 +49,7 @@ export class System {
      * @param   {Response}    res     responsehandler for the client
      * @returns {Void}
      */
-    public displayConStatement(req: RoutingModels.Request, res: RoutingModels.Response, next: HookableModels.ArgumentableCb): void {
+    public displayConStatement(req: Request, res: Response, next: HookableModels.ArgumentableCb): void {
 
         let conformance: IConformance = this.rsc.getConformance();
 
