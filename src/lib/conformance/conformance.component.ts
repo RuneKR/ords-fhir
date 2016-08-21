@@ -10,20 +10,6 @@ interface IResources {
 }
 
 /**
- * String index of valuesets
- */
-interface Valuesets {
-    [key: string]: IValueSet;
-}
-
-/**
- * String index of valuesets
- */
-interface RestOperations {
-    [key: string]: IRestResource;
-}
-
-/**
  * Manage all valueset and resources including structure definitions that an implementation conforms too
  */
 export class ConformanceComponent {
@@ -99,6 +85,8 @@ export class ConformanceComponent {
                 this.conformance.rest.push(this.resources[resource].restConformance);
             }
         }
+
+        // Todo: Create an instance of the conformance resource and check if it fails.
 
         return this.conformance;
     }
