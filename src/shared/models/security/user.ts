@@ -1,4 +1,5 @@
 import {RolesPerOrganisation}   from    './roles-per-organisation';
+import {Role}                   from    './role';
 
 /**
  * Basic user class, may be extended as needed
@@ -15,5 +16,5 @@ export class User {
     /**
      * All roles that are attached to the user
      */
-    roles: Array<string>;
+    roles: Array<Role>;
 }
