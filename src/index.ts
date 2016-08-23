@@ -1,8 +1,7 @@
 // framework
 export *  from './lib/database';
 export *  from './lib/conformance';
-
-export *  from './lib/client-connection/routing';
+export *  from './lib/routing';
 
 // shared
 import * as Models            from './shared/models';   export {Models};

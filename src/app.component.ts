@@ -1,7 +1,7 @@
 import * as cors                            from 'cors';
 import {Component}                          from 'di-type';
 import {Constants}                          from './shared/services/constants';
-import {RoutingComponent}                   from './lib/client-connection/routing';
+import {RoutingComponent}                   from './lib/routing';
 import * as express                         from 'express';
 
 /**
