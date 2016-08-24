@@ -1,8 +1,7 @@
 import {Resource}       from    './resource';
+import {Query}          from    './query';
 
 export interface RecordRemoval {
-    query: {
-        [key: string]: any;
-    };
+    query: Query;
     resource: Resource;
 }
