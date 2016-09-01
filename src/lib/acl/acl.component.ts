@@ -1,12 +1,20 @@
+export interface ResourceRight {
+    [resource: string]: void;
+}
+
 export class ACLComponent {
+    /***
+     * Check if the user is authenticated
+     */
+    private isAuthenticated: boolean;
     /**
      * Rights owned by the connected user
      */
-    private rights: { [right: string]: boolean };
+    private rights: { [right: string]: ResourceRight };
     /**
-     * Check if the user has the rights to perfom the action
+     * Check if the user has the rights to perfom the action and check that rights limitations
      */
-    public HasRight(right: string) {
+    public HasRight(right: string, resource?: string) {
 
         if (this.rights[right] === undefined) {
             return false;
@@ -19,15 +27,16 @@ export class ACLComponent {
      */
     public isLoggedIn(): Boolean {
 
-        // return true or false
-        return true;
+        // return boolean
+        return this.isAuthenticated;
     }
     /**
      * Create new component for connected user
      */
-    constructor() {
+    constructor(isAuthenticated: boolean) {
 
-        // do something
+        // bind input
+        this.isAuthenticated = isAuthenticated;
     }
 
 }
