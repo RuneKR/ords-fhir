@@ -15,9 +15,19 @@ export class ACLComponent {
         }
     }
     /**
-     * Check if there are any limitations on a resource for that given user
+     * Check that the connected has a login
      */
-    public queryLimitations(resource: string, query: any) {
+    public isLoggedIn(): Boolean {
 
+        // return true or false
+        return true;
     }
+    /**
+     * Create new component for connected user
+     */
+    constructor() {
+
+        // do something
+    }
+
 }
