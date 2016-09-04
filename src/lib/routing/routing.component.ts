@@ -1,6 +1,5 @@
 import * as parser                          from 'body-parser';
 import {Constants}                          from '../../../shared/services/constants';
-import {ConformanceComponent}               from '../../conformance';
 import * as express                         from 'express';
 import {HandlerOptions}                     from './models/handler-options';
 import {RequestHandler}                     from './models/request-handler';
@@ -43,7 +42,7 @@ export class RoutingComponent {
     /**
      * Refernce in conformance instance
      */
-    private conformance: ConformanceComponent;
+    private resources: { [resource: string]: any } = {};
     /**
      * Start up and listen for incomming traffic
      */
@@ -66,9 +65,9 @@ export class RoutingComponent {
         // remember resource check
         this._routers.resource.use(this.isResource);
     }
-     /**
-     * Add a handler to handle system interactions
-     */
+    /**
+    * Add a handler to handle system interactions
+    */
     public addToSystem(options: HandlerOptions, ...handlers: Array<RequestHandler>): void {
 
         // prepare a stack
@@ -182,7 +181,7 @@ export class RoutingComponent {
     private isResource(req: Request, res: Response, next: HookableModels.ArgumentableCb): void {
 
         // grap info about the current route
-        let model: any = this.conformance.getResource(req.params.resource);
+        let model: any = this.resources[req.params.resource];
 
         // check that resource actually exists
         if (model === undefined) {

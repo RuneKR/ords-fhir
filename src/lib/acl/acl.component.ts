@@ -12,9 +12,9 @@ export class ACLComponent {
      */
     private rights: { [right: string]: ResourceRight };
     /**
-     * Check if the user has the rights to perfom the action and check that rights limitations
+     * Check if the user has the rights to perfom the action for a resource
      */
-    public HasRight(right: string, resource?: string) {
+    public HasRight(right: string, resource?: string): Boolean {
 
         if (this.rights[right] === undefined) {
             return false;
