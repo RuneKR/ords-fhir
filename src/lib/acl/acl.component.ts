@@ -3,6 +3,14 @@ export interface ResourceRight {
 }
 
 export class ACLComponent {
+    /**
+     * Identifyer of the current conntected user
+     */
+    public uid: any;
+    /**
+     * Organisations this belongs to
+     */
+    public organisations: Array<any>;
     /***
      * Check if the user is authenticated
      */
@@ -34,6 +42,9 @@ export class ACLComponent {
      * Create new component for connected user
      */
     constructor(isAuthenticated: boolean) {
+        
+
+        //add other here
 
         // bind input
         this.isAuthenticated = isAuthenticated;
