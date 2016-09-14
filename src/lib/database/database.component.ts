@@ -45,8 +45,16 @@ export class DatabaseComponent implements DBOperations {
     public createResource(name: string, schema: SchemaModels.Schema): Resource {
 
 
+        // prepare resource
         let resource: Resource = new Resource(name, schema);
 
+        // add reference to database as actors
+        resource.create.actor       = this.create.actor;
+        resource.read.actor         = this.read.actor;
+        resource.update.actor       = this.update.actor;
+        resource.delete.actor       = this.delete.actor;
+        resource.history.actor      = this.history.actor;
+        resource.patch.actor        = this.patch.actor;
 
         // return result
         return resource;

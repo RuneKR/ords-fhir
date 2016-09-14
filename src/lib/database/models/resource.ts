@@ -17,19 +17,19 @@ export class Resource implements DBOperations {
     /**
      * Create something in the database
      */
-    public create: HookableModels.ReturnableAll<DataManipulation, any> = HookableComponent.returnableAll();
+    public create:  HookableModels.ReturnableAll<DataManipulation, any> = HookableComponent.returnableAll();
     /**
      * Read something from the database
      */
-    public read: HookableModels.ReturnableAll<QueryBase, Array<any>> = HookableComponent.returnableAll();
+    public read:    HookableModels.ReturnableAll<QueryBase, Array<any>> = HookableComponent.returnableAll();
     /**
      * Update something in the database
      */
-    public update: HookableModels.ReturnableAll<DataManipulation, any> = HookableComponent.returnableAll();
+    public update:  HookableModels.ReturnableAll<DataManipulation, any> = HookableComponent.returnableAll();
     /**
      * Create something in the database
      */
-    public delete: HookableModels.ReturnableAll<RecordRemoval, any> = HookableComponent.returnableAll();
+    public delete:  HookableModels.ReturnableAll<RecordRemoval, any> = HookableComponent.returnableAll();
     /**
      * Read history of something in the database
      */
@@ -37,7 +37,7 @@ export class Resource implements DBOperations {
     /**
      * Patch something in the database
      */
-    public patch: HookableModels.ReturnableAll<DataManipulation, any> = HookableComponent.returnableAll();
+    public patch:   HookableModels.ReturnableAll<DataManipulation, any> = HookableComponent.returnableAll();
     /**
      * Create a new resource conform to ORDS
      */
