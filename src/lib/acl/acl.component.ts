@@ -1,3 +1,12 @@
+import {Comparator}             from './models/comparator';
+
+export interface RuleEntry {
+    datakey: string;
+    comparator: Comparator;
+    source: string;
+    sourcekey: string;
+}
+
 export interface ResourceRight {
     [resource: string]: void;
 }

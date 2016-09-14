@@ -1,40 +1,11 @@
 import {SchemaModels}           from 'simple-ts-schema';
+import {DBOperations}           from './db-operations';
 import {QueryBase}              from './query-base';
 import {RecordRemoval}          from './record-removal';
 import {DataManipulation}       from './data-manipulation';
+import {HookableComponent, HookableModels}  from 'make-it-hookable';
 
-export class ACL {
-    /**
-    * Limit create operations on the resource
-    */
-    public create(query: DataManipulation): void {
-
-        // do something here like updating the content
-    }
-    /**
-     * Limit read operations on the resource
-     */
-    public read(query: QueryBase): void {
-
-        // do something here like updating the content
-    }
-    /**
-    * Limit update operations on the resource
-    */
-    public update(query: DataManipulation): void {
-
-        // do something here like updating the content
-    }
-    /**
-    * Limit delete operations on the resource
-    */
-    public delete(query: RecordRemoval): void {
-
-        // do something here like updating the content
-    }
-}
-
-export class Resource {
+export class Resource implements DBOperations {
     /**
      * Schema for this resource
      */
@@ -44,16 +15,35 @@ export class Resource {
      */
     public name: string;
     /**
-     * Control the operations for this resource
+     * Create something in the database
      */
-    public acl: ACL;
+    public create: HookableModels.ReturnableAll<DataManipulation, any> = HookableComponent.returnableAll();
+    /**
+     * Read something from the database
+     */
+    public read: HookableModels.ReturnableAll<QueryBase, Array<any>> = HookableComponent.returnableAll();
+    /**
+     * Update something in the database
+     */
+    public update: HookableModels.ReturnableAll<DataManipulation, any> = HookableComponent.returnableAll();
+    /**
+     * Create something in the database
+     */
+    public delete: HookableModels.ReturnableAll<RecordRemoval, any> = HookableComponent.returnableAll();
+    /**
+     * Read history of something in the database
+     */
+    public history: HookableModels.ReturnableAll<QueryBase, Array<any>> = HookableComponent.returnableAll();
+    /**
+     * Patch something in the database
+     */
+    public patch: HookableModels.ReturnableAll<DataManipulation, any> = HookableComponent.returnableAll();
     /**
      * Create a new resource conform to ORDS
      */
-    constructor(data: Resource) {
+    constructor(name: string, schema: SchemaModels.Schema) {
 
-        this.name = data.name;
-        this.schema = data.schema;
-        this.acl = data.acl;
+        this.name = name;
+        this.schema = schema;
     }
 }
