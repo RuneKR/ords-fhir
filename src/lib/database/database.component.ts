@@ -1,11 +1,7 @@
 import {HookableComponent, HookableModels}  from 'make-it-hookable';
 import {DBOperations}                       from './models/db-operations';
-import {QueryBase}                          from './models/query-base';
-import {DataManipulation}                   from './models/data-manipulation';
-import {RecordRemoval}                      from './models/record-removal';
-import {Resource}                           from './models/Resource';
 import {Component}                          from 'di-type';
-import {SchemaModels}                       from 'simple-ts-schema';
+import {Resource}                           from './models/Resource';
 
 /**
  * Connect to a database and perform operation in that
@@ -14,49 +10,24 @@ import {SchemaModels}                       from 'simple-ts-schema';
     directives: [],
     providers: []
 })
-export class DatabaseComponent implements DBOperations {
+export class DatabaseComponent {
     /**
-     * Create something in the database
+     * Resources in the database
      */
-    public create: HookableModels.Returnable<DataManipulation, any> = HookableComponent.returnable();
+    public resource: { [resource: string]: Resource };
     /**
-     * Read something from the database
+     * Libery methods performing actual operations in the database
      */
-    public read: HookableModels.Returnable<QueryBase, Array<any>> = HookableComponent.returnable();
+    public _lib: DBOperations;
     /**
-     * Update something in the database
+     * Attach resource to the database
      */
-    public update: HookableModels.Returnable<DataManipulation, any> = HookableComponent.returnable();
-    /**
-     * Create something in the database
-     */
-    public delete: HookableModels.Returnable<RecordRemoval, any> = HookableComponent.returnable();
-    /**
-     * Read history of something in the database
-     */
-    public history: HookableModels.Returnable<QueryBase, Array<any>> = HookableComponent.returnable();
-    /**
-     * Patch something in the database
-     */
-    public patch: HookableModels.Returnable<DataManipulation, any> = HookableComponent.returnable();
-    /**
-     * Create a new resource 
-     */
-    public createResource(name: string, schema: SchemaModels.Schema): Resource {
+    public attachResource(resource: Resource): void {
 
+        // TODO: check allready existing resource
 
-        // prepare resource
-        let resource: Resource = new Resource(name, schema);
-
-        // add reference to database as actors
-        resource.create.actor       = this.create.actor;
-        resource.read.actor         = this.read.actor;
-        resource.update.actor       = this.update.actor;
-        resource.delete.actor       = this.delete.actor;
-        resource.history.actor      = this.history.actor;
-        resource.patch.actor        = this.patch.actor;
-
-        // return result
-        return resource;
+        // save reference to resource
+        this.resource[resource.name] = resource;
     }
+
 }

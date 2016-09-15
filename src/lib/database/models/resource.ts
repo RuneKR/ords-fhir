@@ -1,11 +1,7 @@
 import {SchemaModels}           from 'simple-ts-schema';
-import {DBOperations}           from './db-operations';
-import {QueryBase}              from './query-base';
-import {RecordRemoval}          from './record-removal';
-import {DataManipulation}       from './data-manipulation';
-import {HookableComponent, HookableModels}  from 'make-it-hookable';
+import {ResourceACL}            from './resource-acl';
 
-export class Resource implements DBOperations {
+export class Resource {
     /**
      * Schema for this resource
      */
@@ -15,35 +11,16 @@ export class Resource implements DBOperations {
      */
     public name: string;
     /**
-     * Create something in the database
+     * ACL control 
      */
-    public create:  HookableModels.ReturnableAll<DataManipulation, any> = HookableComponent.returnableAll();
-    /**
-     * Read something from the database
-     */
-    public read:    HookableModels.ReturnableAll<QueryBase, Array<any>> = HookableComponent.returnableAll();
-    /**
-     * Update something in the database
-     */
-    public update:  HookableModels.ReturnableAll<DataManipulation, any> = HookableComponent.returnableAll();
-    /**
-     * Create something in the database
-     */
-    public delete:  HookableModels.ReturnableAll<RecordRemoval, any> = HookableComponent.returnableAll();
-    /**
-     * Read history of something in the database
-     */
-    public history: HookableModels.ReturnableAll<QueryBase, Array<any>> = HookableComponent.returnableAll();
-    /**
-     * Patch something in the database
-     */
-    public patch:   HookableModels.ReturnableAll<DataManipulation, any> = HookableComponent.returnableAll();
+    public acl: ResourceACL;
     /**
      * Create a new resource conform to ORDS
      */
-    constructor(name: string, schema: SchemaModels.Schema) {
+    constructor(name: string, schema: SchemaModels.Schema, acl: ResourceACL) {
 
         this.name = name;
         this.schema = schema;
+        this.acl = acl;
     }
 }
