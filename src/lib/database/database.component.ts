@@ -1,24 +1,31 @@
-import {HookableComponent, HookableModels}  from 'make-it-hookable';
-import {DBOperations}                       from './models/db-operations';
+import {DatabaseConfig}                     from './database.config';
 import {Component}                          from 'di-type';
 import {Resource}                           from './models/Resource';
+import {DBModel}                            from './models/db-model';
 
 /**
  * Connect to a database and perform operation in that
  */
 @Component({
-    directives: [],
+    directives: [DatabaseConfig],
     providers: []
 })
 export class DatabaseComponent {
     /**
-     * Resources in the database
+     * Resource builded to a model
      */
-    public resource: { [resource: string]: Resource };
+    public model: { [resource: string]: DBModel };
     /**
      * Libery methods performing actual operations in the database
      */
-    public _lib: DBOperations;
+    private config: DatabaseConfig;
+    /**
+     * Create a new database instance
+     */
+    constructor(config: DatabaseConfig) {
+
+        this.config = config;
+    }
     /**
      * Attach resource to the database
      */
@@ -26,8 +33,8 @@ export class DatabaseComponent {
 
         // TODO: check allready existing resource
 
-        // save reference to resource
-        this.resource[resource.name] = resource;
+        // save reference to resource and give that a reference to the db lib
+        this.model[resource.name] = new DBModel(this.config, resource);
     }
 
 }

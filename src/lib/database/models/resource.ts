@@ -22,5 +22,8 @@ export class Resource {
         this.name = name;
         this.schema = schema;
         this.acl = acl;
+
+
+        // read command: Do read ACL then do DB where Resource is added and do db reading comands
     }
 }
