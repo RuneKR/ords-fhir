@@ -1,4 +1,3 @@
-import {ConformResource}                from '../../shared/models/resources/conform-resource';
 import {IConformance, IRestResource}    from '../../shared/models/hl7-fhir/schemas/conformance';
 import {IValueSet}                      from '../../shared/models/hl7-fhir/schemas/value-set';
 
@@ -12,7 +11,7 @@ interface IResources {
 /**
  * Manage all valueset and resources including structure definitions that an implementation conforms too
  */
-export class Conformance {
+export class ConformanceComponent {
     /**
      * The raw content of the conformance
      */
@@ -71,8 +70,7 @@ export class Conformance {
      */
     public getConformance(): IConformance {
 
-
-        // reset calculated
+        // reset calculated rest
         this.conformance.rest = [];
 
         // for all resources

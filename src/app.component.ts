@@ -1,7 +1,10 @@
+// external
 import * as cors                            from 'cors';
 import {Component}                          from 'di-type';
-import {RoutingComponent, RoutingConfig}    from './lib/routing';
 import * as express                         from 'express';
+
+// internal
+import {RoutingComponent, RoutingConfig}    from './lib/routing';
 
 /**
  * Initialize client connection methods supported in ORDS

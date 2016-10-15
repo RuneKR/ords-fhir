@@ -1,17 +1,22 @@
+// external
 import * as parser                          from 'body-parser';
-import {RoutingConfig}                      from './routing.config';
-import * as express                         from 'express';
-import {HandlerOptions}                     from './models/handler-options';
-import {RequestHandler}                     from './models/request-handler';
 import {Router}                             from 'express';
-import {RouterContainer}                    from './models/router-container';
 import {HookableComponent, HookableModels}  from 'make-it-hookable';
 import {Component}                          from 'di-type';
+
+// internal
+import {ConformanceComponent}               from '../conformance';
+
+// within
+import {RoutingConfig}                      from './routing.config';
+import {RouterContainer}                    from './models/router-container';
+import {HandlerOptions}                     from './models/handler-options';
+import {RequestHandler}                     from './models/request-handler';
 import {Request}                            from './models/request';
 import {Response}                           from './models/response';
 
 @Component({
-    directives: [RoutingConfig],
+    directives: [RoutingConfig, ConformanceComponent],
     providers: []
 })
 export class RoutingComponent {
@@ -40,13 +45,16 @@ export class RoutingComponent {
         system: Router()
     };
     /**
-     * Refernce in conformance instance
+     * Reference to instance of conformance
      */
-    private resources: { [resource: string]: any } = {};
+    private _cinstance:  ConformanceComponent;
     /**
      * Start up and listen for incomming traffic
      */
-    constructor(constants: RoutingConfig) {
+    constructor(constants: RoutingConfig, cinstance: ConformanceComponent) {
+
+        // bind handler
+        this._cinstance = cinstance;
 
         // bind pre handlers
         this.preHandlers.actor.push(this.authenticate);
@@ -181,13 +189,9 @@ export class RoutingComponent {
     private isResource(req: Request, res: Response, next: HookableModels.ArgumentableCb): void {
 
         // grap info about the current route
-        let model: any = this.resources[req.params.resource];
+        let model: any = this._cinstance[req.params.resource];
 
-        // check that resource actually exists
-        if (model === undefined) {
-
-            // throw some error
-        }
+        // how to send back error?
 
         // set reference to that
         delete req.params.resource;
