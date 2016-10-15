@@ -1,11 +1,14 @@
-import {IConformance, IRestResource}    from '../../shared/models/hl7-fhir/schemas/conformance';
-import {IValueSet}                      from '../../shared/models/hl7-fhir/schemas/value-set';
+// external
+import {Resource}                       from 'ords-db';
+
+// internal
+import {IConformance, IRestResource}    from './models/schemas/conformance';
 
 /**
  * String index of resources
  */
 interface IResources {
-    [key: string]: ConformResource;
+    [key: string]: Resource;
 }
 
 /**
@@ -48,10 +51,12 @@ export class ConformanceComponent {
      * @param   {string}       Resource             the resource itself being added
      * @returns {void}
      */
-    public addResource(resource: ConformResource): void {
+    public addResource(resource: Resource, conformance: IRestResource): void {
 
         // init new holder and save reference to it
         this.resources[resource.restConformance.type] = resource;
+
+        // do stuff with conformance too
 
     }
     /**
@@ -59,7 +64,7 @@ export class ConformanceComponent {
      * @param   {string}       type     type of the resource
      * @returns {ConformResource}       all information about the resource in the requested form
      */
-    public getResource(type: string): ConformResource {
+    public getResource(type: string): Resource {
 
         // return content
         return this.resources[type];

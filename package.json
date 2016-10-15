@@ -11,7 +11,7 @@
     "es6-promise": "^3.2.1",
     "express": "^4.13.4",
     "make-it-hookable": "^1.1.0",
-    "mongodb": "^2.1.18",
+    "ords-db": "^0.12.0",
     "simple-ts-schema": "^1.0.0"
   },
   "scripts": {
