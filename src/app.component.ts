@@ -1,21 +1,20 @@
 import * as cors                            from 'cors';
 import {Component}                          from 'di-type';
-import {Constants}                          from './shared/services/constants';
-import {RoutingComponent}                   from './lib/routing';
+import {RoutingComponent, RoutingConfig}    from './lib/routing';
 import * as express                         from 'express';
 
 /**
  * Initialize client connection methods supported in ORDS
  */
 @Component({
-    directives: [Constants, RoutingComponent],
+    directives: [RoutingConfig, RoutingComponent],
     providers: []
 })
 export class AppComponent {
     /**
      * Startup the client connections
      */
-    constructor(constants: Constants, routing: RoutingComponent) {
+    constructor(constants: RoutingConfig, routing: RoutingComponent) {
         
         // init instance of router
         let router: express.Express = express();

@@ -1,5 +1,5 @@
 import * as parser                          from 'body-parser';
-import {Constants}                          from '../../../shared/services/constants';
+import {RoutingConfig}                      from './routing.config';
 import * as express                         from 'express';
 import {HandlerOptions}                     from './models/handler-options';
 import {RequestHandler}                     from './models/request-handler';
@@ -11,7 +11,7 @@ import {Request}                            from './models/request';
 import {Response}                           from './models/response';
 
 @Component({
-    directives: [Constants],
+    directives: [RoutingConfig],
     providers: []
 })
 export class RoutingComponent {
@@ -46,7 +46,7 @@ export class RoutingComponent {
     /**
      * Start up and listen for incomming traffic
      */
-    constructor(constants: Constants) {
+    constructor(constants: RoutingConfig) {
 
         // bind pre handlers
         this.preHandlers.actor.push(this.authenticate);
