@@ -1,9 +1,10 @@
-import {Request, Response}                   from '../routing.models';
-import {RoutingComponent}                    from '../routing.component';
-import {ConformanceComponent}                from '../../../conformance';
+// external
 import {Component}                           from 'di-type';
 import {HookableModels}                      from 'make-it-hookable';
-import {IConformance}                        from '../../../../shared/models/hl7-fhir/schemas/conformance';
+
+// internal
+import {RoutingComponent, RoutingModels}            from '../lib/routing';
+import {ConformanceComponent, ConformanceModels}    from '../lib/conformance';
 
 /**
  * HL7 FHIR instance interactions
@@ -49,9 +50,9 @@ export class System {
      * @param   {Response}    res     responsehandler for the client
      * @returns {Void}
      */
-    public displayConStatement(req: Request, res: Response, next: HookableModels.ArgumentableCb): void {
+    public displayConStatement(req: RoutingModels.Request, res: RoutingModels.Response, next: HookableModels.ArgumentableCb): void {
 
-        let conformance: IConformance = this.rsc.getConformance();
+        let conformance: ConformanceModels.Schemas.IConformance = this.rsc.getConformance();
 
         // set meta if needed
         if (conformance.meta) {

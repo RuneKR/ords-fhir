@@ -1,1 +1,1 @@
-import * as ConformanceModels   from    './models'; export {ConformanceModels}
+import * as Schemas from    './models/schemas'; export {Schemas}

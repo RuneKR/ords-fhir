@@ -7,8 +7,11 @@ import {IConformance, IRestResource}    from './models/schemas/conformance';
 /**
  * String index of resources
  */
-interface IResources {
-    [key: string]: Resource;
+interface IImplemented {
+    [key: string]: {
+        resource: Resource,
+        conformance: IRestResource
+    };
 }
 
 /**
@@ -22,7 +25,7 @@ export class ConformanceComponent {
     /**
      * Avalable resources and constom conformance for these
      */
-    private resources: IResources = {};
+    private resources: IImplemented = {};
     /**
      * General rest conformance for all resources
      */
@@ -54,9 +57,11 @@ export class ConformanceComponent {
     public addResource(resource: Resource, conformance: IRestResource): void {
 
         // init new holder and save reference to it
-        this.resources[resource.restConformance.type] = resource;
+        this.resources[resource.name] = resource;
 
         // do stuff with conformance too
+        t
+
 
     }
     /**

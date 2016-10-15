@@ -74,8 +74,8 @@ export class RoutingComponent {
         this._routers.resource.use(this.isResource);
     }
     /**
-    * Add a handler to handle system interactions
-    */
+     * Add a handler to handle system interactions
+     */
     public addToSystem(options: HandlerOptions, ...handlers: Array<RequestHandler>): void {
 
         // prepare a stack
@@ -189,15 +189,19 @@ export class RoutingComponent {
     private isResource(req: Request, res: Response, next: HookableModels.ArgumentableCb): void {
 
         // grap info about the current route
-        let model: any = this._cinstance[req.params.resource];
-
-        // how to send back error?
+        let model: any = this._cinstance.getResource(req.params.resource);
 
         // set reference to that
         delete req.params.resource;
 
         // bind model to request
         req.resource = model;
+
+        if (model === undefined) {
+
+            //cancel operation since it do not exists
+
+        }
 
         // go next
         next();
