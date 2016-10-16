@@ -9,8 +9,7 @@ import {IConformance, IRestResource}    from './models/schemas/conformance';
  */
 interface IImplemented {
     [key: string]: {
-        resource: Resource,
-        conformance: IRestResource
+        restConformance: IRestResource
     };
 }
 
@@ -23,20 +22,24 @@ export class ConformanceComponent {
      */
     public conformance: IConformance;
     /**
-     * Avalable resources and constom conformance for these
+     * General rest conformance for all resources
      */
-    private resources: IImplemented = {};
+    public generalResourceConformance: IRestResource;
     /**
      * General rest conformance for all resources
      */
-    private resourceRestConformance: IRestResource;
+    public generalRestConformance: any;    //DO SOMETHING ELSE HERE WITH MODEL
+    /**
+     * Avalable resources and constom conformance for these
+     */
+    private implemented: IImplemented = {};
     /**
      * Create empty conformance component
      */
     constructor() {
 
         // standard values for the conformance for all resources
-        this.resourceRestConformance = {
+        this.generalResourceConformance = {
             type: '*'
         };
 
@@ -56,23 +59,24 @@ export class ConformanceComponent {
      */
     public addResource(resource: Resource, conformance: IRestResource): void {
 
-        // init new holder and save reference to it
-        this.resources[resource.name] = resource;
-
-        // do stuff with conformance too
-        t
-
-
+        // init new holder for implemented resource and save reference to it
+        this.implemented[resource.name] = {
+            restConformance: conformance
+        };
     }
     /**
      * Grap all known information about a resource type
      * @param   {string}       type     type of the resource
      * @returns {ConformResource}       all information about the resource in the requested form
      */
-    public getResource(type: string): Resource {
+    public isResource(type: string): Resource {
 
-        // return content
-        return this.resources[type];
+        // return content if it exists
+        if (this.implemented[type] === undefined) {
+            return false;
+        } else {
+            return true;
+        }
     }
     /**
      * Calculate the content of the conformance and return it back
@@ -83,18 +87,21 @@ export class ConformanceComponent {
         // reset calculated rest
         this.conformance.rest = [];
 
+        // copy
+
         // for all resources
-        for (let resource in this.resources) {
+        for (let type in this.implemented) {
 
             // check that it is not inherited
-            if (this.resources.hasOwnProperty(resource)) {
+            if (this.implemented.hasOwnProperty(type)) {
 
                 // push conformance into rest
-                this.conformance.rest.push(this.resources[resource].restConformance);
+                this.conformance.rest.push(this.implemented[type].restConformance);
             }
         }
 
         // Todo: Create an instance of the conformance resource and check if it fails.
+        // implement general conformance too
 
         return this.conformance;
     }

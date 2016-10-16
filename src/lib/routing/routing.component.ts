@@ -188,16 +188,8 @@ export class RoutingComponent {
      */
     private isResource(req: Request, res: Response, next: HookableModels.ArgumentableCb): void {
 
-        // grap info about the current route
-        let model: any = this._cinstance.getResource(req.params.resource);
 
-        // set reference to that
-        delete req.params.resource;
-
-        // bind model to request
-        req.resource = model;
-
-        if (model === undefined) {
+        if (this._cinstance.isResource(req.params.resource)) {
 
             //cancel operation since it do not exists
 
