@@ -10,6 +10,7 @@ import {IConformance, IRestResource}    from './models/schemas/conformance';
 interface IImplemented {
     [key: string]: {
         restConformance: IRestResource
+        resource: Resource;
     };
 }
 
@@ -43,13 +44,16 @@ export class ConformanceComponent {
             type: '*'
         };
 
+        // set general rest conformance
+        this.generalRestConformance = {};
+
         // standard value for conformance
         this.conformance = {
             acceptUnknown: 'no',
             contact: [],
             format: ['json'],
             profile: [],
-            rest: []
+            rest: [this.generalRestConformance]
         };
     }
     /**
@@ -61,6 +65,7 @@ export class ConformanceComponent {
 
         // init new holder for implemented resource and save reference to it
         this.implemented[resource.name] = {
+            resource: Resource,
             restConformance: conformance
         };
     }
@@ -69,13 +74,13 @@ export class ConformanceComponent {
      * @param   {string}       type     type of the resource
      * @returns {ConformResource}       all information about the resource in the requested form
      */
-    public isResource(type: string): Resource {
+    public getResource(type: string): Resource {
 
         // return content if it exists
         if (this.implemented[type] === undefined) {
-            return false;
+            return undefined;
         } else {
-            return true;
+            return this.implemented[type].resource;
         }
     }
     /**
@@ -87,7 +92,7 @@ export class ConformanceComponent {
         // reset calculated rest
         this.conformance.rest = [];
 
-        // copy
+        // MERGE GENERAL WITH SPECIFIC KEYS FOR RESOURCES
 
         // for all resources
         for (let type in this.implemented) {
