@@ -1,5 +1,6 @@
 # Status
 Work in progress. Version 1.0.0 is not done yet.
+The main author unfortunetly do not have time to finish this project that now have been seperated into multiple project under the account. It is possible for anyone who wish to continue to do so.
 
 # ORDS
 The point of ORDS is to leverage the gap between thought and implementation when one wants to create a [HL7 FHIR REST]( https://www.hl7.org/fhir/http.html) application.
