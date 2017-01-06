@@ -1,8 +1,8 @@
 // external
-import {Resource}                       from 'ords-db';
+import { DatabaseLib } from 'ords-db';
 
 // internal
-import {IConformance, IRestResource}    from './models/schemas/conformance';
+import { IConformance, IRestResource } from './lib/schemas/conformance';
 
 /**
  * String index of resources
@@ -10,7 +10,7 @@ import {IConformance, IRestResource}    from './models/schemas/conformance';
 interface IImplemented {
     [key: string]: {
         restConformance: IRestResource
-        resource: Resource;
+        resource: DatabaseLib.DatabaseResource;
     };
 }
 
@@ -61,20 +61,19 @@ export class ConformanceComponent {
      * @param   {string}       Resource             the resource itself being added
      * @returns {void}
      */
-    public addResource(resource: Resource, conformance: IRestResource): void {
+    public addResource(resource: DatabaseLib.DatabaseResource, conformance: IRestResource): void {
 
         // init new holder for implemented resource and save reference to it
         this.implemented[resource.name] = {
-            resource: Resource,
+            resource: resource,
             restConformance: conformance
         };
     }
     /**
      * Grap all known information about a resource type
      * @param   {string}       type     type of the resource
-     * @returns {ConformResource}       all information about the resource in the requested form
      */
-    public getResource(type: string): Resource {
+    public getResource(type: string): DatabaseLib.DatabaseResource {
 
         // return content if it exists
         if (this.implemented[type] === undefined) {
