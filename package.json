@@ -8,9 +8,6 @@
     "body-parser": "^1.14.2",
     "cors": "^2.7.1",
     "di-type": "^2.0.0",
-    "es6-promise": "^3.2.1",
-    "express": "^4.13.4",
-    "make-it-hookable": "^1.1.0",
     "ords-db": "^0.12.0",
     "simple-ts-schema": "^1.0.0"
   },
