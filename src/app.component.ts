@@ -20,14 +20,14 @@ export class AppComponent {
         hooks.routes.push({
             method: 'USE',
             path: '*',
-            handlers: [
-                cors({
-                    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin', 'Authentication'],
-                    credentials: true,
-                    origin: function (origin: string, callback: Function): void {
-                        callback(undefined, cfg.whitelist.indexOf(origin) !== -1);
-                    }]
+            handlers: [cors({
+                allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin', 'Authentication'],
+                credentials: true,
+                origin: function (origin: string, callback: Function): void {
+                    callback(undefined, cfg.whitelist.indexOf(origin) !== -1);
+                }
+            })]
         });
 
-    });
+    }
 }

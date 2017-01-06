@@ -8,7 +8,7 @@
     "body-parser": "^1.14.2",
     "cors": "^2.7.1",
     "di-type": "^2.0.0",
-    "ords-db": "^0.14.1",
+    "ords-db": "^0.14.2",
     "simple-ts-schema": "^1.0.0"
   },
   "scripts": {
