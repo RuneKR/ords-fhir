@@ -2,7 +2,7 @@
   "name": "ords-fhir",
   "version": false,
   "globalDependencies": {
-        
+    "node": "registry:env/node#6.0.0+20170102175725"
   },
   "dependencies": {
     "cors": "registry:npm/cors#2.7.0+20160505024722"
