@@ -1,20 +1,20 @@
 import * as cors from 'cors';
 import { Component } from 'di-type';
 import { RoutingHooks } from 'ords-db';
-import { AppConfig } from './app.config';
+import { ApplicationConfig } from './app.config';
 
 /**
- * Initialize client connection methods supported in ORDS fhir
+ * This is the class to be bootstrapped
  */
 @Component({
-    directives: [RoutingHooks, AppConfig],
+    directives: [RoutingHooks, ApplicationConfig],
     providers: []
 })
 export class Application {
     /**
      * Startup the client connections
      */
-    constructor(hooks: RoutingHooks, cfg: AppConfig) {
+    constructor(hooks: RoutingHooks, cfg: ApplicationConfig) {
 
         // setup the usage of the whitelist
         hooks.routes.push({
