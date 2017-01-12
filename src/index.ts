@@ -1,5 +1,5 @@
 export * from './conformance';
-export { AppComponent } from './app.component';
+export { Application } from './app.component';
 
 // include routes
 import './routes/system';
