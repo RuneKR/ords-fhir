@@ -18,7 +18,7 @@ export class System {
     /**
      * Reference to conformance
      */
-    private rsc: ConformanceComponent;
+    private rsc: Conformance;
     /**
      * Binding the routes their function
      */
