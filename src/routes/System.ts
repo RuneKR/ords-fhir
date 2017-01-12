@@ -3,13 +3,15 @@ import { Component } from 'di-type';
 
 // internal
 import { RoutingHooks, RoutingLib } from 'ords-db';
-import { ConformanceComponent, ConformanceLib } from '../conformance';
+import { Conformance, ConformanceLib } from '../conformance';
+
+// include reference to conformance and update the conformance with functions added in this routes
 
 /**
  * HL7 FHIR instance interactions
  */
 @Component({
-    directives: [ConformanceComponent],
+    directives: [Conformance],
     providers: [RoutingHooks]
 })
 export class System {
@@ -20,7 +22,7 @@ export class System {
     /**
      * Binding the routes their function
      */
-    constructor(config: RoutingHooks, rsc: ConformanceComponent) {
+    constructor(config: RoutingHooks, rsc: Conformance) {
 
         // bind reference
         this.rsc = rsc;

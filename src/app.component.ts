@@ -4,13 +4,13 @@ import { RoutingHooks } from 'ords-db';
 import { AppConfig } from './app.config';
 
 /**
- * Initialize client connection methods supported in ORDS
+ * Initialize client connection methods supported in ORDS fhir
  */
 @Component({
     directives: [RoutingHooks, AppConfig],
     providers: []
 })
-export class AppComponent {
+export class Application {
     /**
      * Startup the client connections
      */

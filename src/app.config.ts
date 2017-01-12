@@ -1,3 +1,3 @@
-export class AppConfig {
+export class ApplicationConfig {
     public whitelist: Array<string> = [];
 }

@@ -17,7 +17,7 @@ interface IImplemented {
 /**
  * Manage all valueset and resources including structure definitions that an implementation conforms too
  */
-export class ConformanceComponent {
+export class Conformance {
     /**
      * The raw content of the conformance
      */
