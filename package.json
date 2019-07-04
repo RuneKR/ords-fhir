@@ -9,11 +9,13 @@
     "cors": "^2.7.1",
     "di-type": "^2.0.0",
     "ords-db": "^0.14.2",
-    "simple-ts-schema": "^1.0.0"
+    "simple-ts-schema": "^1.0.0",
+    "snyk": "^1.189.0"
   },
   "scripts": {
     "test": "node build/test",
-    "prepublish": "typings install -o && tsc"
+    "prepublish": "npm run snyk-protect; typings install -o && tsc",
+    "snyk-protect": "snyk protect"
   },
   "repository": {
     "type": "git",
@@ -28,5 +30,6 @@
   "bugs": {
     "url": "https://github.com/MedSolve/ords-core/issues"
   },
-  "homepage": "https://github.com/MedSolve/ords-core#readme"
+  "homepage": "https://github.com/MedSolve/ords-core#readme",
+  "snyk": true
 }
